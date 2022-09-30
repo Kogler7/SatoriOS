@@ -1,4 +1,6 @@
-OBJS := kernel.o stdio.o info.o
+SRC := $(wildcard *.c)
+OBJS := $(patsubst %.c, %.o, $(SRC))
+
 TOOLPREFIX = /opt/cross-tools/bin/loongarch64-unknown-linux-gnu-
 
 CC = $(TOOLPREFIX)gcc

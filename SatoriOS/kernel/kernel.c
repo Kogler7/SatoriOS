@@ -1,5 +1,5 @@
-#include"stdio.h"
-#include"info.h"
+#include"include/satio.h"
+#include"include/info.h"
 
 void print_info()
 {
