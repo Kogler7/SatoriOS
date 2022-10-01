@@ -1,24 +1,26 @@
-OUTDIR := ../../output/
-SRC := $(wildcard *.c)
-OBJS := $(patsubst %.c, $(OUTDIR)%.o, $(SRC))
-OUT := $(OUTDIR)satio.o
+TGTDIR := ../../build/
+INCDIR := ../../include
+TARGET := $(TGTDIR)satio.o
+SOURCE := $(wildcard *.c)
+OBJECTS := $(patsubst %.c, $(TGTDIR)%.o, $(SOURCE))
 
 TOOLPREFIX = loongarch64-unknown-linux-gnu-
 
 CC = $(TOOLPREFIX)gcc
 LD = $(TOOLPREFIX)ld
 
-CFLAGS = -Wall -O2 -g3 -march=loongarch64 -mabi=lp64s -ffreestanding -fno-common -nostdlib -I. -fno-stack-protector -fno-pie -no-pie 
+CFLAGS = -Wall -O2 -g3 -march=loongarch64 -mabi=lp64s\
+	-ffreestanding -fno-common -nostdlib -I$(INCDIR) -fno-stack-protector -fno-pie -no-pie 
 
-all: $(OUT)
+all: $(TARGET)
 
-$(OUT): $(OBJS)
-	$(LD) -r -o $(OUT) $(OBJS)
+$(TARGET): $(OBJECTS)
+	$(LD) -r -o $(TARGET) $(OBJECTS)
 
-$(OUTDIR)%.o : %.c
+$(TGTDIR)%.o : %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 .PHONY: clean
 
 clean: 
-	rm -f *.o ./kernel
+	rm -f $(TARGET)

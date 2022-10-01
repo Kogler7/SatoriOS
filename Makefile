@@ -1,4 +1,4 @@
-OBJS = output/kernel
+OBJECTS = build/kernel
 
 TOOLPREFIX = loongarch64-unknown-linux-gnu-
 
@@ -6,16 +6,17 @@ LD = $(TOOLPREFIX)ld
 
 LDFLAGS = -z max-page-size=4096
 
-all: image
+all: build/kernel
 
-image: $(OBJS)
-	$(OBJS) > image
-# > image means that the output of $(OBJS) is redirected to image
+image: $(OBJECTS)
+	$(OBJECTS) > image
+# > image means that the output of $(OBJECTS) is redirected to image
 
-output/kernel:
+build/kernel:
+	@mkdir -p build
 	(cd kernel; make)
 
 .PHONY: clean
 
 clean: 
-	rm -f *.o ./kernel
+	rm -f build

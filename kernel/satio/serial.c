@@ -1,4 +1,4 @@
-#include"../../include/serial.h"
+#include"include/serial.h"
 
 unsigned long uart_base = 0x1fe001e0;
 

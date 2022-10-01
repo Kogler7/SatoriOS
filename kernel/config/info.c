@@ -1,4 +1,4 @@
-#include"../../include/info.h"
+#include"include/info.h"
 
 const char *LABEL = "SatoriOS 0.0.1\n";
 
