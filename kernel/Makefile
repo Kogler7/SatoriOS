@@ -2,7 +2,7 @@ TGTDIR := ../build/
 TARGET := $(TGTDIR)kernel
 SOURCE := $(wildcard *.c)
 SUBOBJS := config.o satio.o
-OBJECTS = $(patsubst %.c, %.o, $(SOURCE))
+OBJECTS = $(patsubst %.c, $(TGTDIR)%.o, $(SOURCE))
 OBJECTS += $(patsubst %.o, $(TGTDIR)%.o, $(SUBOBJS))
 
 TOOLPREFIX = loongarch64-unknown-linux-gnu-
@@ -33,7 +33,7 @@ LDFLAGS = -z max-page-size=4096
 $(TARGET): $(OBJECTS) ld.script
 	$(LD) $(LDFLAGS) -T ld.script -o $(TARGET) $(OBJECTS)
 
-%.o : %.c
+$(TGTDIR)%.o : %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(TGTDIR)config.o:

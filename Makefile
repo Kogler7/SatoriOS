@@ -3,7 +3,7 @@ TARGET := $(TGTDIR)image
 
 .PHONY:
 
-$(TARGET):
+all:
 	@mkdir -p build
 	(cd kernel; make)
 
