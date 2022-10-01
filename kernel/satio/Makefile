@@ -1,5 +1,7 @@
+OUTDIR := ../../output/
 SRC := $(wildcard *.c)
-OBJS := $(patsubst %.c, %.o, $(SRC))
+OBJS := $(patsubst %.c, $(OUTDIR)%.o, $(SRC))
+OUT := $(OUTDIR)satio.o
 
 TOOLPREFIX = loongarch64-unknown-linux-gnu-
 
@@ -7,14 +9,13 @@ CC = $(TOOLPREFIX)gcc
 LD = $(TOOLPREFIX)ld
 
 CFLAGS = -Wall -O2 -g3 -march=loongarch64 -mabi=lp64s -ffreestanding -fno-common -nostdlib -I. -fno-stack-protector -fno-pie -no-pie 
-LDFLAGS = -z max-page-size=4096
 
-all: config.o
+all: $(OUT)
 
-config.o: $(OBJS)
-	$(LD) $(LDFLAGS) -r -o ../output/config.o $(OBJS)
+$(OUT): $(OBJS)
+	$(LD) -r -o $(OUT) $(OBJS)
 
-%.o : %.c
+$(OUTDIR)%.o : %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 .PHONY: clean

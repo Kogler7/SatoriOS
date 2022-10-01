@@ -27,10 +27,10 @@ Help()
 MEM="4G"
 # 1-4
 CPUS="1"
-#BIOS="/root/Desktop/SatoriVenv/loongarch_bios_0310.bin"
-BIOS="/root/Desktop/SatoriVenv/loongarch_bios_0310_debug.bin"
-KERNEL="./kernel/kernel"
-INITRD="/root/Desktop/SatoriVenv/busybox-rootfs.img"
+#BIOS="/opt/SatoriVenv/loongarch_bios_0310.bin"
+BIOS="/opt/SatoriVenv/loongarch_bios_0310_debug.bin"
+KERNEL="./output/kernel"
+INITRD="/opt/SatoriVenv/busybox-rootfs.img"
 USE_GRAPHIC="no"
 DEBUG=''
 QEMU="qemu-system-loongarch64"
