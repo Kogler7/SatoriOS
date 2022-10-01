@@ -1,5 +1,6 @@
 #include"shell.h"
 #include"satio/serial.h"
+#include"util.h"
 
 void show_help()
 {
@@ -47,7 +48,9 @@ void show_help()
 }
 
 void entry_shell(){
-    char input[256] = "";
+    char input[256];
+    for (int i = 0; i < 256; i++)
+        input[i] = 0;
     while (1)
     {
         puts("SatoriOS $ ");

@@ -14,7 +14,7 @@ const char *BIRTHDAY = "2022-10-01";
 
 const char *COPYRIGHT = "Copyright (C) 2022 Kogler. All Rights Resevered.\n";
 
-const char *ORIGIN = "The Story Originated on October 1, 2022\n";
+const char *ORIGIN = "The Story Originated on October 1, 2022.\n";
 
 const char *THANKS = "Thanks to the Support of Beijing Jiaotong University.\n";
 

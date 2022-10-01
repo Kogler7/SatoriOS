@@ -37,12 +37,15 @@ $(TGTDIR)%.o : %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(TGTDIR)config.o:
+	@mkdir -p $(TGTDIR)config
 	(cd config; make)
 
 $(TGTDIR)satio.o:
+	@mkdir -p $(TGTDIR)satio
 	(cd satio; make)
 
 $(TGTDIR)shell.o:
+	@mkdir -p $(TGTDIR)shell
 	(cd shell; make)
 
 .PHONY: clean

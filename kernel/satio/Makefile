@@ -1,8 +1,8 @@
 SECNME := satio
 TGTDIR := ../../build/
 INCDIR := ../../include
-SUBDIR := $(TGTDIR)$(SECNME)
-TARGET := $(SUBDIR).o
+SUBDIR := $(TGTDIR)$(SECNME)/
+TARGET := $(TGTDIR)$(SECNME).o
 SOURCE := $(wildcard *.c)
 OBJECTS := $(patsubst %.c, $(SUBDIR)%.o, $(SOURCE))
 
@@ -17,7 +17,6 @@ CFLAGS = -Wall -O2 -g3 -march=loongarch64 -mabi=lp64s\
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	@mkdir -p $(SUBDIR)
 	$(LD) -r -o $(TARGET) $(OBJECTS)
 
 $(SUBDIR)%.o : %.c
