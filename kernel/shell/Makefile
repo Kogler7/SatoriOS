@@ -1,4 +1,4 @@
-SECNME := satio
+SECNME := shell
 TGTDIR := ../../build/
 INCDIR := ../../include
 SUBDIR := $(TGTDIR)$(SECNME)

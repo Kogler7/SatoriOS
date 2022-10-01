@@ -1,4 +1,5 @@
 #include"info.h"
+#include"satio/serial.h"
 
 const char *LABEL = "SatoriOS 0.0.1\n";
 

@@ -1,7 +1,7 @@
 TGTDIR := ../build/
 TARGET := $(TGTDIR)kernel
 SOURCE := $(wildcard *.c)
-SUBOBJS := config.o satio.o
+SUBOBJS := config.o satio.o shell.o
 OBJECTS = $(patsubst %.c, $(TGTDIR)%.o, $(SOURCE))
 OBJECTS += $(patsubst %.o, $(TGTDIR)%.o, $(SUBOBJS))
 
@@ -41,6 +41,9 @@ $(TGTDIR)config.o:
 
 $(TGTDIR)satio.o:
 	(cd satio; make)
+
+$(TGTDIR)shell.o:
+	(cd shell; make)
 
 .PHONY: clean
 

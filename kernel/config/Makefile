@@ -1,8 +1,10 @@
+SECNME := config
 TGTDIR := ../../build/
 INCDIR := ../../include
-TARGET := $(TGTDIR)config.o
+SUBDIR := $(TGTDIR)$(SECNME)
+TARGET := $(SUBDIR).o
 SOURCE := $(wildcard *.c)
-OBJECTS := $(patsubst %.c, $(TGTDIR)%.o, $(SOURCE))
+OBJECTS := $(patsubst %.c, $(SUBDIR)%.o, $(SOURCE))
 
 TOOLPREFIX = loongarch64-unknown-linux-gnu-
 
@@ -15,12 +17,13 @@ CFLAGS = -Wall -O2 -g3 -march=loongarch64 -mabi=lp64s\
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
+	@mkdir -p $(SUBDIR)
 	$(LD) -r -o $(TARGET) $(OBJECTS)
 
-$(TGTDIR)%.o : %.c
+$(SUBDIR)%.o : %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 .PHONY: clean
 
 clean: 
-	rm -rf $(TARGET)
+	rm -rf $(TARGET) $(SUBDIR)
