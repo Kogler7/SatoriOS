@@ -29,7 +29,7 @@ MEM="4G"
 CPUS="1"
 #BIOS="/opt/SatoriVenv/loongarch_bios_0310.bin"
 BIOS="/opt/SatoriVenv/loongarch_bios_0310_debug.bin"
-KERNEL="./output/kernel"
+KERNEL="./build/kernel"
 INITRD="/opt/SatoriVenv/busybox-rootfs.img"
 USE_GRAPHIC="no"
 DEBUG=''
@@ -39,13 +39,13 @@ QEMU="qemu-system-loongarch64"
 while getopts ":b:c:dDghi:k:m:q:" option; do
    case $option in
       b)
-        BIOS=$OPTARG;;
+         BIOS=$OPTARG;;
       c)
-        CPUS=$OPTARG;;
+         CPUS=$OPTARG;;
       d)
-        DEBUG='-s';;
+         DEBUG='-s';;
       D)
-        DEBUG='-s -S';;
+         DEBUG='-s -S';;
       g) 
          USE_GRAPHIC="yes";;
       h) # display Help
@@ -58,20 +58,20 @@ while getopts ":b:c:dDghi:k:m:q:" option; do
       q)
          QEMU=$OPTARG;;
       \?) # invalid option
-        echo "invalid option"
-        exit;;
+         echo "invalid option"
+         exit;;
    esac
 done
 
 if [ $USE_GRAPHIC = "no" ] ; then
-    # run without graphic
-    CMDLINE="root=/dev/ram console=ttyS0,115200 rdinit=/init"
-    GRAPHIC="-vga none -nographic"
+   # run without graphic
+   CMDLINE="root=/dev/ram console=ttyS0,115200 rdinit=/init"
+   GRAPHIC="-vga none -nographic"
 else
-    # run with graphic
-    CMDLINE="root=/dev/ram console=tty0 rdinit=/init"
+   # run with graphic
+   CMDLINE="root=/dev/ram console=tty0 rdinit=/init"
 #    GRAPHIC="-vga virtio -device virtio-keyboard-pci -device virtio-mouse-pci"
-    GRAPHIC="-vga virtio -device qemu-xhci -device usb-kbd -device usb-mouse"
+   GRAPHIC="-vga virtio -device qemu-xhci -device usb-kbd -device usb-mouse"
 fi
 
 set -x

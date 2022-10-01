@@ -1,18 +1,9 @@
-OBJECTS = build/kernel
+TGTDIR := build/
+TARGET := $(TGTDIR)image
 
-TOOLPREFIX = loongarch64-unknown-linux-gnu-
+all: $(TARGET)
 
-LD = $(TOOLPREFIX)ld
-
-LDFLAGS = -z max-page-size=4096
-
-all: build/kernel
-
-image: $(OBJECTS)
-	$(OBJECTS) > image
-# > image means that the output of $(OBJECTS) is redirected to image
-
-build/kernel:
+$(TARGET):
 	@mkdir -p build
 	(cd kernel; make)
 
