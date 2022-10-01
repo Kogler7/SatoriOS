@@ -23,4 +23,4 @@ $(TGTDIR)%.o : %.c
 .PHONY: clean
 
 clean: 
-	rm -f $(TARGET)
+	rm -rf $(TARGET)

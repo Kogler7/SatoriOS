@@ -1,13 +1,11 @@
 TGTDIR := build/
 TARGET := $(TGTDIR)image
 
-all: $(TARGET)
+.PHONY:
 
 $(TARGET):
 	@mkdir -p build
 	(cd kernel; make)
 
-.PHONY: clean
-
 clean: 
-	rm -f build
+	rm -rf build/

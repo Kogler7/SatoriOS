@@ -30,8 +30,6 @@ CFLAGS = -Wall -O2 -g3 -march=loongarch64 -mabi=lp64s\
 
 LDFLAGS = -z max-page-size=4096
 
-all: $(TARGET)
-
 $(TARGET): $(OBJECTS) ld.script
 	$(LD) $(LDFLAGS) -T ld.script -o $(TARGET) $(OBJECTS)
 
@@ -47,4 +45,4 @@ $(TGTDIR)satio.o:
 .PHONY: clean
 
 clean: 
-	rm -f $(TARGET) $(OBJECTS)
+	rm -rf $(TARGET) $(OBJECTS)
