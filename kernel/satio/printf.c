@@ -1,7 +1,7 @@
 // formatted console output -- printf, panic.
 
 #include <stdarg.h>
-#include "serial.h"
+#include "satio/serial.h"
 
 static char digits[] = "0123456789abcdef";
 

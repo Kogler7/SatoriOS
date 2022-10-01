@@ -1,16 +1,4 @@
-#include"../include/satio.h"
-#include"../include/info.h"
-
-void print_info()
-{
-    puts(LOGO);
-    newline();
-    puts(LABEL);
-    newline();
-    puts(COPYRIGHT);
-    puts(THANKS);
-    newline();
-}
+#include"info.h"
 
 void kernel_entry(void *a0, void *a1, void *a2)
 {
