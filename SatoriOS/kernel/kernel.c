@@ -1,6 +1,5 @@
 #include"include/satio.h"
 #include"include/info.h"
-//hahahha
 
 void print_info()
 {
