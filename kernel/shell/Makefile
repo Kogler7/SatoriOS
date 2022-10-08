@@ -12,7 +12,7 @@ CC = $(TOOLPREFIX)gcc
 LD = $(TOOLPREFIX)ld
 
 CFLAGS = -Wall -O2 -g3 -march=loongarch64 -mabi=lp64s\
-	-ffreestanding -fno-common -nostdlib -I$(INCDIR) -fno-stack-protector -fno-pie -no-pie 
+	-ffreestanding -fno-common -nostdlib -I$(INCDIR) -fno-stack-protector -fno-pie -no-pie -D_GNU_SOURCE
 
 all: $(TARGET)
 

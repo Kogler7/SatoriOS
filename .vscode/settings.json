@@ -2,6 +2,8 @@
     "files.associations": {
         "stdio.h": "c",
         "serial.h": "c",
-        "info.h": "c"
+        "info.h": "c",
+        "util.h": "c",
+        "shell.h": "c"
     }
 }

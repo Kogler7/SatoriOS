@@ -1,6 +1,8 @@
 #include"shell.h"
-#include"satio/serial.h"
+// #include<stdio.h>
 #include"util.h"
+#include"satio/printf.h"
+#include"satio/serial.h"
 
 void show_help()
 {
@@ -54,7 +56,9 @@ void entry_shell(){
     while (1)
     {
         puts("SatoriOS $ ");
-        gets(input);
+        printf("SatoriOS $ %d",1);
+        break;
+        // gets(input);
         if (strcmp(input, "help") == 0)
             show_help();
         if (strcmp(input, "exit") == 0)
