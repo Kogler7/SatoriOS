@@ -1,0 +1,98 @@
+#include "util.h"
+#include "satio/printf.h"
+#include "boot/env_init.h"
+#define MAX_PACKAGES 16
+#define EPERM 1
+#define NULL ((void *)0)
+#define EFI_BOOT		0 //efi.h
+#define NR_CPUS CONFIG_NR_CPUS
+#define CONFIG_NR_CPUS	1 //threads.h
+
+#define pr_warn(text) printf(text)
+
+struct BootParamsInterface *efi_bp;
+struct loongsonlist_mem_map *loongson_mem_map;
+struct loongsonlist_vbios *pvbios;
+struct loongson_system_configuration loongson_sysconf;
+
+static int parse_mem(struct _extention_list_hdr *head)
+{
+	loongson_mem_map = (struct loongsonlist_mem_map *)head;
+	if (ext_listhdr_checksum((u8 *)loongson_mem_map, head->length)) {
+		pr_warn("mem checksum error\n");
+		return -EPERM;
+	}
+
+	return 0;
+}
+
+static int parse_vbios(struct _extention_list_hdr *head)
+{
+	// pvbios = (struct loongsonlist_vbios *)head;
+
+	// if (ext_listhdr_checksum((u8 *)pvbios, head->length)) {
+	// 	pr_warn("vbios_addr checksum error\n");
+	// 	return -EPERM;
+	// }
+
+	// loongson_sysconf.vgabios_addr = TO_CAC((unsigned long)pvbios->vbios_addr);
+
+	return 0;
+}
+
+static int parse_screeninfo(struct _extention_list_hdr *head)
+{
+	// struct loongsonlist_screeninfo *pscreeninfo;
+
+	// pscreeninfo = (struct loongsonlist_screeninfo *)head;
+	// if (ext_listhdr_checksum((u8 *)pscreeninfo, head->length)) {
+	// 	pr_warn("screeninfo_addr checksum error\n");
+	// 	return -EPERM;
+	// }
+
+	// memcpy(&screen_info, &pscreeninfo->si, sizeof(screen_info));
+
+	return 0;
+}
+
+static int list_find(struct _extention_list_hdr *head)
+{
+	struct _extention_list_hdr *fhead = head;
+
+	if (fhead == NULL) {
+		pr_warn("the link is empty!\n");
+		return -1;
+	}
+
+	while(fhead != NULL) {
+		if (memcmp(&(fhead->Signature), LOONGSON_MEM_LINKLIST, 3) == 0) {
+			if (parse_mem(fhead) !=0) {
+				pr_warn("parse mem failed\n");
+				return -EPERM;
+			}
+		} else if (memcmp(&(fhead->Signature), LOONGSON_VBIOS_LINKLIST, 5) == 0) {
+			if (parse_vbios(fhead) != 0) {
+				pr_warn("parse vbios failed\n");
+				return -EPERM;
+			}
+		} else if (memcmp(&(fhead->Signature), LOONGSON_SCREENINFO_LINKLIST, 5) == 0) {
+			if (parse_screeninfo(fhead) != 0) {
+				pr_warn("parse screeninfo failed\n");
+				return -EPERM;
+			}
+		}
+		if (fhead->next) 
+			fhead = (struct _extention_list_hdr *)TO_CAC((unsigned long)fhead->next);
+		else
+			fhead = fhead->next;
+	}
+
+	return 0;
+}
+
+void env_init(struct BootParamsInterface *efi_bp){
+    struct _extention_list_hdr *fhead;
+	fhead = efi_bp->ExtList ? (struct _extention_list_hdr *)TO_CAC((unsigned long)efi_bp->ExtList) : NULL;
+	if (list_find(fhead))
+		pr_warn("Scan bootparam failed\n");
+}

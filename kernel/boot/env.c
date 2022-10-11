@@ -117,10 +117,10 @@ static int list_find(struct _extention_list_hdr *head)
 
 static void parse_bpi_flags(void)
 {
-	if (efi_bp->Flags & BPI_FLAGS_UEFI_SUPPORTED)
-		set_bit(EFI_BOOT, &efi.flags);
-	else
-		clear_bit(EFI_BOOT, &efi.flags);
+	// if (efi_bp->Flags & BPI_FLAGS_UEFI_SUPPORTED)
+	// 	set_bit(EFI_BOOT, &efi.flags);
+	// else
+	// 	clear_bit(EFI_BOOT, &efi.flags);
 }
 
 static int get_bpi_version(void *signature)
@@ -143,28 +143,28 @@ static int get_bpi_version(void *signature)
 
 void fw_init_environ(void)
 {
-	struct _extention_list_hdr *fhead;
+	// struct _extention_list_hdr *fhead;
 
-	efi_bp = (struct BootParamsInterface *)_fw_envp;
-	loongson_sysconf.bpi_ver = get_bpi_version(&efi_bp->Signature);
+	// efi_bp = (struct BootParamsInterface *)_fw_envp;
+	// loongson_sysconf.bpi_ver = get_bpi_version(&efi_bp->Signature);
 
-	register_addrs_set(smp_group, TO_UNCAC(0x1fe01000), 16);
-	register_addrs_set(loongson_chipcfg, TO_UNCAC(0x1fe00180), 16);
-	register_addrs_set(loongson_chiptemp, TO_UNCAC(0x1fe0019c), 16);
-	register_addrs_set(loongson_freqctrl, TO_UNCAC(0x1fe001d0), 16);
-	fhead = efi_bp->ExtList ? (struct _extention_list_hdr *)TO_CAC((unsigned long)efi_bp->ExtList) : NULL;
-	if (list_find(fhead))
-		pr_warn("Scan bootparam failed\n");
+	// register_addrs_set(smp_group, TO_UNCAC(0x1fe01000), 16);
+	// register_addrs_set(loongson_chipcfg, TO_UNCAC(0x1fe00180), 16);
+	// register_addrs_set(loongson_chiptemp, TO_UNCAC(0x1fe0019c), 16);
+	// register_addrs_set(loongson_freqctrl, TO_UNCAC(0x1fe001d0), 16);
+	// fhead = efi_bp->ExtList ? (struct _extention_list_hdr *)TO_CAC((unsigned long)efi_bp->ExtList) : NULL;
+	// if (list_find(fhead))
+	// 	pr_warn("Scan bootparam failed\n");
 }
 
 static int init_cpu_fullname(void)
 {
 	int cpu;
 
-	if (loongson_sysconf.cpuname && !strncmp(loongson_sysconf.cpuname, "Loongson", 8)) {
-		for (cpu = 0; cpu < NR_CPUS; cpu++)
-			__cpu_full_name[cpu] = loongson_sysconf.cpuname;
-	}
+	// if (loongson_sysconf.cpuname && !strncmp(loongson_sysconf.cpuname, "Loongson", 8)) {
+	// 	for (cpu = 0; cpu < NR_CPUS; cpu++)
+	// 		__cpu_full_name[cpu] = loongson_sysconf.cpuname;
+	// }
 	return 0;
 }
 arch_initcall(init_cpu_fullname);
