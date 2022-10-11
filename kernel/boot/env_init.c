@@ -8,12 +8,42 @@
 #define NR_CPUS CONFIG_NR_CPUS
 #define CONFIG_NR_CPUS	1 //threads.h
 
+//loongarch.h
+#define CSR_DMW1_VSEG		_CONST64_(0x9000)
+#define CSR_DMW1_BASE		(CSR_DMW1_VSEG << DMW_PABITS)
+#ifndef CAC_BASE
+#define CAC_BASE		CSR_DMW1_BASE
+#endif
+
+#ifndef UNCAC_BASE
+#define UNCAC_BASE		CSR_DMW0_BASE
+#endif
+//addrspace.h
+#define DMW_PABITS	48
+#define TO_PHYS_MASK	((1ULL << DMW_PABITS) - 1)
+#define TO_PHYS(x)		(	      ((x) & TO_PHYS_MASK))
+#define TO_CAC(x)		(CAC_BASE   | ((x) & TO_PHYS_MASK))
+#define TO_UNCAC(x)		(UNCAC_BASE | ((x) & TO_PHYS_MASK))
+//在直接使用地址时也许应该注意类型转换
+
 #define pr_warn(text) printf(text)
 
 struct BootParamsInterface *efi_bp;
 struct loongsonlist_mem_map *loongson_mem_map;
 struct loongsonlist_vbios *pvbios;
 struct loongson_system_configuration loongson_sysconf;
+
+static u8 ext_listhdr_checksum(u8 *buffer, u32 length)
+{
+	u8 sum = 0;
+	u8 *end = buffer + length;
+
+	while (buffer < end) {
+		sum = (u8)(sum + *(buffer++));
+	}
+
+	return (sum);
+}
 
 static int parse_mem(struct _extention_list_hdr *head)
 {
