@@ -18,9 +18,9 @@ char kbdcode2char(int code)
 
 void uart0_interrupt(void)
 {
-  char c;
-  c = r_csr_uartrx();
-  printf("uart interrupt: %c\n\r", c);
+  // char c;
+  // c = r_csr_uartrx();
+  // printf("uart interrupt: %c\n\r", c);
 }
 
 void keyboard_interrupt(void)
