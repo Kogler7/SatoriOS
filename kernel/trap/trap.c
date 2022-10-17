@@ -1,7 +1,7 @@
 #include "satio/printf.h"
 #include "trap/loongarch.h"
 
-//extern void trap_entry(void);
+extern void trap_entry(void);
 
 void timer_interrupt(void)
 {
@@ -9,8 +9,6 @@ void timer_interrupt(void)
     /* ack */
     w_csr_ticlr(r_csr_ticlr() | CSR_TICLR_CLR);
 }
-
-extern trap_entry();
 
 void trap_handler(void)
 {
