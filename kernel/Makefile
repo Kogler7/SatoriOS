@@ -22,10 +22,12 @@ export CFLAGS = -Wall -O2 -g3 \
 export LDFLAGS = -z max-page-size=4096
 
 $(TARGET): $(OBJECTS) ld.script
-	$(LD) $(LDFLAGS) -T ld.script -o $(TARGET) $(OBJECTS)
+	@echo Linking $(TARGET)
+	$(ECHOPRE)$(LD) $(LDFLAGS) -T ld.script -o $(TARGET) $(OBJECTS)
 
 $(TGTDIR)%.o : %.c
-	$(CC) $(CFLAGS) -c -o $@ $<
+	@echo Compiling $<
+	$(ECHOPRE)$(CC) $(CFLAGS) -c -o $@ $<
 
 $(TGTDIR)%.o :
 	@echo -------------------------- == $(subst .o,,$@) == ------------------------------
