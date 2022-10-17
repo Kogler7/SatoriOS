@@ -5,6 +5,7 @@ SUBDIR := $(TGTDIR)$(SECNME)/
 TARGET := $(TGTDIR)$(SECNME).o
 SOURCE := $(wildcard *.c)
 OBJECTS := $(patsubst %.c, $(SUBDIR)%.o, $(SOURCE))
+CFLAGS += -I../../include
 
 all: $(TARGET)
 

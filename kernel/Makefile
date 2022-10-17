@@ -1,7 +1,7 @@
 TGTDIR := ../build/
 TARGET := $(TGTDIR)kernel
 SOURCE := $(wildcard *.c)
-SUBOBJS := config.o satio.o shell.o util.o boot.o trap.o
+SUBOBJS = $(filter %.o, $(patsubst ./%, %.o, $(shell find -maxdepth 1 -type d)))
 OBJECTS = $(patsubst %.c, $(TGTDIR)%.o, $(SOURCE))
 OBJECTS += $(patsubst %.o, $(TGTDIR)%.o, $(SUBOBJS))
 
@@ -26,29 +26,9 @@ $(TARGET): $(OBJECTS) ld.script
 $(TGTDIR)%.o : %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(TGTDIR)config.o:
-	@mkdir -p $(TGTDIR)config
-	(cd config; make)
-
-$(TGTDIR)satio.o:
-	@mkdir -p $(TGTDIR)satio
-	(cd satio; make)
-
-$(TGTDIR)shell.o:
-	@mkdir -p $(TGTDIR)shell
-	(cd shell; make)
-
-$(TGTDIR)util.o:
-	@mkdir -p $(TGTDIR)util
-	(cd util; make)
-
-$(TGTDIR)boot.o:
-	@mkdir -p $(TGTDIR)boot
-	(cd boot; make)
-
-$(TGTDIR)trap.o:
-	@mkdir -p $(TGTDIR)trap
-	(cd trap; make)
+$(TGTDIR)%.o :
+	@mkdir -p $(subst .o,,$@)
+	(cd $(subst $(TGTDIR),,$(subst .o,,$@)); make)
 
 .PHONY: clean
 
