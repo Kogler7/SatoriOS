@@ -1,1 +1,3 @@
 build/
+efi-virtio.rom
+vgabios-virtio.bin
