@@ -4,7 +4,7 @@
 void extioi_init(void)
 {
     iocsr_writeq((0x1UL << UART0_IRQ) | (0x1UL << KEYBOARD_IRQ) | 
-                 (0x1UL << MOUSE_IRQ), LOONGARCH_IOCSR_EXTIOI_EN_BASE);  
+                (0x1UL << MOUSE_IRQ), LOONGARCH_IOCSR_EXTIOI_EN_BASE);  
 
     /* extioi[31:0] map to cpu irq pin INT1, other to INT0 */
     iocsr_writeq(0x01UL,LOONGARCH_IOCSR_EXTIOI_MAP_BASE);

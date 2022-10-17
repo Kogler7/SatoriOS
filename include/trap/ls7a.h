@@ -13,7 +13,7 @@
     
 /* ============== LS7A registers =============== */
 #define LS7A_PCH_REG_BASE       0x10000000UL
-  
+
 #define LS7A_INT_MASK_REG       LS7A_PCH_REG_BASE + 0x020
 #define LS7A_INT_EDGE_REG       LS7A_PCH_REG_BASE + 0x060
 #define LS7A_INT_CLEAR_REG      LS7A_PCH_REG_BASE + 0x080
