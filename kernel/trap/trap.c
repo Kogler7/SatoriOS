@@ -46,13 +46,12 @@ void trap_handler(void)
   unsigned int estat = r_csr_estat();
   unsigned int ecfg = r_csr_ecfg();
 
-
   printf("estat %x, ecfg %x\n\r", estat, ecfg);
   printf("era=%p eentry=%p\n\r", r_csr_era(), r_csr_eentry());
 
   if ((prmd & PRMD_PPLV) != 0)
     printf("kerneltrap: not from privilege0");
-  
+
   if (intr_get() != 0)
     printf("kerneltrap: interrupts enabled");
 
@@ -60,33 +59,38 @@ void trap_handler(void)
   {
     timer_interrupt();
   }
-  else if (estat & ecfg & HWI_VEC) {
-      // hardware interrupt
-      unsigned long irq = extioi_claim();
+  else if (estat & ecfg & HWI_VEC)
+  {
+    // hardware interrupt
+    unsigned long irq = extioi_claim();
 
-      //printf("irq=%x\n", irq);
+    // printf("irq=%x\n", irq);
 
-      if(irq & (1UL << UART0_IRQ)){
-          uart0_interrupt();
-      }
+    if (irq & (1UL << UART0_IRQ))
+    {
+      uart0_interrupt();
+    }
 
-      if(irq & (1UL << KEYBOARD_IRQ)){
-          keyboard_interrupt();
-      }
+    if (irq & (1UL << KEYBOARD_IRQ))
+    {
+      keyboard_interrupt();
+    }
 
-      if(irq & (1UL << MOUSE_IRQ)){
-          mouse_interrupt();
-      }
+    if (irq & (1UL << MOUSE_IRQ))
+    {
+      mouse_interrupt();
+    }
 
-      //ack
-      ls7a_intc_complete(irq);
-      extioi_complete(irq);
-
-  } else {
-      printf("unexpected interrupt\n");
-      while (1);
+    // ack
+    ls7a_intc_complete(irq);
+    extioi_complete(irq);
   }
-  
+  else
+  {
+    printf("unexpected interrupt\n");
+    while (1)
+      ;
+  }
 
   w_csr_era(era);
   w_csr_prmd(prmd);
@@ -99,5 +103,10 @@ void trap_init(void)
   w_csr_ecfg(ecfg);
   w_csr_tcfg(tcfg);
   w_csr_eentry((unsigned long)trap_entry);
+
+  extioi_init();
+  ls7a_intc_init();
+  i8042_init();
+
   intr_on();
 }
