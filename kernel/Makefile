@@ -5,7 +5,8 @@ SUBOBJS = $(filter %.o, $(patsubst ./%, %.o, $(shell find -maxdepth 1 -type d)))
 OBJECTS = $(patsubst %.c, $(TGTDIR)%.o, $(SOURCE))
 OBJECTS += $(patsubst %.o, $(TGTDIR)%.o, $(SUBOBJS))
 
-export TOOLPREFIX = loongarch64-unknown-linux-gnu-
+export ECHOPRE := @
+export TOOLPREFIX := loongarch64-unknown-linux-gnu-
 
 export CC = $(TOOLPREFIX)gcc
 export LD = $(TOOLPREFIX)ld
@@ -27,8 +28,9 @@ $(TGTDIR)%.o : %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(TGTDIR)%.o :
+	@echo -------------------------- == $(subst .o,,$@) == ------------------------------
 	@mkdir -p $(subst .o,,$@)
-	(cd $(subst $(TGTDIR),,$(subst .o,,$@)); make)
+	@(cd $(subst $(TGTDIR),,$(subst .o,,$@)); make)
 
 .PHONY: clean
 

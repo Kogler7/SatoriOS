@@ -10,10 +10,12 @@ CFLAGS += -I../../include
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	$(LD) -r -o $(TARGET) $(OBJECTS)
+	@echo Linking $(TARGET)
+	$(ECHOPRE)$(LD) -r -o $(TARGET) $(OBJECTS)
 
 $(SUBDIR)%.o : %.c
-	$(CC) $(CFLAGS) -c -o $@ $<
+	@echo Compiling $<
+	$(ECHOPRE)$(CC) $(CFLAGS) -c -o $@ $<
 
 .PHONY: clean
 
