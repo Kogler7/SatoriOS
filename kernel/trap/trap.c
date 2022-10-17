@@ -1,4 +1,5 @@
 #include "satio/printf.h"
+#include "satio/serial.h"
 #include "satio/kbdmap.h"
 #include "trap/loongarch.h"
 #include "trap/ls7a.h"
@@ -23,13 +24,18 @@ void uart0_interrupt(void)
   // printf("uart interrupt: %c\n\r", c);
 }
 
+char scan2ascii(int code)
+{
+  return kbd_US[keymap[(unsigned int)code]];
+}
+
 void keyboard_interrupt(void)
 {
   while (kbd_has_data())
   {
     // kbd_buf[i]
     // printf("%x ", kbd_read_byte());
-    printf("%c", &kbd_US[keymap[(unsigned int)(kbd_read_byte())]]);
+    putc(scan2ascii(kbd_read_byte()));
   }
   // printf("key done\n");
 }
@@ -46,8 +52,8 @@ void trap_handler(void)
   unsigned int estat = r_csr_estat();
   unsigned int ecfg = r_csr_ecfg();
 
-  printf("estat %x, ecfg %x\n\r", estat, ecfg);
-  printf("era=%p eentry=%p\n\r", r_csr_era(), r_csr_eentry());
+  // printf("estat %x, ecfg %x\n\r", estat, ecfg);
+  // printf("era=%p eentry=%p\n\r", r_csr_era(), r_csr_eentry());
 
   if ((prmd & PRMD_PPLV) != 0)
     printf("kerneltrap: not from privilege0");
