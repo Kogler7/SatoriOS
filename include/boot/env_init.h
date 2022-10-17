@@ -1,4 +1,4 @@
-#include "boot_param.h"
+#include "boot.h"
 extern struct BootParamsInterface *efi_bp;
 extern struct loongsonlist_mem_map *loongson_mem_map;
 extern struct loongsonlist_vbios *pvbios;

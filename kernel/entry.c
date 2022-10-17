@@ -1,16 +1,17 @@
 #include"info.h"
 #include"shell.h"
-#include "boot_param.h"
+#include "boot.h"
 #include "satio/printf.h"
 #include "boot/env_init.h"
-
+#define NULL ((void *)0)
 
 void handle_bootparams(struct BootParamsInterface *a2){
     env_init(a2);
     int cnt=loongson_mem_map->map_count;
+    printf("%d\n",cnt);
     for (int i=0;i<cnt;i++){
         struct loongson_mem_map *map=&loongson_mem_map->map[i];
-        printf("");
+        printf("------");
     }
 }
 
@@ -32,7 +33,20 @@ void kernel_entry(int a0, char **args, struct BootParamsInterface *a2)
 
     handle_bootparams(a2);
 
+    struct _extention_list_hdr *hdr=a2->ExtList;
+
+    printf("flags:%d\n",a2->Flags);
+
+    while(hdr!=NULL){
+        printf("hdr: %s\n",hdr->Signature);
+
+        hdr=hdr->next;
+        printf("finish\n");
+    }
+
     /* ... read the linux kernel source for how to decode these data */
     // printf("efi memory map at %p\n", a2->memorymap);
-    while(1);
+
+    printf("here\n");
+    // while(1);
 }

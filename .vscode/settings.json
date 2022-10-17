@@ -4,6 +4,7 @@
         "serial.h": "c",
         "info.h": "c",
         "util.h": "c",
-        "shell.h": "c"
+        "shell.h": "c",
+        "printf.h": "c"
     }
 }
