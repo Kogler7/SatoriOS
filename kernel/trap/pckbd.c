@@ -16,7 +16,7 @@ void i8042_init(void)
   /* self test */
   *(volatile unsigned char*)(LS7A_I8042_COMMAND) = 0xAA;
   data = *(volatile unsigned char*)(LS7A_I8042_DATA);
-  printf("keyboard reponse %x\n", data);
+  printf("keyboard response %x\n\r", data);
 
   /* set config byte, enable device and interrupt*/
   *(volatile unsigned char*)(LS7A_I8042_COMMAND) = 0x20;
@@ -27,7 +27,7 @@ void i8042_init(void)
   /* test */
   *(volatile unsigned char*)(LS7A_I8042_COMMAND) = 0xAB;
   data = *(volatile unsigned char*)(LS7A_I8042_DATA);
-  printf("test result %x\n", data);
+  printf("test result %x\n\r", data);
 
   /* enable first port */
   *(volatile unsigned char*)(LS7A_I8042_COMMAND) = 0xAE;
@@ -35,7 +35,7 @@ void i8042_init(void)
   /* reset device */
   *(volatile unsigned char*)(LS7A_I8042_DATA) = 0xFF;
   data = *(volatile unsigned char*)(LS7A_I8042_DATA);
-  printf("reset result %x\n", data);
+  printf("reset result %x\n\r", data);
 }
 
 int kbd_has_data(void)

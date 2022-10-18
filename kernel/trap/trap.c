@@ -13,10 +13,6 @@ void timer_interrupt(void)
   w_csr_ticlr(r_csr_ticlr() | CSR_TICLR_CLR);
 }
 
-char kbdcode2char(int code)
-{
-}
-
 void uart0_interrupt(void)
 {
   // char c;
@@ -47,6 +43,7 @@ void mouse_interrupt(void)
 
 void trap_handler(void)
 {
+  intr_off(); //关中断
   unsigned long era = r_csr_era();
   unsigned long prmd = r_csr_prmd();
   unsigned int estat = r_csr_estat();
@@ -87,23 +84,23 @@ void trap_handler(void)
       mouse_interrupt();
     }
 
-    // ack
+    // acknowledge
     ls7a_intc_complete(irq);
     extioi_complete(irq);
   }
   else
   {
-    printf("unexpected interrupt\n");
-    while (1)
-      ;
+    printf("unexpected interrupt\n\r");
   }
 
   w_csr_era(era);
   w_csr_prmd(prmd);
+  intr_on(); //开中断
 }
 
 void trap_init(void)
 {
+  intr_off();
   unsigned int ecfg = (0U << CSR_ECFG_VS_SHIFT) | HWI_VEC | TI_VEC;
   unsigned long tcfg = 0x10000000UL | CSR_TCFG_EN | CSR_TCFG_PER;
   w_csr_ecfg(ecfg);

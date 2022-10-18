@@ -79,7 +79,7 @@ void printf(char *fmt, ...)
                 putc(*s);
             break;
         case 'c':
-            putc(*va_arg(ap, char*));
+            putc((char)va_arg(ap, char));
             break;
         case '%':
             putc('%');
