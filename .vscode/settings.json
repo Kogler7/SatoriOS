@@ -3,6 +3,8 @@
         "ls7a.h": "c",
         "kbdmap.h": "c",
         "loongarch.h": "c",
-        "printf.h": "c"
+        "printf.h": "c",
+        "boot.h": "c",
+        "mem_block.h": "c"
     }
 }

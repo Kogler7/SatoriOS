@@ -1,13 +1,11 @@
-/* SPDX-License-Identifier: GPL-2.0 */
-/* copied from linux source */
 #ifndef __ASM_BOOT_PARAM_H_
 #define __ASM_BOOT_PARAM_H_
+#include "types.h"
 
-/* add necessary defines */
 typedef unsigned char u8;
 typedef unsigned int u32;
 typedef unsigned long u64;
-#define __packed //duiqi error here
+#define __packed //对齐问题
 // #define __packed __attribute__ ((__packed__))
 
 #define ADDRESS_TYPE_SYSRAM	1
