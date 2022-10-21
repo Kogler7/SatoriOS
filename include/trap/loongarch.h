@@ -1,7 +1,7 @@
 #ifndef __mini_kernel_loongarch_h_
 #define __mini_kernel_loongarch_h_
 
-#include <larchintrin.h>
+#include <gcc/larchintrin.h>
 
 /* interrupt enable bit */
 #define  CSR_CRMD_IE_SHIFT		    2
@@ -17,13 +17,13 @@
 static inline unsigned int r_csr_crmd()
 {
   unsigned int x;
-  asm volatile("csrrd %0, 0x0" : "=r" (x) );
+  __asm volatile("csrrd %0, 0x0" : "=r" (x) );
   return x;
 }
 
 static inline void w_csr_crmd(unsigned int x)
 {
-  asm volatile("csrwr %0, 0x0" : : "r" (x));
+  __asm volatile("csrwr %0, 0x0" : : "r" (x));
 }
 
 #define PRMD_PPLV (3U << 0)  // Previous Privilege
@@ -32,25 +32,25 @@ static inline void w_csr_crmd(unsigned int x)
 static inline unsigned int r_csr_prmd()
 {
   unsigned int x;
-  asm volatile("csrrd %0, 0x1" : "=r" (x) );
+  __asm volatile("csrrd %0, 0x1" : "=r" (x) );
   return x;
 }
 
 static inline void w_csr_prmd(unsigned int x)
 {
-  asm volatile("csrwr %0, 0x1" : : "r" (x));
+  __asm volatile("csrwr %0, 0x1" : : "r" (x));
 }
 
 static inline unsigned long r_csr_era()
 {
   unsigned long x;
-  asm volatile("csrrd %0, 0x6" : "=r" (x) );
+  __asm volatile("csrrd %0, 0x6" : "=r" (x) );
   return x;
 }
 
 static inline void w_csr_era(unsigned long x)
 {
-  asm volatile("csrwr %0, 0x6" : : "r" (x));
+  __asm volatile("csrwr %0, 0x6" : : "r" (x));
 }
 
 /* ESTAT bit 16..21 is ecode field */
@@ -59,7 +59,7 @@ static inline void w_csr_era(unsigned long x)
 static inline unsigned int r_csr_estat()
 {
   unsigned int x;
-  asm volatile("csrrd %0, 0x5" : "=r" (x) );
+  __asm volatile("csrrd %0, 0x5" : "=r" (x) );
   return x;
 }
 
@@ -76,13 +76,13 @@ static inline unsigned int r_csr_estat()
 static inline unsigned int r_csr_ecfg()
 {
   unsigned int x;
-  asm volatile("csrrd %0, 0x4" : "=r" (x) );
+  __asm volatile("csrrd %0, 0x4" : "=r" (x) );
   return x;
 }
 
 static inline void w_csr_ecfg(unsigned int x)
 {
-  asm volatile("csrwr %0, 0x4" : : "r" (x) );
+  __asm volatile("csrwr %0, 0x4" : : "r" (x) );
 }
 
 /* timer interrupt clear */
@@ -91,59 +91,59 @@ static inline void w_csr_ecfg(unsigned int x)
 static inline unsigned int r_csr_ticlr()
 {
   unsigned int x;
-  asm volatile("csrrd %0, 0x44" : "=r" (x) );
+  __asm volatile("csrrd %0, 0x44" : "=r" (x) );
   return x;
 }
 
 static inline void w_csr_ticlr(unsigned int x)
 {
-  asm volatile("csrwr %0, 0x44" : : "r" (x) );
+  __asm volatile("csrwr %0, 0x44" : : "r" (x) );
 }
 
 static inline unsigned long r_csr_eentry()
 {
   unsigned long x;
-  asm volatile("csrrd %0, 0xc" : "=r" (x) );
+  __asm volatile("csrrd %0, 0xc" : "=r" (x) );
   return x;
 }
 
 static inline unsigned long r_csr_tlbrelo0()
 {
   unsigned long x;
-  asm volatile("csrrd %0, 0x8c" : "=r" (x) );
+  __asm volatile("csrrd %0, 0x8c" : "=r" (x) );
   return x;
 }
 
 static inline unsigned long r_csr_tlbrelo1()
 {
   unsigned long x;
-  asm volatile("csrrd %0, 0x8d" : "=r" (x) );
+  __asm volatile("csrrd %0, 0x8d" : "=r" (x) );
   return x;
 }
 
 static inline void w_csr_eentry(unsigned long x)
 {
-  asm volatile("csrwr %0, 0xc" : : "r" (x) );
+  __asm volatile("csrwr %0, 0xc" : : "r" (x) );
 }
 
 static inline void w_csr_tlbrentry(unsigned long x)
 {
-  asm volatile("csrwr %0, 0x88" : : "r" (x) );
+  __asm volatile("csrwr %0, 0x88" : : "r" (x) );
 }
 
 static inline void w_csr_merrentry(unsigned long x)
 {
-  asm volatile("csrwr %0, 0x93" : : "r" (x) );
+  __asm volatile("csrwr %0, 0x93" : : "r" (x) );
 }
 
 static inline void w_csr_stlbps(unsigned int x)
 {
-  asm volatile("csrwr %0, 0x1e" : : "r" (x) );
+  __asm volatile("csrwr %0, 0x1e" : : "r" (x) );
 }
 
 static inline void w_csr_asid(unsigned int x)
 {
-  asm volatile("csrwr %0, 0x18" : : "r" (x) );
+  __asm volatile("csrwr %0, 0x18" : : "r" (x) );
 }
 
 /* timer enable */
@@ -153,7 +153,7 @@ static inline void w_csr_asid(unsigned int x)
 
 static inline void w_csr_tcfg(unsigned long x)
 {
-  asm volatile("csrwr %0, 0x41" : : "r" (x) );
+  __asm volatile("csrwr %0, 0x41" : : "r" (x) );
 }
 
 /* IOCSR */

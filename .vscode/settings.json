@@ -5,6 +5,9 @@
         "loongarch.h": "c",
         "printf.h": "c",
         "boot.h": "c",
-        "mem_block.h": "c"
-    }
+        "mem_block.h": "c",
+        "larchintrin.h": "c",
+        "types.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }

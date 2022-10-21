@@ -8,7 +8,15 @@
 - 采用离散的存储管理方式
 - 采用四级分页结构，每页大小4KB
 - 利用位示图描述物理块信息
+- 设计页表数据结构
+- 启动MMU，设置TLB
+- 研究内存管理算法
 
+## 工作流程
+
+	a.系统初始化代码会在内存中生成页表，然后把页表地址设置给MMU对应寄存器，使MMU知道页表在物理内存中的什么位置，以便在需要时进行查找。之后通过专用指令启动MMU，以此为分界，之后程序中所有内存地址都变成虚地址，MMU硬件开始自动完成查表和虚实地址转换。
+	b.OS初始化后期，创建第一个用户进程，这个过程中也需要创建页表，把其地址赋给进程结构体中某指针成员变量。即每个进程都要有独立的页表。
+	c.用户创建新进程时，子进程拷贝一份父进程的页表，之后随着程序运行，页表内容逐渐更新变化。
 
 
 # 参考资料
@@ -22,6 +30,10 @@
 [(91条消息) Linux内存管理之MMU的过程_布道师Peter的博客-CSDN博客_linux mmu](https://blog.csdn.net/melody157398/article/details/106846311)
 
 [(91条消息) 【Linux】Linux的虚拟内存详解（MMU、页表结构）__kerneler的博客-CSDN博客](https://blog.csdn.net/qq_38350702/article/details/109508057?spm=1001.2101.3001.6650.5&utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-5-109508057-blog-127061728.pc_relevant_3mothn_strategy_and_data_recovery&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-5-109508057-blog-127061728.pc_relevant_3mothn_strategy_and_data_recovery&utm_relevant_index=10)
+
+[(91条消息) 硬件篇之MMU_ipmux的博客-CSDN博客_mmu](https://blog.csdn.net/ipmux/article/details/19167605)
+
+[(91条消息) 深度学习arm MMU一篇就够了_代码改变世界ctw的博客-CSDN博客_smmu granule](https://blog.csdn.net/weixin_42135087/article/details/123573475?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~Rate-1-123573475-blog-19167605.pc_relevant_multi_platform_whitelistv3&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~Rate-1-123573475-blog-19167605.pc_relevant_multi_platform_whitelistv3&utm_relevant_index=1)
 
 # 信息记录
 
