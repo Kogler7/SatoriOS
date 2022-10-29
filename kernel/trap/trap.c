@@ -1,7 +1,7 @@
 #include "satio/printf.h"
 #include "satio/serial.h"
 #include "satio/kbdmap.h"
-#include "trap/loongarch.h"
+#include "loongarch.h"
 #include "trap/ls7a.h"
 
 extern void trap_entry(void);

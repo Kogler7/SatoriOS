@@ -31,16 +31,6 @@ const struct loongsonlist_mem_map mem_map_list = {
 
 u64 bitmap[MAXSPACE / 64 / PAGESIZE] = {0}; //8k*64*4K=0x80000000L
 
-// struct page
-// {
-//     unsigned long flags;
-// };
-
-struct zone
-{
-    int node;
-};
-
 void mem_block_add(u64 mem_start, u64 mem_size)
 {
     if (mem_size < PAGESIZE)

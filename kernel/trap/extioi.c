@@ -1,4 +1,4 @@
-#include "trap/loongarch.h"
+#include "loongarch.h"
 #include "trap/ls7a.h"
 
 void extioi_init(void)
