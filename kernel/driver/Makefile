@@ -1,4 +1,4 @@
-SECNME := mm
+SECNME := driver
 TGTDIR := ../../build/
 INCDIR := ../../include
 SUBDIR := $(TGTDIR)$(SECNME)/

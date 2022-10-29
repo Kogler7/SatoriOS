@@ -2,9 +2,9 @@
 #define __ASM_BOOT_PARAM_H_
 #include "types.h"
 
-typedef unsigned char u8;
-typedef unsigned int u32;
-typedef unsigned long u64;
+// typedef unsigned char u8;
+// typedef unsigned int u32;
+// typedef unsigned long u64;
 #define __packed //对齐问题
 // #define __packed __attribute__ ((__packed__))
 
