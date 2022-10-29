@@ -2,7 +2,6 @@
 
 - TLB配置
 
-
 ## 设计思路
 
 - 采用离散的存储管理方式
@@ -14,10 +13,9 @@
 
 ## 工作流程
 
-	a.系统初始化代码会在内存中生成页表，然后把页表地址设置给MMU对应寄存器，使MMU知道页表在物理内存中的什么位置，以便在需要时进行查找。之后通过专用指令启动MMU，以此为分界，之后程序中所有内存地址都变成虚地址，MMU硬件开始自动完成查表和虚实地址转换。
+    a.系统初始化代码会在内存中生成页表，然后把页表地址设置给MMU对应寄存器，使MMU知道页表在物理内存中的什么位置，以便在需要时进行查找。之后通过专用指令启动MMU，以此为分界，之后程序中所有内存地址都变成虚地址，MMU硬件开始自动完成查表和虚实地址转换。
 	b.OS初始化后期，创建第一个用户进程，这个过程中也需要创建页表，把其地址赋给进程结构体中某指针成员变量。即每个进程都要有独立的页表。
 	c.用户创建新进程时，子进程拷贝一份父进程的页表，之后随着程序运行，页表内容逐渐更新变化。
-
 
 # 参考资料
 
@@ -34,6 +32,21 @@
 [(91条消息) 硬件篇之MMU_ipmux的博客-CSDN博客_mmu](https://blog.csdn.net/ipmux/article/details/19167605)
 
 [(91条消息) 深度学习arm MMU一篇就够了_代码改变世界ctw的博客-CSDN博客_smmu granule](https://blog.csdn.net/weixin_42135087/article/details/123573475?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~Rate-1-123573475-blog-19167605.pc_relevant_multi_platform_whitelistv3&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~Rate-1-123573475-blog-19167605.pc_relevant_multi_platform_whitelistv3&utm_relevant_index=1)
+
+- 龙芯地址路由
+
+[(94条消息) 龙芯3B处理器—地址映射以及路由地址分布与配置_hansome913的博客-CSDN博客](https://blog.csdn.net/hansome913/article/details/51476492)
+
+[(94条消息) 国产处理器龙芯地址空间详解_qq_26989627的博客-CSDN博客](https://blog.csdn.net/qq_26989627/article/details/109107667?spm=1001.2101.3001.6650.4&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-4-109107667-blog-51476492.pc_relevant_multi_platform_whitelistv4&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-4-109107667-blog-51476492.pc_relevant_multi_platform_whitelistv4&utm_relevant_index=5)
+
+[(94条消息) 龙芯内核启动流程（一）_Hacker_Albert的博客-CSDN博客](https://blog.csdn.net/weixin_41028621/article/details/108809089)
+
+![1666788424798](image/memory/1666788424798.png)
+
+> 系统加电启动后，任何MIPS Core都是从系统的虚拟地址0xbfc00000(BIOS入口地址)启动的，其对应的物理地址为0x1FC00000。因为上述地址处于kseg1中，所以此时系统不需要TLB映射就能够运行（这段空间通过去掉最高的三位来获得物理地址）。CPU从物理地址0x1FC00000开始取第一条指令，这个地址在硬件上已经确定为FLASH（BIOS）的位置，BIOS将Linux内核镜像文件拷贝到RAM中某个空闲地址（LOAD地址）处，然后一般有个内存移动的操作（Entry point(EP)的地址），最后BIOS跳转到EP指定的地址运行，此时开始运行Linux kernel。
+> ————————————————
+> 版权声明：本文为CSDN博主「Hacker_Albert」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+> 原文链接：https://blog.csdn.net/weixin_41028621/article/details/108809089
 
 # 信息记录
 

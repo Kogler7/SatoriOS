@@ -10,6 +10,13 @@ void memset(void *ptr, char c, unsigned long size)
     }
 }
 
+// void *memset(void *s, int c, unsigned int n){
+//     char *xs = (char *)s;
+//     while (n--)
+//         *xs++ = c;
+//     return s;
+// }
+
 int memcmp(void *ptr1, void *ptr2, unsigned long size)
 {
     char *p1 = (char*)ptr1;
