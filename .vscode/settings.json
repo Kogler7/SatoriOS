@@ -7,7 +7,8 @@
         "boot.h": "c",
         "mem_block.h": "c",
         "larchintrin.h": "c",
-        "types.h": "c"
+        "types.h": "c",
+        "shell.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

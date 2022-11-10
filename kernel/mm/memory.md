@@ -60,6 +60,8 @@ TLB是translation lookaside buffer的简称。首先，我们知道MMU的作用�
 
 [从零开始的ARMv8操作系统内核实践 3 为内核启动MMU - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/435684493)
 
+[(95条消息) 深入浅出MIPS 二 MIPS的内存映射 ._myxmu的博客-CSDN博客](https://blog.csdn.net/myxmu/article/details/10513207?spm=1001.2101.3001.6650.2&utm_medium=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-2-10513207-blog-8630681.pc_relevant_3mothn_strategy_and_data_recovery&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-2-10513207-blog-8630681.pc_relevant_3mothn_strategy_and_data_recovery&utm_relevant_index=3)
+
 # 信息记录
 
 ## MEM_MAP
