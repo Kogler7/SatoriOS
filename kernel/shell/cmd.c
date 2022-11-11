@@ -98,7 +98,6 @@ shell_cmd shell_cmds[SHELL_CMD_MAX] = {
                 .desc = "show boot information",
             }
         },
-        },
         .func = 0
     },
     {

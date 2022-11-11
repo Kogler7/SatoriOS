@@ -280,5 +280,8 @@ extern unsigned int keymap[512];
 extern char kbd_US[128];
 extern char kbd_US_up[128];
 
-
-#define KBD_CBK_MAX 8
+#define KBD_CBK_MAX     8
+#define CAPS_LOCK       1
+#define CAPS_UNLOCK     0
+#define KEY_DOWN        1
+#define KEY_UP          0

@@ -1,3 +1,5 @@
+#include "trap/ls7a.h"
+
 void ls7a_i8042_init(void)
 {
     unsigned char data;
@@ -10,7 +12,7 @@ void ls7a_i8042_init(void)
     /* self test */
     *(volatile unsigned char *)(LS7A_I8042_COMMAND) = 0xAA;
     data = *(volatile unsigned char *)(LS7A_I8042_DATA);
-    printf("keyboard response %x\n\r", data);
+    printf("kbd: keyboard response %x\n\r", data);
 
     /* set config byte, enable device and interrupt*/
     *(volatile unsigned char *)(LS7A_I8042_COMMAND) = 0x20;
@@ -21,7 +23,7 @@ void ls7a_i8042_init(void)
     /* test */
     *(volatile unsigned char *)(LS7A_I8042_COMMAND) = 0xAB;
     data = *(volatile unsigned char *)(LS7A_I8042_DATA);
-    printf("test result %x\n\r", data);
+    printf("kbd: test result %x\n\r", data);
 
     /* enable first port */
     *(volatile unsigned char *)(LS7A_I8042_COMMAND) = 0xAE;
@@ -29,5 +31,5 @@ void ls7a_i8042_init(void)
     /* reset device */
     *(volatile unsigned char *)(LS7A_I8042_DATA) = 0xFF;
     data = *(volatile unsigned char *)(LS7A_I8042_DATA);
-    printf("reset result %x\n\r", data);
+    printf("kbd: reset result %x\n\r", data);
 }
