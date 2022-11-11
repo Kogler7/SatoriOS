@@ -276,12 +276,20 @@
 #define C_58	CONFLICT(	KEY_CAPSLOCK,	KEY_RIGHTCTRL	)
 #define C_61	CONFLICT(	KEY_102ND,	KEY_LEFT	)
 
+#define KBD_CBK_MAX      8
+#define CAPS_LOCK        1
+#define CAPS_UNLOCK      0
+#define KEY_STATE_DOWN   1
+#define KEY_STATE_UP     0
+
 extern unsigned int keymap[512];
 extern char kbd_US[128];
-extern char kbd_US_up[128];
+extern char kbd_US_shift[128];
 
-#define KBD_CBK_MAX     8
-#define CAPS_LOCK       1
-#define CAPS_UNLOCK     0
-#define KEY_DOWN        1
-#define KEY_UP          0
+extern int shift_state;
+extern int ctrl_state;
+extern int alt_state;
+extern int caps_lock_state;
+
+int register_kbd_cbk(void (*cbk_func)(char, int));
+void unregister_kbd_cbk(int cbk_id);

@@ -9,7 +9,8 @@
         "larchintrin.h": "c",
         "types.h": "c",
         "shell.h": "c",
-        "info.h": "c"
+        "info.h": "c",
+        "kbd.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

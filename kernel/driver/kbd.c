@@ -5,8 +5,9 @@
 
 #pragma GCC diagnostic ignored "-Warray-bounds"
 
-int kbd_status[128] = {0};
-int kbd_status_shift = 0;
+int shift_state = KEY_STATE_UP;
+int ctrl_state = KEY_STATE_UP;
+int alt_state = KEY_STATE_UP;
 int caps_lock_state = CAPS_UNLOCK;
 
 void (*cbk_table[KBD_CBK_MAX])(char, int) = {0};
@@ -18,10 +19,22 @@ int register_kbd_cbk(void (*cbk_func)(char, int))
         if (cbk_table[i] == 0)
         {
             cbk_table[i] = cbk_func;
-            return 0;
+            return i;
         }
     }
     return -1;
+}
+
+void unregister_kbd_cbk(int cbk_id)
+{
+    if (cbk_id >= 0 && cbk_id < KBD_CBK_MAX)
+    {
+        cbk_table[cbk_id] = 0;
+    }
+    for (; cbk_id < KBD_CBK_MAX - 1; cbk_id++)
+    {
+        cbk_table[cbk_id] = cbk_table[cbk_id + 1];
+    }
 }
 
 void invoke_kbd_cbk(char key, int state)
@@ -54,54 +67,52 @@ char scan2ascii(int code)
 void handle_kbd_irq(void)
 {
     unsigned char status = *(volatile unsigned char *)(LS7A_I8042_STATUS);
-    unsigned char data = *(volatile unsigned char *)(LS7A_I8042_DATA);
-    if (status & 0x80)
+    unsigned char code = *(volatile unsigned char *)(LS7A_I8042_DATA);
+    unsigned char key_no = keymap[(unsigned int)code];
+
+    int key_state = KEY_STATE_DOWN;
+
+    if (status & 0x80) // 0x80待定
     {
-        // printf("keyboard error: %x\n", data);
+        // 键盘错误
+        printf("keyboard error: %x\n", key);
         return;
     }
-    if (data == 0xe0)
+
+    if (key_no == KEY_INSERT)
     {
-        kbd_status_shift = 1;
-        return;
+        key_no = keymap[(unsigned int)kbd_read_byte()];
+        key_state = KEY_STATE_UP;
     }
-    if (kbd_status_shift)
+
+    if (key_no == KEY_LEFTSHIFT || key_no == KEY_RIGHTSHIFT)
     {
-        kbd_status_shift = 0;
-        data += 128;
+        shift_state = key_state;
     }
-    if (data == 0x3a)
+    else if (key_no == KEY_LEFTCTRL || key_no == KEY_RIGHTCTRL)
+    {
+        ctrl_state = key_state;
+    }
+    else if (key_no == KEY_LEFTALT || key_no == KEY_RIGHTALT)
+    {
+        alt_state = key_state;
+    }
+    else if (key_no == KEY_CAPSLOCK && key_state == KEY_STATE_DOWN)
     {
         caps_lock_state = !caps_lock_state;
-        return;
-    }
-    if (data == 0x2a || data == 0x36)
-    {
-        kbd_status_shift = 1;
-        return;
-    }
-    if (data == 0xaa || data == 0xb6)
-    {
-        kbd_status_shift = 0;
-        return;
-    }
-    if (kbd_status[data] == 0)
-    {
-        kbd_status[data] = 1;
-        char key = scan2ascii(data);
-        if (caps_lock_state == CAPS_LOCK)
-        {
-            if (key >= 'a' && key <= 'z')
-            {
-                key = key - 'a' + 'A';
-            }
-        }
-        invoke_kbd_cbk(key, 1);
     }
     else
     {
-        kbd_status[data] = 0;
-        char key = scan2ascii(data);
+        char key;
+        if (shift_state == KEY_STATE_DOWN)
+        {
+            key = kbd_US_shift[key_no];
+        }
+        else
+        {
+            key = kbd_US[key_no];
+        }
+
         if (caps_lock_state == CAPS_LOCK)
         {
             if (key >= 'a' && key <= 'z')
@@ -109,29 +120,6 @@ void handle_kbd_irq(void)
                 key = key - 'a' + 'A';
             }
         }
-        invoke_kbd_cbk(key, 0);
-    }
-}
-
-void handle_kbd_irq()
-{
-    while (kbd_has_data())
-    {
-        char key = scan2ascii(kbd_read_byte());
-        for(int i=0;i<KBD_CBK_MAX;i++)
-        {
-            if(cbk_table[i]!=0)
-            {
-                if(kbd_status_shift)
-                {
-                    cbk_table[i](key, KBD_SHIFT);
-                }
-                else
-                {
-                    cbk_table[i](key, KBD_NORMAL);
-                }
-                cbk_table[i](key, 1);
-            }
-        }
+        invoke_kbd_cbk(key, key_state);
     }
 }
