@@ -8,7 +8,8 @@
         "mem_block.h": "c",
         "larchintrin.h": "c",
         "types.h": "c",
-        "shell.h": "c"
+        "shell.h": "c",
+        "info.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

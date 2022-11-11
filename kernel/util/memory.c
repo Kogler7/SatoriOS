@@ -10,13 +10,6 @@ void memset(void *ptr, char c, unsigned long size)
     }
 }
 
-// void *memset(void *s, int c, unsigned int n){
-//     char *xs = (char *)s;
-//     while (n--)
-//         *xs++ = c;
-//     return s;
-// }
-
 int memcmp(void *ptr1, void *ptr2, unsigned long size)
 {
     char *p1 = (char*)ptr1;
@@ -29,4 +22,16 @@ int memcmp(void *ptr1, void *ptr2, unsigned long size)
         p2++;
     }
     return 1;
+}
+
+void memcpy(void *ptr1, void *ptr2, unsigned long size)
+{
+    char *p1 = (char*)ptr1;
+    char *p2 = (char*)ptr2;
+    while (size--)
+    {
+        *p1 = *p2;
+        p1++;
+        p2++;
+    }
 }

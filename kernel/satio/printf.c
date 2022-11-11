@@ -6,7 +6,7 @@
 static char digits[] = "0123456789abcdef";
 
 static void
-printint(int xx, int base, int sign)
+print_int(int xx, int base, int sign)
 {
     char buf[16];
     int i;
@@ -31,7 +31,7 @@ printint(int xx, int base, int sign)
 }
 
 static void
-printptr(unsigned long x)
+print_ptr(unsigned long x)
 {
     int i;
     putc('0');
@@ -40,7 +40,7 @@ printptr(unsigned long x)
         putc(digits[x >> (sizeof(unsigned long) * 8 - 4)]);
 }
 
-// Print to the serial port. only understands %d, %x, %p, %s.
+// Print to the serial port. only understands %d, %x, %p, %s, %c.
 void printf(char *fmt, ...)
 {
     va_list ap;
@@ -64,13 +64,13 @@ void printf(char *fmt, ...)
         switch (c)
         {
         case 'd':
-            printint(va_arg(ap, int), 10, 1);
+            print_int(va_arg(ap, int), 10, 1);
             break;
         case 'x':
-            printint(va_arg(ap, int), 16, 1);
+            print_int(va_arg(ap, int), 16, 1);
             break;
         case 'p':
-            printptr(va_arg(ap, unsigned long));
+            print_ptr(va_arg(ap, unsigned long));
             break;
         case 's':
             if ((s = va_arg(ap, char *)) == 0)
