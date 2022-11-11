@@ -1,9 +1,11 @@
-#include"info.h"
-#include"satio/serial.h"
+#include "info.h"
+#include "satio/serial.h"
 
 const char *LABEL = "SatoriOS\n\r";
 
-const char* VERSION = "SatoriOS 0.0.1\n\r";
+const char *AUTHOR = "Kogler\n\r";
+
+const char *VERSION = "SatoriOS 0.0.1\n\r";
 
 const char *LOGO =
     "   _____       __             _    ____  _____\n\r"

@@ -1,5 +1,6 @@
 #include "shell.h"
 #include "info.h"
+#include "satio/printf.h"
 
 void show_help()
 {

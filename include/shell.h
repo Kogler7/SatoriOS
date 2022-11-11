@@ -29,5 +29,5 @@ extern param_unit param_buff[CMD_PARAM_MAX];
 void entry_shell();
 void show_help();
 
-int has_param()
+int has_param();
 char* get_param(char sign);
