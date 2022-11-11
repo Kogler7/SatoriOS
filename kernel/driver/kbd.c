@@ -75,7 +75,7 @@ void handle_kbd_irq(void)
     if (status & 0x80) // 0x80待定
     {
         // 键盘错误
-        printf("keyboard error: %x\n", key);
+        printf("keyboard error: %x\n", key_no);
         return;
     }
 
