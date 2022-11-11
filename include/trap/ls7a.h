@@ -1,5 +1,5 @@
-#ifndef __mini_kernel_ls7a_h_
-#define __mini_kernel_ls7a_h_
+#ifndef __ls7a_h_
+#define __ls7a_h_
 
 #define UART0 0x1fe001e0UL
 #define UART0_IRQ 2

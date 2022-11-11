@@ -7,8 +7,7 @@
 
 #pragma GCC diagnostic ignored "-Warray-bounds"
 
-void
-ls7a_intc_init(void)
+void ls7a_intc_init(void)
 {
   /* enable uart0/keyboard/mouse */
   *(volatile unsigned long*)(LS7A_INT_MASK_REG) = ~((0x1UL << UART0_IRQ) | (0x1UL << KEYBOARD_IRQ) | (0x1UL << MOUSE_IRQ));
@@ -25,8 +24,7 @@ ls7a_intc_init(void)
 }
 
 // tell the apic we've served this IRQ.
-void
-ls7a_intc_complete(unsigned long irq)
+void ls7a_intc_complete(unsigned long irq)
 {
   *(volatile unsigned long*)(LS7A_INT_CLEAR_REG) = (irq);
 }
