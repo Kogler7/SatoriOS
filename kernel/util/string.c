@@ -1,4 +1,4 @@
-#include"util.h"
+#include "util.h"
 
 int strcmp(const char *str1, const char *str2)
 {
@@ -12,7 +12,6 @@ int strcmp(const char *str1, const char *str2)
     if (*str1 != *str2)
         return 1;
     return 0;
-
 }
 
 int strcpy(char *dst, const char *src)

@@ -1,13 +1,5 @@
 #include "boot.h"
-
-#define NULL ((void *)0)
-#define PAGESIZE 4096
-#define MAXSPACE 0x80000000L
-
-#define SYSTEM_RAM 1
-#define MEM_RESERVED 2
-#define ACPI_TABLE 3
-#define ACPI_NVS 4
+#include "mm/mm.h"
 
 const struct loongsonlist_mem_map mem_map_list = {
     {0, 0, 0, 0},
@@ -29,16 +21,14 @@ const struct loongsonlist_mem_map mem_map_list = {
         {(u32)1, (u64)0xfeb60000, (u64)0x003b0000},
         {(u32)1, (u64)0xfff90000, (u64)0x00050000}}};
 
-u64 bitmap[MAXSPACE / 64 / PAGESIZE] = {0}; //8k*64*4K=0x80000000L
-
 void mem_block_add(u64 mem_start, u64 mem_size)
 {
-    if (mem_size < PAGESIZE)
+    if (mem_size < PAGE_SIZE)
         return;
-    u64 start = mem_start / PAGESIZE;
-    u64 end = (mem_start + mem_size) / PAGESIZE;
-    if (end > MAXSPACE / PAGESIZE)
-        end = MAXSPACE / PAGESIZE;
+    u64 start = mem_start / PAGE_SIZE;
+    u64 end = (mem_start + mem_size) / PAGE_SIZE;
+    if (end > MAXSPACE / PAGE_SIZE)
+        end = MAXSPACE / PAGE_SIZE;
     for (u64 i = start; i < end; i++)
     {
         bitmap[i / 64] |= (1UL << (i % 64));
@@ -62,65 +52,3 @@ void mem_block_init(struct loongsonlist_mem_map *mem_map)
         }
     }
 }
-
-void mem_init()
-{
-}
-
-void buffer_init()
-{
-}
-
-void* get_free_page()
-{
-    for (u64 i = 0; i < MAXSPACE / 64 / PAGESIZE; i++)
-    {
-        if (bitmap[i] != 0xffffffffffffffff)
-        {
-            for (u64 j = 0; j < 64; j++)
-            {
-                if ((bitmap[i] & (1UL << j)) == 0)
-                {
-                    bitmap[i] |= (1UL << j);
-                    return (void *)(i * 64 * PAGESIZE + j * PAGESIZE);
-                }
-            }
-        }
-    }
-    return NULL;
-}
-
-int put_page()
-{
-    return 0;
-}
-
-int free_page(void* addr)
-{
-    u64 i = (u64)addr / PAGESIZE;
-    bitmap[i / 64] &= ~(1UL << (i % 64));
-    return 0;
-}
-
-//buddy system
-// #define MAXORDER 11
-// struct page{
-//     //mem page struct
-//     unsigned long flags;
-//     unsigned long _count;
-
-// };
-// struct list_head
-// {
-//     struct list_head *next, *prev;
-
-// };
-// struct free_area
-// {
-    
-// };
-
-// struct page *alloc_pages(int order)
-// {
-//     return NULL;
-// }

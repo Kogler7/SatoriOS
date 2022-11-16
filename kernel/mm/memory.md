@@ -39,6 +39,8 @@
 
 [(94条消息) 国产处理器龙芯地址空间详解_qq_26989627的博客-CSDN博客](https://blog.csdn.net/qq_26989627/article/details/109107667?spm=1001.2101.3001.6650.4&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-4-109107667-blog-51476492.pc_relevant_multi_platform_whitelistv4&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-4-109107667-blog-51476492.pc_relevant_multi_platform_whitelistv4&utm_relevant_index=5)
 
+[(99条消息) 龙芯64bit地址空间_Life_Maze的博客-CSDN博客](https://blog.csdn.net/Life_Maze/article/details/97916874?spm=1001.2101.3001.6650.16&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-16-97916874-blog-109107667.pc_relevant_aa&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-16-97916874-blog-109107667.pc_relevant_aa&utm_relevant_index=17)
+
 [(94条消息) 龙芯内核启动流程（一）_Hacker_Albert的博客-CSDN博客](https://blog.csdn.net/weixin_41028621/article/details/108809089)
 
 ![1666788424798](image/memory/1666788424798.png)
@@ -52,7 +54,7 @@
 
 [TLB原理 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/108425561)
 
-TLB是translation lookaside buffer的简称。首先，我们知道MMU的作用是把虚拟地址转换成物理地址。虚拟地址和物理地址的映射关系存储在页表中，而现在页表又是分级的。64位系统一般都是3~5级。常见的配置是4级页表，就以4级页表为例说明。分别是`PGD、PUD、PMD、PTE`四级页表。在硬件上会有一个叫做页表基地址寄存器，它存储PGD页表的首地址。MMU就是根据页表基地址寄存器从PGD页表一路查到PTE，最终找到物理地址(PTE页表中存储物理地址)。
+TLB是translation lookaside buffer的简称。首先，我们知道MMU的作用是把虚拟地址转换成物理地址。虚拟地址和物理地址的映射关系存储在页表中，而现在页表又是分级的。64位系统一般都是3~5级。常见的配置是4级页表，就以4级页表为例说明。分别是 `PGD、PUD、PMD、PTE`四级页表。在硬件上会有一个叫做页表基地址寄存器，它存储PGD页表的首地址。MMU就是根据页表基地址寄存器从PGD页表一路查到PTE，最终找到物理地址(PTE页表中存储物理地址)。
 
 ![img](https://pic4.zhimg.com/80/v2-70f03a91b02fe51cced8cb57fa30d84b_720w.webp)
 
@@ -61,6 +63,10 @@ TLB是translation lookaside buffer的简称。首先，我们知道MMU的作用�
 [从零开始的ARMv8操作系统内核实践 3 为内核启动MMU - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/435684493)
 
 [(95条消息) 深入浅出MIPS 二 MIPS的内存映射 ._myxmu的博客-CSDN博客](https://blog.csdn.net/myxmu/article/details/10513207?spm=1001.2101.3001.6650.2&utm_medium=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-2-10513207-blog-8630681.pc_relevant_3mothn_strategy_and_data_recovery&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-2-10513207-blog-8630681.pc_relevant_3mothn_strategy_and_data_recovery&utm_relevant_index=3)
+
+[(99条消息) 内存算法-伙伴(buddy)算法_才不是本人的博客-CSDN博客_伙伴算法的优缺点](https://blog.csdn.net/helloworld_ptt/article/details/115599230)
+
+[(99条消息) 伙伴分配器(buddy allocator)和slab_birate_小小人生的博客-CSDN博客_伙伴分配器](https://blog.csdn.net/u014183456/article/details/122031750?spm=1001.2101.3001.6650.9&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-9-122031750-blog-127184863.pc_relevant_recovery_v2&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-9-122031750-blog-127184863.pc_relevant_recovery_v2&utm_relevant_index=10)
 
 # 信息记录
 
