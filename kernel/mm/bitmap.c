@@ -77,7 +77,7 @@ void print_bitmap(byte *bitmap, int size)
         for (int j = 0; j < 8; j++)
             printf("%d", (bitmap[i] >> j) & 1);
         printf(" ");
-        if(i % 4 == 3)
+        if (i % 4 == 3)
             printf("\n");
     }
 }

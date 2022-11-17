@@ -15,7 +15,7 @@
 #define END_ADDR        0x160000000
 #define MAX_SPACE       (END_ADDR - START_ADDR)
 
-#define MAX_ORDER       11
+#define MAX_ORDER       18  // 2^18 = 256 Pages = 1GB
 #define LIST_LEN        100
 
 #include "types.h"
@@ -26,10 +26,10 @@
 #include "satio/printf.h"
 
 #define mm_warn(fmt, ...) \
-    printf("mm warning: " fmt, ##__VA_ARGS__)
+    printf("mm warning: %s" fmt, ##__VA_ARGS__)
 
 #define mm_error(fmt, ...) \
-    printf("mm error: " fmt, ##__VA_ARGS__)
+    printf("mm error: %s" fmt, ##__VA_ARGS__)
 
 #endif // __PRINTF_H__
 #endif  // _MM_H_

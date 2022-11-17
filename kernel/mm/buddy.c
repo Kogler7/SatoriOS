@@ -1,8 +1,6 @@
 #include "types.h"
 #include "mm/mm.h"
 
-// 利用数组实现双向链表
-
 typedef struct page
 {
     void *addr;

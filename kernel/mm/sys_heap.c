@@ -15,7 +15,12 @@ void *sys_heap_alloc(unsigned int size)
     else
         index = alloc_aligned_bits(sys_heap_bitmap, sys_heap_bitmap_size, size, last);
     if (index == -1)
+        mm_error("The system heap is out of memory.");
         return NULL;
+#ifdef __SATORI_DEBUG_
+    if (last > map_size * 0.8)
+        mm_warn("The system heap is almost full.");
+#endif // __SATORI_DEBUG_
     return sys_heap + index;
 }
 
@@ -43,7 +48,6 @@ void *sys_heap_calloc(unsigned int size)
     void *addr = sys_heap_alloc(size);
     if (addr == NULL)
         return NULL;
-
     memset(addr, 0, size);
     return addr;
 }
