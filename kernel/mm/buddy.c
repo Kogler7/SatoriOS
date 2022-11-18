@@ -8,7 +8,7 @@ void init_buddy()
     buddy_root.right = NULL;
     buddy_root.order = MAX_ORDER;
     buddy_root.state = FREE;
-    buddy_root.start = USER_START_ADDR;
+    buddy_root.start = (void*)USER_START_ADDR;
 }
 
 int split_buddy(buddy_node *node)
@@ -60,7 +60,7 @@ buddy_node *alloc_buddy(buddy_node *root, int order)
             if (split_buddy(root) == -1)
                 return NULL;
         }
-        int ret = alloc_buddy(root->left, order);
+        void* ret = alloc_buddy(root->left, order);
         if (ret == NULL)
             ret = alloc_buddy(root->right, order);
         return ret;

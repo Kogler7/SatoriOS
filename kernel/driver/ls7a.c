@@ -1,4 +1,5 @@
 #include "trap/ls7a.h"
+#include "satio/printf.h"
 
 void ls7a_i8042_init(void)
 {

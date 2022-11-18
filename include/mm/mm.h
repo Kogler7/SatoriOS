@@ -27,8 +27,8 @@
 #include "satio/printf.h"
 
 #define mm_info(fmt, ...) \
-    printf("[MM] | INFO | ");   \
-    printf(fmt, ##__VA_ARGS__)  \
+    printf("[MM] | INFO | ");    \
+    printf(fmt, ##__VA_ARGS__);  \
     printf("\n");
 
 #define mm_warn(fmt, ...) \

@@ -11,15 +11,19 @@ void *sys_heap_alloc(unsigned int size)
     static int last = 0;
     int index;
     if (size < SYS_HEAP_ALLOC_THRESHOLD)
-        index = alloc_bits(sys_heap_bitmap, sys_heap_bitmap_size, size, last);
+        index = alloc_bits(sys_heap_bitmap, sys_heap_bitmap_size, size, &last);
     else
-        index = alloc_aligned_bits(sys_heap_bitmap, sys_heap_bitmap_size, size, last);
+        index = alloc_aligned_bits(sys_heap_bitmap, sys_heap_bitmap_size, size, &last);
     if (index == -1)
+    {
         mm_error("The system heap is out of memory.");
         return NULL;
+    }
 #ifdef __SATORI_DEBUG_
-    if (last > map_size * 0.8)
+    if (last > sys_heap_bitmap_size * 0.8)
+    {
         mm_warn("The system heap is almost full.");
+    }
 #endif // __SATORI_DEBUG_
     return sys_heap + index;
 }

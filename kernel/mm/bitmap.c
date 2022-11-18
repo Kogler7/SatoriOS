@@ -1,6 +1,7 @@
 #include "mm/bitmap.h"
+#include "satio/printf.h"
 
-void set_bit(byte *bitmap, int index, const byte value = 1)
+void set_bit(byte *bitmap, int index, const byte value)
 {
     if (value == 0)
         bitmap[index / 8] &= ~(1 << (index % 8));
@@ -29,7 +30,7 @@ int alloc_bits(byte *bitmap, int map_size, int size, int *last)
     }
     *last = i * 8 + j;
     for (int l = 0; l < size; l++)
-        set_bit(bitmap, *last - l - 1);
+        set_bit(bitmap, *last - l - 1, 1);
     return *last - size;
 }
 
