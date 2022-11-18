@@ -2,6 +2,7 @@
 #include "satio/serial.h"
 #include "loongarch.h"
 #include "trap/ls7a.h"
+#include "trap/trap.h"
 #include "driver/kbd.h"
 
 extern void trap_entry(void);

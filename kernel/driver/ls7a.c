@@ -1,6 +1,8 @@
 #include "trap/ls7a.h"
 #include "satio/printf.h"
 
+#pragma GCC diagnostic ignored "-Warray-bounds"
+
 void ls7a_i8042_init(void)
 {
     unsigned char data;

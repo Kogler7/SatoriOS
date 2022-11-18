@@ -14,9 +14,9 @@
 #define SYS_HEAP_SIZE   0x4000000  // 64MB 
 
 #define USER_START_ADDR 0x90000000
-#define KMEM_START_ADDR 0x160000000
+#define KMEM_START_ADDR 0xD0000000
 
-#define MAX_ORDER       19  // 2^19 = 512 Pages = 2GB
+#define MAX_ORDER       18  // 2^19 = 512 Pages = 2GB
 
 #include "types.h"
 #include "utils.h"

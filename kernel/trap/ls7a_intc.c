@@ -1,5 +1,6 @@
 #include "loongarch.h"
 #include "trap/ls7a.h"
+#include "trap/trap.h"
 
 //
 // the loongarch 7A1000 I/O Interrupt Controller Registers.

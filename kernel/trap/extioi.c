@@ -1,5 +1,6 @@
 #include "loongarch.h"
 #include "trap/ls7a.h"
+#include "trap/trap.h"
 
 void extioi_init(void)
 {

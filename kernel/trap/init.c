@@ -1,8 +1,5 @@
 #include "loongarch.h"
-
-extern void extioi_init();
-extern void ls7a_intc_init();
-extern void ls7a_i8042_init();
+#include "trap/trap.h"
 
 extern void trap_entry();
 
