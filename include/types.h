@@ -24,6 +24,8 @@ typedef unsigned int 		u32;
 typedef signed long long 	s64;
 typedef unsigned long long 	u64;
 
+typedef u64 				addr;
+
 #endif /* !(__BIT_TYPES_DEFINED__) */
 
 #endif /* !(_SATORI_TYPES_H_) */

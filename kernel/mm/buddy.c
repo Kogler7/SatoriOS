@@ -1,68 +1,129 @@
-#include "types.h"
-#include "mm/mm.h"
+#include "mm/buddy.h"
 
-typedef struct page
+buddy_node buddy_root;
+
+void init_buddy()
 {
-    void *addr;
-    int next;
-    int prev;
-} page;
-
-typedef struct free_list
-{
-    page pages[LIST_LEN];
-    int head;
-    int tail;
-    int order;
-} free_list;
-
-typedef struct free_zone
-{
-    void *start_addr;
-    void *end_addr;
-    free_list free_areas[MAX_ORDER];
-} free_zone;
-
-// free_zone zone;
-
-void init_free_list(free_list *list, int order)
-{
-    list->head = 0;
-    list->tail = 0;
-    list->order = order;
-    for (int i = 0; i < LIST_LEN; i++)
-    {
-        list->pages[i].next = i + 1;
-        list->pages[i].prev = i - 1;
-    }
-    list->pages[0].prev = -1;
-    list->pages[LIST_LEN - 1].next = -1;
+    buddy_root.left = NULL;
+    buddy_root.right = NULL;
+    buddy_root.order = MAX_ORDER;
+    buddy_root.state = FREE;
+    buddy_root.start = USER_START_ADDR;
 }
 
-void insert_page(free_list *list, page *p)
+int split_buddy(buddy_node *node)
 {
-    if (list->head == -1)
+    if (node->order == 0)
+        return -1;
+    node->left = (buddy_node *)kmalloc(sizeof(buddy_node));
+    node->right = (buddy_node *)kmalloc(sizeof(buddy_node));
+    node->left->order = node->order - 1;
+    node->left->start = node->start;
+    node->left->state = FREE;
+    node->left->left = NULL;
+    node->left->right = NULL;
+    node->right->order = node->order - 1;
+    node->right->start = node->start + (1 << (node->order - 1));
+    node->right->state = FREE;
+    node->right->left = NULL;
+    node->right->right = NULL;
+    return 0;
+}
+
+void merge_buddy(buddy_node *node)
+{
+    if (node->left == NULL) // 无子节点（左右子节点状态相同，判断其中之一即可）
+        return;
+    if (node->left->state == ALLOCATED || node->right->state == ALLOCATED)
+        return;
+    // 有子节点，在此不做递归调用，因为在分配内存时，只会分配到最底层的节点
+    // 合并节点时，只需判断左右子节点是否为空，若为空，则合并
+    kfree(node->left, sizeof(buddy_node));
+    kfree(node->right, sizeof(buddy_node));
+    node->left = NULL;
+    node->right = NULL;
+}
+
+buddy_node *alloc_buddy(buddy_node *root, int order)
+{
+    if (order > root->order)
+        return NULL;
+    if (order == root->order)
     {
-        list->head = (int)(p - list->pages);
-        list->tail = (int)(p - list->pages);
-        p->next = -1;
-        p->prev = -1;
+        root->state = ALLOCATED;
+        return root;
     }
     else
     {
-        p->next = list->head;
-        p->prev = -1;
-        list->pages[list->head].prev = (int)(p - list->pages);
-        list->head = (int)(p - list->pages);
+        if (root->left == NULL)
+        {
+            if (split_buddy(root) == -1)
+                return NULL;
+        }
+        int ret = alloc_buddy(root->left, order);
+        if (ret == NULL)
+            ret = alloc_buddy(root->right, order);
+        return ret;
     }
+    return NULL;
 }
 
-void init_free_zone(free_zone *zone, void *start_addr, void *end_addr)
+void free_buddy(void* start, int order)
 {
-    zone->start_addr = start_addr;
-    zone->end_addr = end_addr;
-    for (int i = 0; i < MAX_ORDER; i++)
+    buddy_node *root = &buddy_root;
+    buddy_node *node = root;
+    while (node->order != order)
     {
-        init_free_list(&zone->free_areas[i], i);
+        if(node->left == NULL)
+        {
+            mm_error("free_buddy: invalid operation. (start: %p, order: %d)", start, order);
+            return;
+        }
+        root = node;
+        if (start < node->right->start)
+            node = node->left;
+        else
+            node = node->right;
     }
+    node->state = FREE;
+    if (root->left->state == FREE && root->right->state == FREE)
+        merge_buddy(root);
+}
+
+void *buddy_alloc(int size)
+{
+    int order = 0;
+    while ((1 << order) < size)
+        order++;
+    buddy_node *node = alloc_buddy(&buddy_root, order);
+    if (node == NULL)
+        return NULL;
+    return (void *)node->start;
+}
+
+void buddy_free(void *addr, int size)
+{
+    int order = 0;
+    while ((1 << order) < size)
+        order++;
+    free_buddy(addr, order);
+}
+
+void* buddy_realloc(void* addr, int old_size, int new_size)
+{
+    void* new_addr = buddy_alloc(new_size);
+    if (new_addr == NULL)
+        return NULL;
+    memcpy(new_addr, addr, old_size);
+    buddy_free(addr, old_size);
+    return new_addr;
+}
+
+void* buddy_calloc(int size)
+{
+    void* addr = buddy_alloc(size);
+    if (addr == NULL)
+        return NULL;
+    memset(addr, 0, size);
+    return addr;
 }

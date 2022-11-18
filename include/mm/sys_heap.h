@@ -1,6 +1,6 @@
 #include "mm/mm.h"
 #include "mm/bitmap.h"
-#include "util.h"
+
 
 #define SYS_HEAP_ALLOC_THRESHOLD 16
 

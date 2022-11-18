@@ -68,6 +68,8 @@ TLB是translation lookaside buffer的简称。首先，我们知道MMU的作用�
 
 [(99条消息) 伙伴分配器(buddy allocator)和slab_birate_小小人生的博客-CSDN博客_伙伴分配器](https://blog.csdn.net/u014183456/article/details/122031750?spm=1001.2101.3001.6650.9&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-9-122031750-blog-127184863.pc_relevant_recovery_v2&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-9-122031750-blog-127184863.pc_relevant_recovery_v2&utm_relevant_index=10)
 
+[(102条消息) slab分配器_phone1126的博客-CSDN博客](https://blog.csdn.net/phone1126/article/details/113877347)
+
 # 信息记录
 
 ## MEM_MAP

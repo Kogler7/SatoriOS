@@ -12,5 +12,12 @@
         "info.h": "c",
         "kbd.h": "c"
     },
-    "C_Cpp.errorSquiggles": "disabled"
+    "C_Cpp.errorSquiggles": "disabled",
+    "cSpell.words": [
+        "kcalloc",
+        "kfree",
+        "kmalloc",
+        "kmemalign",
+        "krealloc"
+    ]
 }

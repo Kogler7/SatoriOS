@@ -1,8 +1,9 @@
-#include"info.h"
-#include"shell.h"
+#include "info.h"
+#include "shell.h"
 #include "boot.h"
 #include "satio/printf.h"
 #include "boot/env_init.h"
+#include "mm/mm.h"
 #define NULL ((void *)0)
 
 void handle_bootparams(struct BootParamsInterface *a2){
@@ -21,6 +22,7 @@ void kernel_entry(int a0, char **args, struct BootParamsInterface *a2)
 {
     print_info();
     trap_init();
+    mem_init();
     // entry_shell();
 
     int i;
