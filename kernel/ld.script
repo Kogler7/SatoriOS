@@ -4,7 +4,7 @@ ENTRY( kernel_entry )
 SECTIONS
 {
 #  . = 0x9000000000100000;
-  . = 0xF0000000;
+  . = 0xD0000000;
 
   .text : {
     *(.text .text.*)

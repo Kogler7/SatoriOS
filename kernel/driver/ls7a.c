@@ -1,4 +1,5 @@
 #include "trap/ls7a.h"
+#include "trap/trap.h"
 #include "satio/printf.h"
 
 #pragma GCC diagnostic ignored "-Warray-bounds"
