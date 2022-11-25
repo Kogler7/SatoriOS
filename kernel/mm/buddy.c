@@ -8,7 +8,7 @@ void init_buddy()
     buddy_root.right = NULL;
     buddy_root.order = MAX_ORDER;
     buddy_root.state = FREE;
-    buddy_root.start = (void*)USER_START_ADDR;
+    buddy_root.start = (void *)USER_START_ADDR;
 }
 
 int split_buddy(buddy_node *node)
@@ -60,7 +60,7 @@ buddy_node *alloc_buddy(buddy_node *root, int order)
             if (split_buddy(root) == -1)
                 return NULL;
         }
-        void* ret = alloc_buddy(root->left, order);
+        void *ret = alloc_buddy(root->left, order);
         if (ret == NULL)
             ret = alloc_buddy(root->right, order);
         return ret;
@@ -68,13 +68,13 @@ buddy_node *alloc_buddy(buddy_node *root, int order)
     return NULL;
 }
 
-void free_buddy(void* start, int order)
+void free_buddy(void *start, int order)
 {
     buddy_node *root = &buddy_root;
     buddy_node *node = root;
     while (node->order != order)
     {
-        if(node->left == NULL)
+        if (node->left == NULL)
         {
             mm_error("free_buddy: invalid operation. (start: %p, order: %d)", start, order);
             return;
@@ -98,6 +98,7 @@ void *buddy_alloc(int size)
     buddy_node *node = alloc_buddy(&buddy_root, order);
     if (node == NULL)
         return NULL;
+    set_dead_beef(node->start + 1 << order - 1);
     return (void *)node->start;
 }
 
@@ -106,12 +107,16 @@ void buddy_free(void *addr, int size)
     int order = 0;
     while ((1 << order) < size)
         order++;
+    if(!check_dead_beef(addr + 1 << order - 1))
+    {
+        mm_error("buddy_free: Dead beef check failure. (addr: %p, size: %d)", addr, size);
+    }
     free_buddy(addr, order);
 }
 
-void* buddy_realloc(void* addr, int old_size, int new_size)
+void *buddy_realloc(void *addr, int old_size, int new_size)
 {
-    void* new_addr = buddy_alloc(new_size);
+    void *new_addr = buddy_alloc(new_size);
     if (new_addr == NULL)
         return NULL;
     memcpy(new_addr, addr, old_size);
@@ -119,9 +124,9 @@ void* buddy_realloc(void* addr, int old_size, int new_size)
     return new_addr;
 }
 
-void* buddy_calloc(int size)
+void *buddy_calloc(int size)
 {
-    void* addr = buddy_alloc(size);
+    void *addr = buddy_alloc(size);
     if (addr == NULL)
         return NULL;
     memset(addr, 0, size);

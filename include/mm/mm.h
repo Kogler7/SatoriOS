@@ -26,6 +26,8 @@
 
 #include "satio/printf.h"
 
+#endif // __PRINTF_H__
+
 #define mm_info(fmt, ...) \
     printf("[MM] | INFO | ");    \
     printf(fmt, ##__VA_ARGS__);  \
@@ -52,9 +54,10 @@
 
 #endif // __SATORI_DEBUG_
 
-#endif // __PRINTF_H__
-
 void mem_init();
+
+void set_dead_beef(void *addr);
+int check_dead_beef(void *addr);
 
 
 #endif  // _MM_H_

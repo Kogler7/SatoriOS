@@ -90,8 +90,4 @@ extern struct loongson_board_info b_info;
 extern struct BootParamsInterface *efi_bp;
 extern struct loongsonlist_mem_map *loongson_mem_map;
 extern struct loongson_system_configuration loongson_sysconf;
-// struct BootParamsInterface *efi_bp;
-// struct loongsonlist_mem_map *loongson_mem_map;
-// struct loongsonlist_vbios *pvbios;
-// struct loongson_system_configuration loongson_sysconf;
 #endif

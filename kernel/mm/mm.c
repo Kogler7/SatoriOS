@@ -28,6 +28,18 @@ void mem_init()
     init_buddy();
 }
 
+void set_dead_beef(void *addr)
+{
+    u32 *p = (u32 *)addr - 3;
+    *p = 0xdeadbeef;
+}
+
+int check_dead_beef(void *addr)
+{
+    u32 *p = (u32 *)addr - 3;
+    return *p == 0xdeadbeef;
+}
+
 // void mem_block_add(u64 mem_start, u64 mem_size)
 // {
 //     if (mem_size < PAGE_SIZE)

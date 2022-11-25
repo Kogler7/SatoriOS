@@ -8,7 +8,7 @@ void parse_command()
     // 清空param_buff
     memset(param_buff, 0, sizeof(param_buff));
 
-    char *cmd_buff[16] = {0};
+    char cmd_buff[16] = {0};
 
     char *p = input_buff;
     char *c = cmd_buff;
@@ -61,8 +61,9 @@ void parse_command()
             }
             else
                 printf("Command %s is not implemented yet.\r", shell_cmds[i].cmd);
-            break;
+            return;
         }
+        printf("Command %s not found.\r", cmd_buff);
     }
 }
 

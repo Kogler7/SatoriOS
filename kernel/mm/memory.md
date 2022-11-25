@@ -70,6 +70,20 @@ TLB是translation lookaside buffer的简称。首先，我们知道MMU的作用�
 
 [(102条消息) slab分配器_phone1126的博客-CSDN博客](https://blog.csdn.net/phone1126/article/details/113877347)
 
+[一文看懂slab分配器实现 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/523241576)
+
+[(102条消息) linux的slub算法原理,图解slub_十二.12的博客-CSDN博客](https://blog.csdn.net/weixin_35748716/article/details/116900414?app_version=5.10.0&code=app_1562916241&csdn_share_tail=%7B%22type%22%3A%22blog%22%2C%22rType%22%3A%22article%22%2C%22rId%22%3A%22116900414%22%2C%22source%22%3A%22weixin_50904351%22%7D&uLinkId=usr1mkqgl919blen&utm_source=app)
+
+![1668869941719](image/memory/1668869941719.png)
+
+[(102条消息) 世上最强最全Linux 内存总结（用户空间：malloc、内核空间:vmalloc kmalloc slab buddy ）_小卷怡情的博客-CSDN博客](https://blog.csdn.net/qq_41945905/article/details/116461064?spm=1001.2101.3001.6650.5&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-5-116461064-blog-89521003.pc_relevant_3mothn_strategy_recovery&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-5-116461064-blog-89521003.pc_relevant_3mothn_strategy_recovery&utm_relevant_index=6)
+
+![1668880134545](image/memory/1668880134545.png)
+
+[Linux 内核 | 内存管理——slab 分配器 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/358891862)
+
+[(102条消息) 函数实现_如何实现一个malloc函数_躺着不干活的博客-CSDN博客](https://blog.csdn.net/weixin_34980267/article/details/112673550)
+
 # 信息记录
 
 ## MEM_MAP
