@@ -1,5 +1,5 @@
-#ifndef __ECHO_OS_ls7a_h_
-#define __ECHO_OS_ls7a_h_
+#ifndef _LS7A_H_
+#define _LS7A_H_
 
 #define UART0 0x1fe001e0UL
 #define UART0_IRQ 2
@@ -22,5 +22,5 @@
 #define LS7A_INT_STATUS_REG     LS7A_PCH_REG_BASE + 0x3a0
 #define LS7A_INT_POL_REG        LS7A_PCH_REG_BASE + 0x3e0
 
-#endif
+#endif /* !_LS7A_H_ */
 

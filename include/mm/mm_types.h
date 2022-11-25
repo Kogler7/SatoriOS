@@ -1,7 +1,7 @@
 #include "types.h"
 
-#ifndef _MM_TYPES_H
-#define _MM_TYPES_H
+#ifndef _MM_TYPES_H_
+#define _MM_TYPES_H_
 
 #define CONFIG_PHYS_ADDR_T_64BIT //一般定义在config中，这里为了方便直接定义
 
@@ -13,4 +13,4 @@ typedef u32 phys_addr_t;
 
 #define MAX_PHYSMEM_BITS 40
 
-#endif
+#endif /* !_MM_TYPES_H_ */

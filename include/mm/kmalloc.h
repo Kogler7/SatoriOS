@@ -1,5 +1,5 @@
-#ifndef __KERN_MM_ALLOC_H__
-#define __KERN_MM_ALLOC_H__
+#ifndef _KERN_MM_ALLOC_H_
+#define _KERN_MM_ALLOC_H_
 
 #include "mm/sys_heap.h"
 
@@ -9,4 +9,4 @@ void *krealloc(void *addr, int old_size, int new_size);
 void *kcalloc(int size);
 void *kmemalign(int size, int align);
 
-#endif /* !__KERN_MM_ALLOC_H__ */
+#endif /* !_KERN_MM_ALLOC_H_ */

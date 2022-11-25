@@ -1,5 +1,5 @@
-#ifndef __BUDDY_SYSTEM_H__
-#define __BUDDY_SYSTEM_H__
+#ifndef _BUDDY_SYSTEM_H__
+#define _BUDDY_SYSTEM_H__
 
 #include "mm/mm.h"
 #include "mm/kmalloc.h"
@@ -26,4 +26,4 @@ void buddy_free(void *addr, int size);
 void* buddy_realloc(void* addr, int old_size, int new_size);
 void* buddy_calloc(int size);
 
-#endif // __BUDDY_SYSTEM_H__
+#endif /* !_BUDDY_SYSTEM_H__ */

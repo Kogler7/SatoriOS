@@ -281,7 +281,3 @@
 #else
 # define CONFLICT(x,y) y
 #endif
-
-extern unsigned int keymap[512];
-extern char kbd_US[128];
-extern char kbd_US_shift[128];

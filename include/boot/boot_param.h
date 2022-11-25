@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /* copied from linux source */
-#ifndef __ASM_BOOT_PARAM_H_
-#define __ASM_BOOT_PARAM_H_
+#ifndef _ASM_BOOT_PARAM_H_
+#define _ASM_BOOT_PARAM_H_
 
 #ifdef CONFIG_VT
 #include <linux/screen_info.h>
@@ -97,4 +97,4 @@ extern struct loongson_system_configuration loongson_sysconf;
 
 void env_init(struct bootparamsinterface *efi_bp);
 
-#endif
+#endif /* !_ASM_BOOT_PARAM_H_ */

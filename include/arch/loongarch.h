@@ -1,5 +1,5 @@
-#ifndef __ECHO_OS_loongarch_h_
-#define __ECHO_OS_loongarch_h_
+#ifndef _LOONGARCH_H_
+#define _LOONGARCH_H_
 
 //#include "temp/larchintrin.h"
 #include <larchintrin.h>
@@ -203,4 +203,4 @@ static inline void intr_off()
   w_csr_crmd(r_csr_crmd() & ~CSR_CRMD_IE);
 }
 
-#endif
+#endif /* !_LOONGARCH_H_ */

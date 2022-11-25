@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __ECHO_OS_io_h_
-#define __ECHO_OS_io_h_
+#ifndef _SATORI_IO_
+#define _SATORI_IO_
 
 void putc(char c);
 void puts(char *str);
@@ -9,4 +9,4 @@ char getc();
 void gets(char *str, int len);
 void newline();
 
-#endif
+#endif /* !_SATORI_IO_ */

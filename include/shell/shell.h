@@ -1,4 +1,6 @@
 #include "boot/boot_param.h"
+#ifndef _SATORI_SHELL_H_
+#define _SATORI_SHELL_H_
 
 #define SHELL_BUFFER_SIZE 1024
 #define SHELL_CMD_MAX 64
@@ -34,3 +36,5 @@ void entry_shell();
 
 int has_param();
 char* get_param(char sign);
+
+#endif /* !_SATORI_SHELL_H_ */

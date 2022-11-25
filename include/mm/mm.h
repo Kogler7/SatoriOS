@@ -1,7 +1,7 @@
 #ifndef _MM_H_
 #define _MM_H_
 
-#define __SATORI_DEBUG_
+#define _SATORI_DEBUG_
 
 #define NULL            ((void *)0)
 #define PAGE_SIZE        4096
@@ -44,7 +44,7 @@
     printf(fmt, ##__VA_ARGS__); \
     printf("\n");
 
-#ifdef __SATORI_DEBUG_
+#ifdef _SATORI_DEBUG_
 #define mm_debug(fmt, ...) \
     printf("[MM] | DEBUG | ");  \
     printf(fmt, ##__VA_ARGS__); \
@@ -53,7 +53,7 @@
 #else
 #define mm_debug(fmt, ...)
 
-#endif // __SATORI_DEBUG_
+#endif /* !_SATORI_DEBUG_ */
 
 void mem_init();
 
@@ -61,4 +61,4 @@ void set_dead_beef(void *addr);
 int check_dead_beef(void *addr);
 
 
-#endif  // _MM_H_
+#endif  /* !_MM_H_ */
