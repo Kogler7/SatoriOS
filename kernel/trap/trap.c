@@ -5,7 +5,7 @@
 #include "drivers/kbd.h"
 #include "shell/shell.h"
 
-//extern void trap_entry(void);
+// extern void trap_entry(void);
 
 extern void ls7a_intc_init(void);
 extern void ls7a_intc_complete(unsigned long irq);
@@ -18,8 +18,7 @@ extern void i8042_init(void);
 extern unsigned char kbd_read_byte(void);
 extern int kbd_has_data(void);
 
-int time_n=0;
-
+int time_n = 0;
 
 void timer_interrupt(void)
 {
@@ -44,7 +43,8 @@ void mouse_interrupt(void)
     printf("mouse interrupt\n\r");
 }
 
-void trap_entry(){
+void trap_entry()
+{
     // intr_off(); // 会导致cbk取消注册失败，尚不清楚原因
     asm volatile(
         "        addi.d $sp, $sp, -256\n"
@@ -112,8 +112,10 @@ void trap_entry(){
         "        ld.d $s7, $sp, 232\n"
         "        ld.d $s8, $sp, 240\n"
         "        addi.d $sp, $sp, 256\n"
-        "        ertn\n" 
-    : : : );
+        "        ertn\n"
+        :
+        :
+        :);
     // intr_on();
 }
 
@@ -125,41 +127,47 @@ void trap_handler(void)
     unsigned int estat = r_csr_estat();
     unsigned int ecfg = r_csr_ecfg();
 
-    if((prmd & PRMD_PPLV) != 0)
+    if ((prmd & PRMD_PPLV) != 0)
         printf("kerneltrap: not from privilege0");
-    if(intr_get() != 0)
+    if (intr_get() != 0)
         printf("kerneltrap: interrupts enabled");
 
-    //printf("\n");
-    //printf("estat %x, ecfg %x\n", estat, ecfg);
-    //printf("era=%p eentry=%p\n", r_csr_era(), r_csr_eentry());
+    // printf("\n");
+    // printf("estat %x, ecfg %x\n", estat, ecfg);
+    // printf("era=%p eentry=%p\n", r_csr_era(), r_csr_eentry());
 
-    if (estat & ecfg & TI_VEC) {
+    if (estat & ecfg & TI_VEC)
+    {
         timer_interrupt();
-    } 
-    else if (estat & ecfg & HWI_VEC) {
+    }
+    else if (estat & ecfg & HWI_VEC)
+    {
         unsigned long irq = extioi_claim();
 
-        if(irq & (1UL << UART0_IRQ)){
+        if (irq & (1UL << UART0_IRQ))
+        {
             uart0_interrupt();
         }
 
-        if(irq & (1UL << KEYBOARD_IRQ)){
+        if (irq & (1UL << KEYBOARD_IRQ))
+        {
             keyboard_interrupt();
         }
 
-        if(irq & (1UL << MOUSE_IRQ)){
+        if (irq & (1UL << MOUSE_IRQ))
+        {
             mouse_interrupt();
         }
 
-        //ack
+        // ack
         ls7a_intc_complete(irq);
         extioi_complete(irq);
-
     }
-    else {
+    else
+    {
         printf("unexpected interrupt\n");
-        while (1);
+        while (1)
+            ;
     }
 
     // restore era
@@ -172,15 +180,15 @@ void trap_init(void)
 {
     intr_off();
 
-    unsigned int ecfg = ( 0U << CSR_ECFG_VS_SHIFT ) | HWI_VEC | TI_VEC;
+    unsigned int ecfg = (0U << CSR_ECFG_VS_SHIFT) | HWI_VEC | TI_VEC;
     unsigned long tcfg = 0x10000000UL | CSR_TCFG_EN | CSR_TCFG_PER;
     w_csr_ecfg(ecfg);
     w_csr_tcfg(tcfg);
     w_csr_eentry((unsigned long)trap_entry);
 
-    extioi_init(); //拓展io中断初始化
+    extioi_init();    //拓展io中断初始化
     ls7a_intc_init(); //桥片初始化
-    i8042_init(); //键鼠控制芯片初始化
+    i8042_init();     //键鼠控制芯片初始化
 
     intr_on();
 }

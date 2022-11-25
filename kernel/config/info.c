@@ -1,5 +1,5 @@
-#include"config/info.h"
-#include"sysio/io.h"
+#include "config/info.h"
+#include "sysio/io.h"
 
 const char *LABEL = "SatoriOS\n\r";
 
