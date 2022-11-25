@@ -98,7 +98,7 @@ void *buddy_alloc(int size)
     buddy_node *node = alloc_buddy(&buddy_root, order);
     if (node == NULL)
         return NULL;
-    set_dead_beef(node->start + 1 << order - 1);
+    set_dead_beef(node->start + (1 << order) - 1);
     return (void *)node->start;
 }
 
@@ -107,7 +107,7 @@ void buddy_free(void *addr, int size)
     int order = 0;
     while ((1 << order) < size)
         order++;
-    if(!check_dead_beef(addr + 1 << order - 1))
+    if (!check_dead_beef(addr + (1 << order) - 1))
     {
         mm_error("buddy_free: Dead beef check failure. (addr: %p, size: %d)", addr, size);
     }

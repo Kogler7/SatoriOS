@@ -1,6 +1,17 @@
-#include "shell.h"
+#include "shell/shell.h"
+#include "shell/impl.h"
 
 shell_cmd shell_cmds[SHELL_CMD_MAX] = {
+    {
+        .cmd = "test",
+        .desc = "test the shell command parser",
+        .params = {
+            {
+                .sign = 'x'
+            },
+        },
+        .func = shell_test
+    },
     {
         .cmd = "help",
         .desc = "show help",
@@ -17,7 +28,7 @@ shell_cmd shell_cmds[SHELL_CMD_MAX] = {
         .cmd = "exit",
         .desc = "exit the shell",
         .params = {},
-        .func = 0
+        .func = exit_shell
     },
     {
         .cmd = "clock",
@@ -62,8 +73,8 @@ shell_cmd shell_cmds[SHELL_CMD_MAX] = {
             },
             {
                 .sign = 'l',
-                .name = "label",
-                .desc = "show Satori label",
+                .name = "logo",
+                .desc = "show Satori logo",
             },
             {
                 .sign = 'o',
@@ -71,7 +82,7 @@ shell_cmd shell_cmds[SHELL_CMD_MAX] = {
                 .desc = "show Satori origin",
             }
         },
-        .func = 0
+        .func = show_about_info
     },
     {
         .cmd = "info",

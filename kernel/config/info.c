@@ -1,5 +1,5 @@
-#include "info.h"
-#include "satio/serial.h"
+#include"config/info.h"
+#include"sysio/io.h"
 
 const char *LABEL = "SatoriOS\n\r";
 
@@ -31,5 +31,4 @@ void print_info()
     puts(ORIGIN);
     puts(COPYRIGHT);
     puts(THANKS);
-    newline();
 }

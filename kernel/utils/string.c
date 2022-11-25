@@ -1,4 +1,4 @@
-#include "utils.h"
+#include"utils/string.h"
 
 int strcmp(const char *str1, const char *str2)
 {
@@ -47,8 +47,7 @@ int strncmp(const char *str1, const char *str2, int n)
         str2++;
         n--;
     }
-    if (*str1 != *str2)
-        return 1;
+    //if (*str1 != *str2) return 1;
     return 0;
 }
 
@@ -65,28 +64,39 @@ int strncpy(char *dst, const char *src, int n)
     return 0;
 }
 
-void split(char *str, char *delim, char *result[], int *result_len)
+void split(char *str, char *delim, char result[][100], int *result_len)
 {
     int len = strlen(str);
     int delim_len = strlen(delim);
     int i = 0;
     int j = 0;
     int k = 0;
-    while (i < len)
+    //printf("\n%d %d\n\n",len,delim_len);
+    //printf("---%p\n",&(result[0][0]));
+    //printf("---%p\n",&(result[1][1]));
+    while (k < len)
     {
-        if (strncmp(str + i, delim, delim_len) == 0)
+        //printf("----11111****\n");
+        if (strncmp(str + k, delim, delim_len) == 1)
         {
-            result[j] = str + k;
-            j++;
-            i += delim_len;
-            k = i;
+            //printf("\n6666\n\n");
+            result[j][i] = str[k];
+            //printf("%c ",*(&result[j]+i));
+            i++;
+            k++;
         }
         else
         {
-            i++;
+            //printf("\n7777\n\n");
+            result[j][i] = 0;
+            //printf("\n\n");
+            j++;
+            i=0;
+            k += delim_len;
         }
+        
     }
-    result[j] = str + k;
+    //printf("---\n");
     j++;
     *result_len = j;
 }

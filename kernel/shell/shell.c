@@ -1,65 +1,65 @@
-#include "shell.h"
-#include "utils.h"
-#include "satio/printf.h"
-#include "satio/serial.h"
-#include "driver/kbd.h"
+#pragma GCC diagnostic ignored "-Wimplicit-function-declaration" //正式开发建议删除此行
+#include "shell/shell.h"
+#include "shell/parser.h"
+#include "sysio/io.h"
+#include "drivers/kbd.h"
+#include "utils/string.h"
+#include "arch/loongarch.h"
+#include "arch/ls7a.h"
 
 char input_buff[SHELL_BUFFER_SIZE];
 
-int wait_for_input()
-{
-    // int i = 0;
-    // while (1)
-    // {
-    //     char c = serial_recv_byte();
-    //     if (c == '\b')
-    //     {
-    //         if (i > 0)
-    //         {
-    //             i--;
-    //             printf("\b \b");
-    //         }
-    //     }
-    //     else if (c == '\r')
-    //     {
-    //         printf("\n\r");
-    //         input_buff[i] = 0;
-    //         return i;
-    //     }
-    //     else
-    //     {
-    //         input_buff[i] = c;
-    //         i++;
-    //         printf("%c", c);
-    //     }
-    // }
-}
+char shell_path[256] = "/";
 
-// void handle_kbd_irq()
-// {
-//     char c = kbd_getc();
-//     printf("%c", c);
-// }
+int buff_index = 0;
+int input_flag = 1;
+int shell_exit_flag = 0;
 
 void kbd_getchar(char c, int s)
 {
-    printf("%c %d", c, s);
+    if (buff_index >= SHELL_BUFFER_SIZE)
+    {
+        input_buff[SHELL_BUFFER_SIZE - 1] = 0;
+        printf("\n\rshell buffer overflowed.\n\r");
+        input_flag = 0;
+        return;
+    }
+    if (s == 1)
+    {
+        putc(c);
+        // printf("[%d]",get_cbk_cnt());
+        if (c == '\n')
+        {
+            input_flag = 0;
+            return;
+        }
+        input_buff[buff_index++] = c;
+    }
 }
 
-void entry_shell(){
-    printf("Entering Shell...\n\r");
-    // while(1){
-    //     printf(">> ");
-    //     int len = wait_for_input();
-    //     printf("input: %s\n\r", input_buff);
-    // }
-    register_kbd_cbk(kbd_getchar);
-    while (1)
+void wait_for_input()
+{
+    int id = register_kbd_cbk(kbd_getchar);
+    buff_index = 0;
+    input_flag = 1;
+    while (input_flag)
     {
-        memset(input_buff, 0, sizeof(input_buff));
-        puts("SatoriOS $ ");
-        printf("SatoriOS $ %d",1);
-        break;
+        asm volatile("nop");
+    }
+    input_buff[buff_index] = 0;
+    unregister_kbd_cbk(id);
+    // print_cbk_table();
+}
+
+void entry_shell()
+{
+    printf("Entering Shell...\n\r");
+    shell_exit_flag = 0;
+    while (!shell_exit_flag)
+    {
+        printf("SatoriOS:%s $ ", shell_path);
+        wait_for_input();
+        parse_command();
     }
     printf("Exiting Shell...\n\r");
 }

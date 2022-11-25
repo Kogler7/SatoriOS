@@ -1,4 +1,4 @@
-#include "boot.h"
+#include "boot/boot_param.h"
 #include "mm/mm.h"
 #include "mm/buddy.h"
 
