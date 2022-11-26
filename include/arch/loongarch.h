@@ -1,7 +1,6 @@
 #ifndef _LOONGARCH_H_
 #define _LOONGARCH_H_
 
-//#include "temp/larchintrin.h"
 #include <larchintrin.h>
 
 /* interrupt enable bit */

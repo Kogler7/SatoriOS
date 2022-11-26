@@ -15,8 +15,6 @@ extern void extioi_complete(unsigned long irq);
 extern unsigned long extioi_claim(void);
 extern void extioi_complete(unsigned long irq);
 extern void i8042_init(void);
-extern unsigned char kbd_read_byte(void);
-extern int kbd_has_data(void);
 
 int time_n = 0;
 
@@ -42,7 +40,6 @@ void uart0_interrupt(void)
 
 void keyboard_interrupt(void)
 {
-    // kbd_irq();
     handle_kbd_irq();
 }
 
@@ -139,10 +136,6 @@ void trap_handler(void)
         printf("kerneltrap: not from privilege0");
     if (intr_get() != 0)
         printf("kerneltrap: interrupts enabled");
-
-    // printf("\n");
-    // printf("estat %x, ecfg %x\n", estat, ecfg);
-    // printf("era=%p eentry=%p\n", r_csr_era(), r_csr_eentry());
 
     if (estat & ecfg & TI_VEC)
     {

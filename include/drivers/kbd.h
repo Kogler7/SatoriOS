@@ -1,4 +1,4 @@
-#include "config/kbdmap.h"
+#include "arch/kbdmap.h"
 
 #ifndef _DEV_KBD_H_
 #define _DEV_KBD_H_

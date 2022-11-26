@@ -1,5 +1,5 @@
-#pragma GCC diagnostic ignored "-Wreturn-type"                   //正式开发建议删除此行
-#pragma GCC diagnostic ignored "-Wimplicit-function-declaration" //正式开发建议删除此行
+#pragma GCC diagnostic ignored "-Wreturn-type"                   // 正式开发建议删除此行
+#pragma GCC diagnostic ignored "-Wimplicit-function-declaration" // 正式开发建议删除此行
 #include "drivers/kbd.h"
 #include "arch/ls7a.h"
 #include "shell/shell.h"
@@ -71,17 +71,6 @@ void invoke_kbd_cbk(char key, int state)
     }
 }
 
-// int kbd_has_data(void)
-// {
-//     unsigned char status = *(volatile unsigned char *)(LS7A_I8042_STATUS);
-//     return (status & 0x1);
-// }
-
-// unsigned char kbd_read_byte(void)
-// {
-//     return *(volatile unsigned char *)(LS7A_I8042_DATA);
-// }
-
 char scan2ascii(int code)
 {
     return kbd_US[keymap[(unsigned int)code]];
@@ -89,60 +78,55 @@ char scan2ascii(int code)
 
 void handle_kbd_irq(void)
 {
-    unsigned char status = *(volatile unsigned char *)(LS7A_I8042_STATUS);
-    unsigned char code = *(volatile unsigned char *)(LS7A_I8042_DATA);
-    unsigned char key_no = keymap[(unsigned int)code];
+    while (kbd_has_data())
+    {
+        unsigned char code = kbd_read_byte();
+        unsigned char key_no = keymap[(unsigned int)code];
 
-    int key_state = KEY_STATE_DOWN;
+        int key_state = KEY_STATE_DOWN;
 
-    if (status & 0x80) // 0x80待定
-    {
-        // 键盘错误
-        printf("keyboard error: %x\n", key_no);
-        return;
-    }
-
-    if (key_no == KEY_INSERT)
-    {
-        key_no = keymap[(unsigned int)kbd_read_byte()];
-        key_state = KEY_STATE_UP;
-    }
-
-    if (key_no == KEY_LEFTSHIFT || key_no == KEY_RIGHTSHIFT)
-    {
-        shift_state = key_state;
-    }
-    else if (key_no == KEY_LEFTCTRL || key_no == KEY_RIGHTCTRL)
-    {
-        ctrl_state = key_state;
-    }
-    else if (key_no == KEY_LEFTALT || key_no == KEY_RIGHTALT)
-    {
-        alt_state = key_state;
-    }
-    else if (key_no == KEY_CAPSLOCK && key_state == KEY_STATE_DOWN)
-    {
-        caps_lock_state = !caps_lock_state;
-    }
-    else
-    {
-        char key;
-        if (shift_state == KEY_STATE_DOWN)
+        if (code == 0xF0 && kbd_has_data())
         {
-            key = kbd_US_shift[key_no];
+            key_no = keymap[(unsigned int)kbd_read_byte()];
+            key_state = KEY_STATE_UP;
+        }
+
+        if (key_no == KEY_LEFTSHIFT || key_no == KEY_RIGHTSHIFT)
+        {
+            shift_state = key_state;
+        }
+        else if (key_no == KEY_LEFTCTRL || key_no == KEY_RIGHTCTRL)
+        {
+            ctrl_state = key_state;
+        }
+        else if (key_no == KEY_LEFTALT || key_no == KEY_RIGHTALT)
+        {
+            alt_state = key_state;
+        }
+        else if (key_no == KEY_CAPSLOCK && key_state == KEY_STATE_DOWN)
+        {
+            caps_lock_state = !caps_lock_state;
         }
         else
         {
-            key = kbd_US[key_no];
-        }
-
-        if (caps_lock_state == CAPS_LOCK)
-        {
-            if (key >= 'a' && key <= 'z')
+            char key;
+            if (shift_state == KEY_STATE_DOWN)
             {
-                key = key - 'a' + 'A';
+                key = kbd_US_shift[key_no];
             }
+            else
+            {
+                key = kbd_US[key_no];
+            }
+
+            if (caps_lock_state == CAPS_LOCK)
+            {
+                if (key >= 'a' && key <= 'z')
+                {
+                    key = key - 'a' + 'A';
+                }
+            }
+            invoke_kbd_cbk(key, key_state);
         }
-        invoke_kbd_cbk(key, key_state);
     }
 }

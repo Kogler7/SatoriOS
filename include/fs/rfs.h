@@ -1,5 +1,5 @@
-#ifndef _SATORI_ROOTFS_H_
-#define _SATORI_ROOTFS_H_
+#ifndef _ROOT_FILESYSTEM_H_
+#define _ROOT_FILESYSTEM_H_
 
 
-#endif /* !_SATORI_ROOTFS_H_ */
+#endif /* !_ROOT_FILESYSTEM_H_ */

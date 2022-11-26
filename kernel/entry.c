@@ -31,6 +31,7 @@ void kernel_entry(int a0, char **args, struct bootparamsinterface *a2)
     print_info();
     entry_shell();
 
-    while (1)
-        ;
+    // while (1)
+    //     ;
+    puts("kernel exited.");
 }
