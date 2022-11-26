@@ -9,6 +9,7 @@ static char digits[] = "0123456789abcdef";
 void newline()
 {
 	putc('\n');
+	putc('\r');
 }
 
 void putc(char c)
@@ -26,6 +27,7 @@ void puts(char *str)
 		putc(*str);
 		str++;
 	}
+	newline();
 }
 
 static void

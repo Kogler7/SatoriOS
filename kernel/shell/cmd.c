@@ -22,7 +22,7 @@ shell_cmd shell_cmds[SHELL_CMD_MAX] = {
         .cmd = "echo",
         .desc = "echo the input",
         .params = {},
-        .func = 0
+        .func = echo
     },
     {
         .cmd = "exit",
@@ -50,7 +50,7 @@ shell_cmd shell_cmds[SHELL_CMD_MAX] = {
                 .desc = "modify the speed level",
             }
         },
-        .func = 0
+        .func = show_clock_info
     },
     {
         .cmd = "about",
@@ -89,11 +89,6 @@ shell_cmd shell_cmds[SHELL_CMD_MAX] = {
         .desc = "show the information of SatoriOS",
         .params = {
             {
-                .sign = 'a',
-                .name = "all",
-                .desc = "show all information",
-            },
-            {
                 .sign = 'c',
                 .name = "cpu",
                 .desc = "show cpu information",
@@ -109,13 +104,13 @@ shell_cmd shell_cmds[SHELL_CMD_MAX] = {
                 .desc = "show boot information",
             }
         },
-        .func = 0
+        .func = show_satori_info
     },
     {
         .cmd = "time",
-        .desc = "show the time",
+        .desc = "show the datetime",
         .params = {},
-        .func = 0
+        .func = show_datetime
     },
     {
         .cmd = "ls",
