@@ -18,6 +18,9 @@
     },
     "C_Cpp.errorSquiggles": "disabled",
     "cSpell.words": [
+        "fappendln",
+        "fdelete",
+        "fmove",
         "kcalloc",
         "kfree",
         "kmalloc",
