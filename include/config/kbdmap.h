@@ -284,4 +284,4 @@
 
 extern const unsigned int keymap[];
 extern const char kbd_US[128];
-extern const char kbd_US_shift[128]
+extern const char kbd_US_shift[128];
