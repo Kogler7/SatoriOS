@@ -75,7 +75,7 @@ void parse_command()
     printf("Command %s not found.\n\r", cmd_buff);
 }
 
-int has_param(int cmd_id)
+int has_param(int cmd_id = 0)
 {
     cmd_param *cmd_params = shell_cmds[cmd_id].params;
     if (cmd_params[0].sign == 0 || param_buff[0].sign == 0)
