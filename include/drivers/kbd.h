@@ -9,10 +9,6 @@
 #define KEY_STATE_DOWN   1
 #define KEY_STATE_UP     0
 
-extern unsigned int keymap[512];
-extern char kbd_US[128];
-extern char kbd_US_shift[128];
-
 extern int shift_state;
 extern int ctrl_state;
 extern int alt_state;
