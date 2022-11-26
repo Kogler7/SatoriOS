@@ -1,4 +1,4 @@
-#include "drivers/kbdmap.h"
+#include "config/kbdmap.h"
 /* sadly RDI (Tadpole) decided to ship a different keyboard layout
    than HP for their PS/2 laptop keyboard which leads to conflicting
    keycodes between a normal HP PS/2 keyboard and a RDI Precisionbook.

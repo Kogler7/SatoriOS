@@ -25,7 +25,7 @@
 #ifndef __PRINTF_H__
 #define __PRINTF_H__
 
-#include "sysio/io.h"
+#include "io/stdio.h"
 
 #endif // __PRINTF_H__
 

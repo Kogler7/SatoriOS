@@ -1,4 +1,4 @@
-#include "drivers/kbdmap.h"
+#include "config/kbdmap.h"
 
 #ifndef _DEV_KBD_H_
 #define _DEV_KBD_H_

@@ -2,7 +2,7 @@
 #ifndef _SATORI_SHELL_H_
 #define _SATORI_SHELL_H_
 
-#define SHELL_BUFFER_SIZE 1024
+#define SHELL_BUFFER_SIZE 256
 #define SHELL_CMD_MAX 64
 #define CMD_PARAM_MAX 4
 

@@ -1,6 +1,5 @@
-#pragma once
-#ifndef __ECHO_OS_serial_h_
-#define __ECHO_OS_serial_h_
+#ifndef _DEV_SERIAL_H_
+#define _DEV_SERIAL_H_
 
 //static const unsigned long base = 0x900000001fe001e0ULL;
 unsigned long uart_base = 0x1fe001e0;
@@ -19,4 +18,4 @@ static void io_writeb(unsigned long addr, char c)
     *(char*)addr = c;
 }
 
-#endif
+#endif /* !_DEV_SERIAL_H_ */

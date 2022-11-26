@@ -12,7 +12,8 @@
         "info.h": "c",
         "kbd.h": "c",
         "bitmap.h": "c",
-        "serial.h": "c"
+        "serial.h": "c",
+        "stdin.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled",
     "cSpell.words": [

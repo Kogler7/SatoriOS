@@ -1,5 +1,5 @@
 #include "app/vim.h"
-#include "sysio/io.h"
+#include "io/stdio.h"
 #include "utils/string.h"
 #include "drivers/kbd.h"
 #include "arch/loongarch.h"

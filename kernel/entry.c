@@ -1,5 +1,5 @@
 #pragma GCC diagnostic ignored "-Wimplicit-function-declaration" //正式开发建议删除此行
-#include "sysio/io.h"
+#include "io/stdio.h"
 #include "boot/boot_param.h"
 #include <unistd.h>
 #include "config/info.h"
@@ -26,6 +26,7 @@ void kernel_entry(int a0, char **args, struct bootparamsinterface *a2)
     printf("\n\n\n");
     fs_init();
     trap_init();
+    stdin_init();
 
     print_info();
     entry_shell();

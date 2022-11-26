@@ -3,7 +3,7 @@
 #include "drivers/kbd.h"
 #include "arch/ls7a.h"
 #include "shell/shell.h"
-#include "sysio/io.h"
+#include "io/stdio.h"
 #include "app/vim.h"
 
 int shift_state = KEY_STATE_UP;

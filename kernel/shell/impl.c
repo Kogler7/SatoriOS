@@ -1,7 +1,7 @@
 #include "shell/shell.h"
 #include "shell/impl.h"
 #include "config/info.h"
-#include "sysio/io.h"
+#include "io/stdio.h"
 
 void shell_test()
 {
@@ -31,6 +31,11 @@ void show_help()
             }
         }
     }
+}
+
+void echo()
+{
+    printf("%s\n\r", input_buff);
 }
 
 void show_about_info(int cmd_id)

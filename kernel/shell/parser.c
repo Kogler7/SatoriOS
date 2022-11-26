@@ -1,8 +1,43 @@
 #include "shell/shell.h"
-#include "sysio/io.h"
+#include "io/stdio.h"
 #include "utils/string.h"
 
 param_unit param_buff[CMD_PARAM_MAX];
+
+void parse_params(int cmd_id)
+{
+    if (shell_cmds[cmd_id].params[0].sign == 0)
+        return;
+    int j = 0;
+    while (*p != 0)
+    {
+        while (*p == ' ')
+            p++;
+        if (*p == '-')
+        {
+            p++;
+            param_buff[j].sign = *p;
+            p++;
+            // 实现不够完善
+            while (*p != ' ' && *p != 0 && j < CMD_PARAM_MAX)
+            {
+                param_buff[++j].sign = *(p++);
+            }
+            while (*p == ' ')
+                p++;
+            int k = 0;
+            while (*p != ' ' && *p != 0 && *p != '-')
+            {
+                // 将解析结果存入param_buff
+                param_buff[j].param[k] = *p;
+                p++;
+                k++;
+            }
+            if (++j >= CMD_PARAM_MAX)
+                break;
+        }
+    }
+}
 
 void parse_command()
 {
@@ -11,7 +46,7 @@ void parse_command()
 
     char cmd_buff[16] = {0};
 
-    char *p = input_buff;
+    char *p, *q = input_buff;
     char *c = cmd_buff;
 
     // 解析input_buff
@@ -23,6 +58,13 @@ void parse_command()
     }
     while (*p == ' ')
         p++;
+    // 参数部分前移
+    while (*p != 0)
+    {
+        *q++ = *p++;
+    }
+    *q = 0;
+
     for (int i = 0; i < SHELL_CMD_MAX; i++)
     {
         if (strcmp(cmd_buff, shell_cmds[i].cmd) == 0)
@@ -30,38 +72,7 @@ void parse_command()
             if (shell_cmds[i].func != 0)
             {
                 // 解析参数
-                if (shell_cmds[i].params[0].sign != 0)
-                {
-                    int j = 0;
-                    while (*p != 0)
-                    {
-                        while (*p == ' ')
-                            p++;
-                        if (*p == '-')
-                        {
-                            p++;
-                            param_buff[j].sign = *p;
-                            p++;
-                            //实现不够完善
-                            while (*p != ' ' && *p != 0 && j < CMD_PARAM_MAX)
-                            {
-                                param_buff[++j].sign = *(p++);
-                            }
-                            while (*p == ' ')
-                                p++;
-                            int k = 0;
-                            while (*p != ' ' && *p != 0 && *p != '-')
-                            {
-                                // 将解析结果存入param_buff
-                                param_buff[j].param[k] = *p;
-                                p++;
-                                k++;
-                            }
-                            if (++j >= CMD_PARAM_MAX)
-                                break;
-                        }
-                    }
-                }
+                parse_params(i);
                 // 调用对应的函数
                 shell_cmds[i].func(i);
             }

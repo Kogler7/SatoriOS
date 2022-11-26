@@ -1,5 +1,5 @@
 #include "mm/bitmap.h"
-#include "sysio/io.h"
+#include "io/stdio.h"
 
 void set_bit(byte *bitmap, int index, const byte value)
 {

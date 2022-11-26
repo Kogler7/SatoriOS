@@ -1,9 +1,7 @@
-// formatted console output -- printf, panic.
-
 #include <stdarg.h>
 #include "arch/loongarch.h"
-#include "sysio/io.h"
-#include "serial/serial.h"
+#include "io/stdout.h"
+#include "drivers/serial.h"
 #include "drivers/kbd.h"
 
 static char digits[] = "0123456789abcdef";
@@ -134,10 +132,3 @@ void printf(char *fmt, ...)
 		}
 	}
 }
-
-// char getc()
-// {
-//   // wait for Transmit Holding Empty to be set in LSR.
-//   while ((io_readb(UART0_LSR) & LSR_TX_IDLE) == 0);
-//   return io_readb(UART0_THR);
-// }
