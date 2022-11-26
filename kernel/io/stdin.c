@@ -1,6 +1,7 @@
 #include "io/stdin.h"
+#include "io/stdout.h"
 
-std_buffer stdin_buffer;
+std_buffer *stdin_buffer;
 
 int stdin_enabled = 0;
 int kbd_cbk_id = -1;
@@ -11,17 +12,18 @@ void stdin_init()
     stdin_enable();
 }
 
-void stdin_kbd_cbk(char c, int state);
+void stdin_kbd_cbk(char c, int state)
 {
     if (state == KEY_STATE_DOWN)
     {
-        std_buffer_put(&stdin_buffer, c);
+        std_buffer_put(stdin_buffer, c);
+        putc(c);
     }
 }
 
 void stdin_clear()
 {
-    std_buffer_clear(&stdin_buffer);
+    std_buffer_clear(stdin_buffer);
 }
 
 void stdin_enable()
@@ -44,14 +46,14 @@ void stdin_disable()
 
 char getc()
 {
-    return std_buffer_get(&stdin_buffer);
+    return std_buffer_get(stdin_buffer);
 }
 
 void gets(char *str)
 {
     if (!stdin_enabled)
         return;
-    std_buffer_wait_line(&stdin_buffer, str, STDIN_BUFFER_SIZE);
+    std_buffer_wait_line(stdin_buffer, str);
 }
 
 int scanf(const char *format, ...)

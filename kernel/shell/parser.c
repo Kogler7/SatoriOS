@@ -4,7 +4,7 @@
 
 param_unit param_buff[CMD_PARAM_MAX];
 
-void parse_params(int cmd_id)
+void parse_params(int cmd_id, char *p)
 {
     if (shell_cmds[cmd_id].params[0].sign == 0)
         return;
@@ -46,7 +46,8 @@ void parse_command()
 
     char cmd_buff[16] = {0};
 
-    char *p, *q = input_buff;
+    char *p = input_buff;
+    char *q = p;
     char *c = cmd_buff;
 
     // 解析input_buff
@@ -72,7 +73,7 @@ void parse_command()
             if (shell_cmds[i].func != 0)
             {
                 // 解析参数
-                parse_params(i);
+                parse_params(i, p);
                 // 调用对应的函数
                 shell_cmds[i].func(i);
             }
@@ -86,7 +87,7 @@ void parse_command()
     printf("Command %s not found.\n\r", cmd_buff);
 }
 
-int has_param(int cmd_id = 0)
+int has_param(int cmd_id)
 {
     cmd_param *cmd_params = shell_cmds[cmd_id].params;
     if (cmd_params[0].sign == 0 || param_buff[0].sign == 0)

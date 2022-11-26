@@ -1,4 +1,4 @@
-SECNME := sysio
+SECNME := io
 TGTDIR := ../../build/
 INCDIR := ../../include
 SUBDIR := $(TGTDIR)$(SECNME)/

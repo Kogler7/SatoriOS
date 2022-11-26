@@ -13,7 +13,8 @@
         "kbd.h": "c",
         "bitmap.h": "c",
         "serial.h": "c",
-        "stdin.h": "c"
+        "stdin.h": "c",
+        "boot_param.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled",
     "cSpell.words": [

@@ -8,15 +8,15 @@ typedef struct std_buffer {
     byte *data;
     int size;
     int capacity;
-    byte *head;
-    byte *tail;
+    int head;
+    int tail;
 } std_buffer;
 
 std_buffer *std_buffer_create(int capacity);
 void std_buffer_destroy(std_buffer *buffer);
 void std_buffer_clear(std_buffer *buffer);
 void std_buffer_put(std_buffer *buffer, const byte data);
-void std_buffer_puts(std_buffer *buffer, const char *data, int size);
+void std_buffer_puts(std_buffer *buffer, const char *data);
 byte std_buffer_get(std_buffer *buffer);
 void std_buffer_gets(std_buffer *buffer, char *data, int size);
 byte std_buffer_peek(std_buffer *buffer);

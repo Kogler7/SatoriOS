@@ -6,7 +6,7 @@
 
 #define STDIN_BUFFER_SIZE 256
 
-extern std_buffer stdin_buffer;
+extern std_buffer *stdin_buffer;
 
 void stdin_init();
 
