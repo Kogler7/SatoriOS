@@ -1,4 +1,5 @@
 build/
+.VSCodeCounter/
 efi-virtio.rom
 vgabios-virtio.bin
 run_loongarch.h
