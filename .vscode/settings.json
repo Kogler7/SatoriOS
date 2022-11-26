@@ -21,10 +21,12 @@
         "fappendln",
         "fdelete",
         "fmove",
+        "Jiaotong",
         "kcalloc",
         "kfree",
         "kmalloc",
         "kmemalign",
+        "Kogler",
         "krealloc",
         "putline"
     ]

@@ -10,7 +10,7 @@ int shell_exit_flag = 0;
 
 void entry_shell()
 {
-    printf("Entering Shell...\n\r");
+    puts("Entering Shell...");
     shell_exit_flag = 0;
     while (!shell_exit_flag)
     {
@@ -18,5 +18,5 @@ void entry_shell()
         gets(input_buff);
         parse_command();
     }
-    printf("Exiting Shell...\n\r");
+    puts("Exiting Shell...");
 }

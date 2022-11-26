@@ -1,21 +1,25 @@
 #ifndef _DEV_SERIAL_H_
 #define _DEV_SERIAL_H_
 
-//static const unsigned long base = 0x900000001fe001e0ULL;
 unsigned long uart_base = 0x1fe001e0;
 
 #define UART0_THR  (uart_base + 0)
 #define UART0_LSR  (uart_base + 5)
 #define LSR_TX_IDLE  (1 << 5)
 
-static char io_readb(unsigned long addr)
+static char serial_read_lsr()
 {
-    return *(volatile char*)addr;
+    return *(volatile char*)UART0_LSR;
 }
 
-static void io_writeb(unsigned long addr, char c)
+static void serial_send_char(char c)
 {
-    *(char*)addr = c;
+    // wait for Transmit Holding Empty to be set in LSR.
+    while ((serial_read_lsr() & LSR_TX_IDLE) == 0)
+	{
+		asm volatile("nop");
+	}
+    *(char*)UART0_THR = c;
 }
 
 #endif /* !_DEV_SERIAL_H_ */
