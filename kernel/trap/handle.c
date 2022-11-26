@@ -3,6 +3,7 @@
 #include "arch/ls7a.h"
 
 extern void ls7a_intc_complete(unsigned long irq);
+void kbd_clear_buffer(void);
 
 extern void extioi_complete(unsigned long irq);
 extern unsigned long extioi_claim(void);
@@ -13,6 +14,7 @@ int time_n = 0;
 void timer_interrupt(void)
 {
     time_n += 1;
+    kbd_clear_buffer();
     w_csr_ticlr(r_csr_ticlr() | CSR_TICLR_CLR);
 }
 

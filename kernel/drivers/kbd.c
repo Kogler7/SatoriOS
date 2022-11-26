@@ -78,7 +78,7 @@ char scan2ascii(int code)
 
 void handle_kbd_irq(void)
 {
-    while (kbd_has_data())
+    while (kbd_has_data()) // while 用于稳定键盘中断，具体原理不详
     {
         unsigned char code = kbd_read_byte();
         unsigned char key_no = keymap[(unsigned int)code];

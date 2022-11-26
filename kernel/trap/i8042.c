@@ -52,3 +52,12 @@ unsigned char kbd_read_byte(void)
 {
 	return RD_PORT(LS7A_I8042_DATA);
 }
+
+void kbd_clear_buffer(void)
+{
+	// 定期清空键盘缓冲区，有助于提高键盘响应稳定性，详细原理暂不清楚
+	while (kbd_has_data())
+	{
+		kbd_read_byte();
+	}
+}
