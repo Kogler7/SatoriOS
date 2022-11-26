@@ -1,8 +1,6 @@
 #include "io/stdio.h"
 #include "arch/loongarch.h"
 #include "arch/ls7a.h"
-#include "drivers/kbd.h"
-#include "shell/shell.h"
 
 extern void ls7a_intc_complete(unsigned long irq);
 
