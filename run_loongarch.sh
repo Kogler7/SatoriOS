@@ -27,8 +27,8 @@ Help()
 MEM="4G"
 # 1-4
 CPUS="1"
-#BIOS="/opt/SatoriVenv/loongarch_bios_0310.bin"
-BIOS="/opt/SatoriVenv/loongarch_bios_0310_debug.bin"
+BIOS="/opt/SatoriVenv/loongarch_bios_0310.bin"
+#BIOS="/opt/SatoriVenv/loongarch_bios_0310_debug.bin"
 KERNEL="./build/kernel"
 INITRD="/opt/SatoriVenv/busybox-rootfs.img"
 USE_GRAPHIC="yes"
