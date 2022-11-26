@@ -24,6 +24,14 @@ void timer_interrupt(void)
 {
     // printf("timer interrupt\n");
     time_n += 1;
+    // unsigned long irq = extioi_claim();
+    // ls7a_intc_complete(irq);
+    // extioi_complete(irq);
+    // unsigned long era = r_csr_era();
+    // unsigned long prmd = r_csr_prmd();
+    // w_csr_era(era);
+    // w_csr_prmd(prmd);
+    // intr_on();
     w_csr_ticlr(r_csr_ticlr() | CSR_TICLR_CLR);
 }
 

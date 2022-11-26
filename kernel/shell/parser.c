@@ -63,7 +63,7 @@ void parse_command()
                     }
                 }
                 // 调用对应的函数
-                shell_cmds[i].func();
+                shell_cmds[i].func(i);
             }
             else
             {
@@ -75,12 +75,22 @@ void parse_command()
     printf("Command %s not found.\n\r", cmd_buff);
 }
 
-int has_param()
+int has_param(int cmd_id)
 {
+    cmd_param *cmd_params = shell_cmds[cmd_id].params;
+    if (cmd_params[0].sign == 0 || param_buff[0].sign == 0)
+        return 0;
     for (int i = 0; i < CMD_PARAM_MAX; i++)
     {
-        if (param_buff[i].sign != 0)
-            return 1;
+        if (param_buff[i].sign == 0)
+            return 0;
+        for (int j = 0; j < CMD_PARAM_MAX; j++)
+        {
+            if (cmd_params[j].sign == 0)
+                break;
+            if (cmd_params[j].sign == param_buff[i].sign)
+                return 1;
+        }
     }
     return 0;
 }
