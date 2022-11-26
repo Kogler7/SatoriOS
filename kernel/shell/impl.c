@@ -33,9 +33,9 @@ void show_help()
     }
 }
 
-void show_about_info()
+void show_about_info(int cmd_id)
 {
-    if (!has_param())
+    if (!has_param(cmd_id))
     {
         printf("Satori OS is a simple OS written by C.\n\r");
         print_info();
