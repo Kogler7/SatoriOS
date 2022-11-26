@@ -1,13 +1,15 @@
 #include "shell/shell.h"
+#include "shell/parser.h"
 #include "io/stdio.h"
 #include "utils/string.h"
 
 param_unit param_buff[CMD_PARAM_MAX];
 
-void parse_params(int cmd_id, char *p)
+void parse_params(int cmd_id)
 {
     if (shell_cmds[cmd_id].params[0].sign == 0)
         return;
+    char *p = input_buff;
     int j = 0;
     while (*p != 0)
     {
@@ -73,7 +75,7 @@ void parse_command()
             if (shell_cmds[i].func != 0)
             {
                 // 解析参数
-                parse_params(i, p);
+                parse_params(i);
                 // 调用对应的函数
                 shell_cmds[i].func(i);
             }

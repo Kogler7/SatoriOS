@@ -3,7 +3,7 @@
 #include "config/info.h"
 #include "io/stdio.h"
 
-void shell_test()
+void shell_test(int cmd_id)
 {
     puts("Shell Test:");
     printf("\tinput: %s\n\r", input_buff);

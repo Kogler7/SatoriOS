@@ -34,7 +34,4 @@ extern int shell_exit_flag;
 
 void entry_shell();
 
-int has_param();
-char* get_param(char sign);
-
 #endif /* !_SATORI_SHELL_H_ */
