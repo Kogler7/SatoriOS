@@ -119,23 +119,3 @@ int std_buffer_wait_line(std_buffer *buffer, char *data, int size)
     }
     return std_buffer_gets(buffer, data, size);
 }
-
-inline int std_buffer_full(std_buffer *buffer)
-{
-    return buffer->size == buffer->capacity;
-}
-
-inline int std_buffer_empty(std_buffer *buffer)
-{
-    return buffer->size == 0;
-}
-
-inline int std_buffer_full_p(std_buffer *buffer)
-{
-    return buffer->peek == buffer->head;
-}
-
-inline int std_buffer_empty_p(std_buffer *buffer)
-{
-    return buffer->peek == buffer->tail;
-}

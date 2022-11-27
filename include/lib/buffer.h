@@ -3,7 +3,8 @@
 #ifndef _SATORI_STD_BUFFER_H_
 #define _SATORI_STD_BUFFER_H_
 
-typedef struct std_buffer {
+typedef struct std_buffer
+{
     byte *data;
     int size;
     int capacity;
@@ -29,9 +30,21 @@ void std_buffer_back(std_buffer *buffer);
 
 int std_buffer_wait_line(std_buffer *buffer, char *data, int size);
 
-inline int std_buffer_full(std_buffer *buffer);
-inline int std_buffer_full_p(std_buffer *buffer);
-inline int std_buffer_empty(std_buffer *buffer);
-inline int std_buffer_empty_p(std_buffer *buffer);
+static inline int std_buffer_full(std_buffer *buffer)
+{
+    return buffer->size == buffer->capacity;
+}
+static inline int std_buffer_full_p(std_buffer *buffer)
+{
+    return buffer->peek == buffer->head;
+}
+static inline int std_buffer_empty(std_buffer *buffer)
+{
+    return buffer->size == 0;
+}
+static inline int std_buffer_empty_p(std_buffer *buffer)
+{
+    return buffer->peek == buffer->tail;
+}
 
 #endif /* !_SATORI_STD_BUFFER_H_ */
