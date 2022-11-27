@@ -9,7 +9,6 @@ int kbd_cbk_id = -1;
 void stdin_init()
 {
     stdin_buffer = std_buffer_create(STDIN_BUFFER_SIZE);
-    stdin_enable();
 }
 
 void stdin_kbd_cbk(char c, int state)
@@ -17,7 +16,6 @@ void stdin_kbd_cbk(char c, int state)
     if (state == KEY_STATE_DOWN)
     {
         std_buffer_put(stdin_buffer, c);
-        putc(c);
     }
 }
 
@@ -46,14 +44,21 @@ void stdin_disable()
 
 char getc()
 {
-    return std_buffer_get(stdin_buffer);
+    stdin_enable();
+    byte c = 0;
+    while (c == 0)
+    {
+        c = std_buffer_get(stdin_buffer);
+    }
+    stdin_disable();
+    return c;
 }
 
-void gets(char *str)
+void gets(char *str, int size)
 {
-    if (!stdin_enabled)
-        return;
+    stdin_enable();
     std_buffer_wait_line(stdin_buffer, str);
+    stdin_disable();
 }
 
 int scanf(const char *format, ...)

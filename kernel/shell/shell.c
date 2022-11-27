@@ -15,7 +15,7 @@ void entry_shell()
     while (!shell_exit_flag)
     {
         printf("SatoriOS:%s $ ", shell_path);
-        gets(input_buff);
+        gets(input_buff, SHELL_BUFFER_SIZE);
         parse_command();
     }
     puts("Exiting Shell...");

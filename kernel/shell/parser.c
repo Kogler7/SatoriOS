@@ -59,6 +59,11 @@ void parse_command()
     {
         *c++ = *p++;
     }
+    if (c - cmd_buff >= 16)
+    {
+        puts("Invalid Command: Command too long!");
+        return;
+    }
     while (*p == ' ')
         p++;
     // 参数部分前移
@@ -81,12 +86,12 @@ void parse_command()
             }
             else
             {
-                printf("Command %s is not implemented yet.\n\r", shell_cmds[i].cmd);
+                printf("%s: Command not implemented yet.\n\r", shell_cmds[i].cmd);
             }
             return;
         }
     }
-    printf("Command %s not found.\n\r", cmd_buff);
+    printf("%s Command not found.\n\r", cmd_buff);
 }
 
 int has_param(int cmd_id)

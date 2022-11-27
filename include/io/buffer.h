@@ -20,7 +20,7 @@ void std_buffer_puts(std_buffer *buffer, const char *data);
 byte std_buffer_get(std_buffer *buffer);
 void std_buffer_gets(std_buffer *buffer, char *data, int size);
 byte std_buffer_peek(std_buffer *buffer);
-void std_buffer_wait_line(std_buffer *buffer, char *data);
+void std_buffer_wait_line(std_buffer *buffer, char *data, int size);
 int std_buffer_full(std_buffer *buffer);
 int std_buffer_empty(std_buffer *buffer);
 

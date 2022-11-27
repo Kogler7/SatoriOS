@@ -29,6 +29,7 @@ void std_buffer_put(std_buffer *buffer, const byte data)
     buffer->data[buffer->tail] = data;
     buffer->tail = (buffer->tail + 1) % buffer->capacity;
     buffer->size++;
+    putc(c);
 }
 
 void std_buffer_puts(std_buffer *buffer, const char *data)
@@ -70,10 +71,10 @@ byte std_buffer_peek(std_buffer *buffer)
 }
 
 // 从缓冲区中获取一行，以换行符结束，换行符被替换为0，若缓冲区为空，则等待
-void std_buffer_wait_line(std_buffer *buffer, char *data)
+void std_buffer_wait_line(std_buffer *buffer, char *data, int size)
 {
     int i = 0;
-    while (1)
+    while (i < size)
     {
         while (std_buffer_empty(buffer))
         {
@@ -87,6 +88,8 @@ void std_buffer_wait_line(std_buffer *buffer, char *data)
         }
         i++;
     }
+    if (i == size)
+        data[size - 1] = 0;
 }
 
 int std_buffer_full(std_buffer *buffer)
