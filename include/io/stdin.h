@@ -1,4 +1,4 @@
-#include "io/buffer.h"
+#include "lib/buffer.h"
 #include "drivers/kbd.h"
 
 #ifndef _SATORI_STD_IN_H_

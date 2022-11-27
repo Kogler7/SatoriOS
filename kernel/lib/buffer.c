@@ -1,4 +1,4 @@
-#include "io/buffer.h"
+#include "lib/buffer.h"
 #include "mm/kmalloc.h"
 
 std_buffer *std_buffer_create(int capacity)
@@ -30,7 +30,6 @@ void std_buffer_put(std_buffer *buffer, const byte data)
     buffer->data[buffer->tail] = data;
     buffer->tail = (buffer->tail + 1) % buffer->capacity;
     buffer->size++;
-    putc(data);
 }
 
 void std_buffer_puts(std_buffer *buffer, const char *data)
@@ -40,6 +39,14 @@ void std_buffer_puts(std_buffer *buffer, const char *data)
         std_buffer_put(buffer, *data);
         data++;
     }
+}
+
+void std_buffer_pop(std_buffer *buffer)
+{
+    if (buffer->size == 0)
+        return;
+    buffer->tail = (buffer->tail - 1 + buffer->capacity) % buffer->capacity;
+    buffer->size--;
 }
 
 byte std_buffer_get(std_buffer *buffer)

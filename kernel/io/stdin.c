@@ -15,7 +15,21 @@ void stdin_kbd_cbk(char c, int state)
 {
     if (state == KEY_STATE_DOWN)
     {
-        std_buffer_put(stdin_buffer, c);
+        if (c == '\b')
+        {
+            if (stdin_buffer->size > 0)
+            {
+                std_buffer_pop(stdin_buffer);
+                putc('\b');
+                putc(' ');
+                putc('\b');
+            }
+        }
+        else
+        {
+            std_buffer_put(stdin_buffer, c);
+            putc(c);
+        }
     }
 }
 
@@ -33,7 +47,7 @@ void stdin_enable()
         stdin_enabled = 1;
 }
 
-void stdin_disable()    
+void stdin_disable()
 {
     if (!stdin_enabled)
         return;

@@ -64,7 +64,7 @@ void parse_command()
         puts("Invalid Command: Command too long!");
         return;
     }
-    while (*p == ' ')
+    while (*p != '-' && *p != 0)
         p++;
     // 参数部分前移
     while (*p != 0)
