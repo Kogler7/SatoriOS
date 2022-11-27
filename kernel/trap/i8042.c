@@ -7,7 +7,7 @@
 
 void i8042_init(void)
 {
-	unsigned char data;
+	// unsigned char data;
 
 	/* disable device */
 	// WR_PORT(LS7A_I8042_COMMAND, 0xAD); // disable keyboard 0xAD=10101101

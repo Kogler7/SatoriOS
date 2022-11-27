@@ -1,4 +1,4 @@
-#include "utils/mem.h"
+#include "lib/string.h"
 #include "io/stdio.h"
 #include "boot/boot_param.h"
 #define MAX_PACKAGES 16

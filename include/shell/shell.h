@@ -2,25 +2,27 @@
 #ifndef _SATORI_SHELL_H_
 #define _SATORI_SHELL_H_
 
-#define SHELL_BUFFER_SIZE 256
-#define SHELL_CMD_MAX 64
-#define CMD_PARAM_MAX 8
+#define SHELL_BUFFER_SIZE   256
+#define SHELL_CMD_MAX       64
+#define CMD_PARAM_MAX       8
+#define NAME_LEN_MAX        16
+#define DESC_LEN_MAX        64
 
 typedef struct {
     char sign;
-    char name[16];
-    char desc[64];
+    char name[NAME_LEN_MAX];
+    char desc[DESC_LEN_MAX];
 } cmd_param;
 
 typedef struct {
     char sign;
-    char param[64];
+    char param[DESC_LEN_MAX];
 } param_unit;
 
 typedef struct {
-    char cmd[16];
-    char desc[64];
-    cmd_param params[4];
+    char cmd[NAME_LEN_MAX];
+    char desc[DESC_LEN_MAX];
+    cmd_param params[CMD_PARAM_MAX];
     void (*func)();
 } shell_cmd;
 

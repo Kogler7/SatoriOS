@@ -19,8 +19,7 @@
 #define MAX_ORDER       18  // 2^19 = 512 Pages = 2GB
 
 #include "types.h"
-#include "utils/string.h"
-#include "utils/mem.h"
+#include "lib/string.h"
 
 #ifndef __PRINTF_H__
 #define __PRINTF_H__

@@ -1,4 +1,4 @@
-SECNME := utils
+SECNME := lib
 TGTDIR := ../../build/
 INCDIR := ../../include
 SUBDIR := $(TGTDIR)$(SECNME)/

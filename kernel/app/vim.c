@@ -1,6 +1,6 @@
 #include "app/vim.h"
 #include "io/stdio.h"
-#include "utils/string.h"
+#include "lib/string.h"
 #include "drivers/kbd.h"
 #include "arch/loongarch.h"
 

@@ -1,7 +1,7 @@
 #include "shell/shell.h"
 #include "shell/parser.h"
 #include "io/stdio.h"
-#include "utils/string.h"
+#include "lib/string.h"
 
 param_unit param_buff[CMD_PARAM_MAX];
 
@@ -46,7 +46,7 @@ void parse_command()
     // 清空param_buff
     memset(param_buff, 0, sizeof(param_buff));
 
-    char cmd_buff[16] = {0};
+    char cmd_buff[NAME_LEN_MAX] = {0};
 
     char *p = input_buff;
     char *q = p;
@@ -55,11 +55,11 @@ void parse_command()
     // 解析input_buff
     while (*p == ' ')
         p++;
-    while (*p != ' ' && *p != 0 && c - cmd_buff < 16)
+    while (*p != ' ' && *p != 0 && c - cmd_buff < NAME_LEN_MAX)
     {
         *c++ = *p++;
     }
-    if (c - cmd_buff >= 16)
+    if (c - cmd_buff >= NAME_LEN_MAX)
     {
         puts("Invalid Command: Command too long!");
         return;

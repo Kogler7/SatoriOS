@@ -1,5 +1,5 @@
 #include "fs/fs-old.h"
-#include "utils/string.h"
+#include "lib/string.h"
 
 struct file_folder *root_path = 0x120000000;
 
