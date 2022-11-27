@@ -17,13 +17,12 @@ void stdin_kbd_cbk(char c, int state)
     {
         if (c == '\b')
         {
-            if (stdin_buffer->size > 0)
-            {
-                std_buffer_pop(stdin_buffer);
-                putc('\b');
-                putc(' ');
-                putc('\b');
-            }
+            if (std_buffer_empty(stdin_buffer))
+                return;
+            std_buffer_pop(stdin_buffer);
+            putc('\b');
+            putc(' ');
+            putc('\b');
         }
         else
         {
