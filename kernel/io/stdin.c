@@ -54,11 +54,12 @@ char getc()
     return c;
 }
 
-void gets(char *str, int size)
+int gets(char *str, int size)
 {
     stdin_enable();
-    std_buffer_wait_line(stdin_buffer, str, size);
+    int n = std_buffer_wait_line(stdin_buffer, str, size);
     stdin_disable();
+    return n;
 }
 
 int scanf(const char *format, ...)

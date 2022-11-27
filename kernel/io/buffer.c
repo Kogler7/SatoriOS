@@ -51,7 +51,7 @@ byte std_buffer_get(std_buffer *buffer)
     return data;
 }
 
-void std_buffer_gets(std_buffer *buffer, char *data, int size)
+int std_buffer_gets(std_buffer *buffer, char *data, int size)
 {
     int i = 0;
     while (i < size)
@@ -61,6 +61,7 @@ void std_buffer_gets(std_buffer *buffer, char *data, int size)
             break;
         i++;
     }
+    return i;
 }
 
 byte std_buffer_peek(std_buffer *buffer)
@@ -71,7 +72,7 @@ byte std_buffer_peek(std_buffer *buffer)
 }
 
 // 从缓冲区中获取一行，以换行符结束，换行符被替换为0，若缓冲区为空，则等待
-void std_buffer_wait_line(std_buffer *buffer, char *data, int size)
+int std_buffer_wait_line(std_buffer *buffer, char *data, int size)
 {
     int i = 0;
     while (i < size)
@@ -90,6 +91,7 @@ void std_buffer_wait_line(std_buffer *buffer, char *data, int size)
     }
     if (i == size)
         data[size - 1] = 0;
+    return i;
 }
 
 int std_buffer_full(std_buffer *buffer)

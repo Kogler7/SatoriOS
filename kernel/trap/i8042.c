@@ -10,26 +10,26 @@ void i8042_init(void)
 	unsigned char data;
 
 	/* disable device */
-	WR_PORT(LS7A_I8042_COMMAND, 0xAD); // disable keyboard 0xAD=10101101
-	WR_PORT(LS7A_I8042_COMMAND, 0xA7); // disable mouse 0xA7=10100111
+	// WR_PORT(LS7A_I8042_COMMAND, 0xAD); // disable keyboard 0xAD=10101101
+	// WR_PORT(LS7A_I8042_COMMAND, 0xA7); // disable mouse 0xA7=10100111
 
 	/* flush */
-	data = RD_PORT(LS7A_I8042_DATA);
+	// data = RD_PORT(LS7A_I8042_DATA);
 
 	/* self test */
-	WR_PORT(LS7A_I8042_COMMAND, 0xAA);
-	data = RD_PORT(LS7A_I8042_DATA);
+	// WR_PORT(LS7A_I8042_COMMAND, 0xAA);
+	// data = RD_PORT(LS7A_I8042_DATA);
 	// printf("keyboard reponse %x\n", data);
 
 	/* set config byte, enable device and interrupt*/
-	WR_PORT(LS7A_I8042_COMMAND, 0x20); // 0x20=00100000 准备读取控制命令
-	data = RD_PORT(LS7A_I8042_DATA);
+	// WR_PORT(LS7A_I8042_COMMAND, 0x20); // 0x20=00100000 准备读取控制命令
+	// data = RD_PORT(LS7A_I8042_DATA);
 	WR_PORT(LS7A_I8042_COMMAND, 0x60); // 0x60=01100000 准备写入控制命令
 	WR_PORT(LS7A_I8042_DATA, 0x07);	   // 0x07=00000111
 
 	/* test */
-	WR_PORT(LS7A_I8042_COMMAND, 0xAB); // 0xAB=10101011
-	data = RD_PORT(LS7A_I8042_DATA);
+	// WR_PORT(LS7A_I8042_COMMAND, 0xAB); // 0xAB=10101011
+	// data = RD_PORT(LS7A_I8042_DATA);
 	// printf("test result %x\n", data);
 
 	/* enable first port */
@@ -37,8 +37,8 @@ void i8042_init(void)
 	WR_PORT(LS7A_I8042_COMMAND, 0xAE);
 
 	/* reset device */
-	WR_PORT(LS7A_I8042_COMMAND, 0xFF);
-	data = RD_PORT(LS7A_I8042_DATA);
+	// WR_PORT(LS7A_I8042_COMMAND, 0xFF);
+	// data = RD_PORT(LS7A_I8042_DATA);
 	// printf("reset result %x\n", data);
 }
 

@@ -14,7 +14,6 @@ void kernel_entry(int a0, char **args, struct bootparamsinterface *a2)
     save_args(a0, args, a2);
 
     // mm_init();
-    printf("\n\n\n");
     fs_init();
     trap_init();
     stdin_init();

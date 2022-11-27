@@ -18,7 +18,7 @@ void stdin_enable();
 void stdin_disable();
 
 char getc();
-void gets(char *str, int size);
+int gets(char *str, int size);
 
 int scanf(const char *format, ...);
 
