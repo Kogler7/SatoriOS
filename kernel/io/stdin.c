@@ -28,6 +28,8 @@ void stdin_kbd_cbk(char c, int state)
         {
             std_buffer_put(stdin_buffer, c);
             putc(c);
+            if (c == '\n')
+                putc('\r');
         }
     }
 }
