@@ -11,16 +11,7 @@ extern void trap_init(void);
 
 void kernel_entry(int a0, char **args, struct bootparamsinterface *a2)
 {
-    // env_init(a2);
-
-    printf("There is %d args for kernel:\n", a0);
-    for (int i = 0; i < a0; i++)
-    {
-        printf("cmd arg %d: %s\n", i, args[i]);
-    }
-
-    printf("efi system table at %p\n", a2->systemtable);
-    printf("efi extend list at %p\n", a2->extlist);
+    save_args(a0, args, a2);
 
     // mm_init();
     printf("\n\n\n");

@@ -26,18 +26,17 @@
 #define TO_PHYS(x) (((x)&TO_PHYS_MASK))
 #define TO_CAC(x) (CAC_BASE | ((x)&TO_PHYS_MASK))
 #define TO_UNCAC(x) (UNCAC_BASE | ((x)&TO_PHYS_MASK))
-//在直接使用地址时也许应该注意类型转换
+// 在直接使用地址时也许应该注意类型转换
 
 #define pr_warn(text) printf(text)
 
-// struct BootParamsInterface *efi_bp;
 struct loongsonlist_mem_map *loongson_mem_map;
 struct loongsonlist_vbios *pvbios;
 struct loongson_system_configuration loongson_sysconf;
-// extern struct loongson_board_info b_info;
-// extern struct BootParamsInterface *efi_bp;
-// extern struct loongsonlist_mem_map *loongson_mem_map;
-// extern struct loongson_system_configuration loongson_sysconf;
+
+int boot_arg0;
+char **boot_args;
+struct bootparamsinterface *boot_arg2;
 
 static u8 ext_listhdr_checksum(u8 *buffer, u32 length)
 {
@@ -160,6 +159,25 @@ static int list_find(struct _extention_list_hdr *head)
 	}
 
 	return 0;
+}
+
+void save_args(int a0, char **args, struct bootparamsinterface *a3)
+{
+	boot_arg0 = a0;
+	boot_args = args;
+	boot_arg2 = a3;
+}
+
+void print_args()
+{
+	printf("There is %d args for kernel:\n", boot_arg0);
+    for (int i = 0; i < boot_arg0; i++)
+    {
+        printf("cmd arg %d: %s\n", i, boot_args[i]);
+    }
+
+    printf("efi system table at %p\n", boot_arg2->systemtable);
+    printf("efi extend list at %p\n", boot_arg2->extlist);
 }
 
 void env_init(struct bootparamsinterface *efi_bp)

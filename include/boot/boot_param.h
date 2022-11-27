@@ -95,6 +95,12 @@ extern struct bootparamsinterface *efi_bp;
 extern struct loongsonlist_mem_map *loongson_mem_map;
 extern struct loongson_system_configuration loongson_sysconf;
 
+extern int boot_arg0;
+extern char **boot_args;
+extern struct bootparamsinterface *boot_arg2;
+
 void env_init(struct bootparamsinterface *efi_bp);
+void save_args(int a0, char **args, struct bootparamsinterface *a3);
+void print_args();
 
 #endif /* !_ASM_BOOT_PARAM_H_ */

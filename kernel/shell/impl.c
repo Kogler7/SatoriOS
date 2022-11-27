@@ -1,6 +1,7 @@
 #include "shell/shell.h"
 #include "shell/impl.h"
 #include "config/info.h"
+#include "boot/boot_param.h"
 #include "io/stdio.h"
 
 void shell_test(int cmd_id)
@@ -94,8 +95,7 @@ void show_satori_info(int cmd_id)
         if (get_param('b') != 0)
         {
             puts("Boot Info:");
-            // print_boot_info();
-            puts("Not implemented yet.");
+            print_args();
         }
     }
 }
