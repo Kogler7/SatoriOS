@@ -1,5 +1,5 @@
-#ifndef _SYSTEM_LIB_STR_
-#define _SYSTEM_LIB_STR_
+#ifndef _SYSTEM_LIB_STRING_H_
+#define _SYSTEM_LIB_STRING_H_
 
 int strcmp(const char *str1, const char *str2);
 int strcpy(char *dst, const char *src);
@@ -12,4 +12,4 @@ void memset(void *ptr, char c, unsigned long size);
 int memcmp(void *ptr1, void *ptr2, unsigned long size);
 void memcpy(void *ptr1, void *ptr2, unsigned long size);
 
-#endif /* !_SYSTEM_LIB_STR_ */
+#endif /* !_SYSTEM_LIB_STRING_H_ */

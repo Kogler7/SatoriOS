@@ -13,7 +13,7 @@ void stdin_init()
 
 void stdin_kbd_cbk(char c, int state)
 {
-    if (state == KEY_STATE_DOWN)
+    if (stdin_enabled && state == KEY_STATE_DOWN)
     {
         if (c == '\b')
         {

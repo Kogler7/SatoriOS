@@ -1,7 +1,7 @@
 #include "types.h"
 
-#ifndef _SATORI_STD_BUFFER_H_
-#define _SATORI_STD_BUFFER_H_
+#ifndef _SYSTEM_LIB_BUFFER_H_
+#define _SYSTEM_LIB_BUFFER_H_
 
 typedef struct std_buffer
 {
@@ -47,4 +47,4 @@ static inline int std_buffer_empty_p(std_buffer *buffer)
     return buffer->peek == buffer->tail;
 }
 
-#endif /* !_SATORI_STD_BUFFER_H_ */
+#endif /* !_SYSTEM_LIB_BUFFER_H_ */

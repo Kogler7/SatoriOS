@@ -8,10 +8,6 @@ char shell_path[256] = "/";
 
 int shell_exit_flag = 0;
 
-void wait_for_input()
-{
-}
-
 void entry_shell()
 {
     puts("Entering Shell...");
@@ -22,7 +18,7 @@ void entry_shell()
         int n = gets(input_buff, SHELL_BUFFER_SIZE);
         if (n == SHELL_BUFFER_SIZE)
         {
-            puts("\n\rInput Overflowed!");
+            puts("\n\rInput overflowed!");
             continue;
         }
         if (input_buff[0] == 0)

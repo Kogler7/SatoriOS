@@ -1,7 +1,7 @@
 #include "config/kbdmap.h"
 
-#ifndef _DEV_KBD_H_
-#define _DEV_KBD_H_
+#ifndef _KEYBOARD_DRIVER_H_
+#define _KEYBOARD_DRIVER_H_
 
 #define KBD_CBK_MAX      8
 #define CAPS_LOCK        1
@@ -23,4 +23,4 @@ void invoke_kbd_cbk(char key, int state);
 
 void handle_kbd_irq(void);
 
-#endif /* !_DEV_KBD_H_ */
+#endif /* !_KEYBOARD_DRIVER_H_ */
