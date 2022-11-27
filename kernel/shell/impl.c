@@ -1,5 +1,6 @@
 #include "shell/shell.h"
 #include "shell/impl.h"
+#include "shell/parser.h"
 #include "config/info.h"
 #include "boot/boot_param.h"
 #include "io/stdio.h"

@@ -1,10 +1,11 @@
 #include "io/buffer.h"
+#include "mm/kmalloc.h"
 
 std_buffer *std_buffer_create(int capacity)
 {
     std_buffer *buffer = (std_buffer *)kmalloc(sizeof(std_buffer));
     buffer->capacity = capacity;
-    buffer->data = (char *)kmalloc(capacity);
+    buffer->data = (byte *)kmalloc(capacity);
     buffer->size = 0;
     return buffer;
 }

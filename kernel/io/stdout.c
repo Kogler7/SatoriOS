@@ -12,12 +12,12 @@ void newline()
 	putc('\r');
 }
 
-void putc(char c)
+void putc(const char c)
 {
 	serial_send_char(c);
 }
 
-void puts(char *str)
+void puts(const char *str)
 {
 	while (*str != 0)
 	{
@@ -62,7 +62,7 @@ print_ptr(unsigned long x)
 		putc(digits[x >> (sizeof(unsigned long) * 8 - 4)]);
 }
 
-void printf(char *fmt, ...)
+void printf(const char *fmt, ...)
 {
 	va_list ap;
 	int i, c, n;

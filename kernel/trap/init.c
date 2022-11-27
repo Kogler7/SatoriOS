@@ -7,6 +7,7 @@ extern void trap_entry(void);
 extern void extioi_init(void);
 extern unsigned long extioi_claim(void);
 extern void i8042_init(void);
+extern void ls7a_intc_init(void);
 
 void trap_init(void)
 {

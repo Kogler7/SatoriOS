@@ -1,5 +1,4 @@
 #include "types.h"
-#include "mm/kmalloc.h"
 
 #ifndef _SATORI_STD_BUFFER_H_
 #define _SATORI_STD_BUFFER_H_

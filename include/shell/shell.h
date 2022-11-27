@@ -4,7 +4,7 @@
 
 #define SHELL_BUFFER_SIZE 256
 #define SHELL_CMD_MAX 64
-#define CMD_PARAM_MAX 4
+#define CMD_PARAM_MAX 8
 
 typedef struct {
     char sign;

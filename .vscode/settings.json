@@ -16,7 +16,8 @@
         "stdin.h": "c",
         "boot_param.h": "c",
         "stdio.h": "c",
-        "buffer.h": "c"
+        "buffer.h": "c",
+        "impl.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled",
     "cSpell.words": [

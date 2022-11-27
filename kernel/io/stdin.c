@@ -71,4 +71,5 @@ int scanf(const char *format, ...)
     // int ret = vsscanf(stdin_buffer.data, format, args);
     // va_end(args);
     // return ret;
+    return 0;
 }

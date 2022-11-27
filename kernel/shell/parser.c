@@ -91,7 +91,7 @@ void parse_command()
             return;
         }
     }
-    printf("%s Command not found.\n\r", cmd_buff);
+    printf("%s: Command not found.\n\r", cmd_buff);
 }
 
 int has_param(int cmd_id)
