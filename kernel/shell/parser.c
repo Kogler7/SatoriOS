@@ -61,7 +61,7 @@ void parse_command()
     }
     if (c - cmd_buff >= 16)
     {
-        puts("Invalid Command: Command too long!");
+        puts("\n\rInvalid Command: Command too long!");
         return;
     }
     while (*p == ' ')

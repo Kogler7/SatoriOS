@@ -57,7 +57,7 @@ char getc()
 void gets(char *str, int size)
 {
     stdin_enable();
-    std_buffer_wait_line(stdin_buffer, str);
+    std_buffer_wait_line(stdin_buffer, str, size);
     stdin_disable();
 }
 

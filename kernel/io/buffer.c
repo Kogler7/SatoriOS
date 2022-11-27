@@ -29,7 +29,7 @@ void std_buffer_put(std_buffer *buffer, const byte data)
     buffer->data[buffer->tail] = data;
     buffer->tail = (buffer->tail + 1) % buffer->capacity;
     buffer->size++;
-    putc(c);
+    putc(data);
 }
 
 void std_buffer_puts(std_buffer *buffer, const char *data)
