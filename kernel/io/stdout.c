@@ -12,23 +12,7 @@ void newline()
 	putc('\r');
 }
 
-void putc(const char c)
-{
-	serial_send_char(c);
-}
-
-void puts(const char *str)
-{
-	while (*str != 0)
-	{
-		putc(*str);
-		str++;
-	}
-	newline();
-}
-
-static void
-print_int(int xx, int base, int sign)
+static void print_int(int xx, int base, int sign)
 {
 	char buf[16];
 	int i;
@@ -52,8 +36,7 @@ print_int(int xx, int base, int sign)
 		putc(buf[i]);
 }
 
-static void
-print_ptr(unsigned long x)
+static void print_ptr(unsigned long x)
 {
 	int i;
 	putc('0');

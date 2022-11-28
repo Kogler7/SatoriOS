@@ -7,12 +7,12 @@ unsigned long uart_base = 0x1fe001e0;
 #define UART0_LSR  (uart_base + 5)
 #define LSR_TX_IDLE  (1 << 5)
 
-static char serial_read_lsr()
+static inline char serial_read_lsr()
 {
     return *(volatile char*)UART0_LSR;
 }
 
-static void serial_send_char(const char c)
+static inline void serial_send_char(const char c)
 {
     // wait for Transmit Holding Empty to be set in LSR.
     while ((serial_read_lsr() & LSR_TX_IDLE) == 0)
