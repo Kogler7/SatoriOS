@@ -13,7 +13,7 @@ void parse_params(int cmd_id)
     int j = 0;
     while (*p != 0)
     {
-        while (*p == ' ')
+        while (*p != '-' && *p != 0)
             p++;
         if (*p == '-')
         {
@@ -64,7 +64,7 @@ void parse_command()
         puts("Invalid Command: Command too long!");
         return;
     }
-    while (*p != '-' && *p != 0)
+    while (*p == ' ' && *p != 0)
         p++;
     // 参数部分前移
     while (*p != 0)
