@@ -11,10 +11,10 @@
 #define is_isolated(obj) (obj->prev == nullptr && obj->next == nullptr)
 #define is_reserved(obj) (obj->prev == nullptr)
 #define is_the_last(obj) (obj->next == nullptr)
-#define is_the_first(obj) (is_reserved(obj->prev))
 
 static inline text_char *create_isolate_char()
 {
+    // 创建一个孤立的字符
     text_char *new_char = new (text_char);
     new_char->ch = 0;
     new_char->next = nullptr;
@@ -24,6 +24,7 @@ static inline text_char *create_isolate_char()
 
 static inline text_line *create_isolate_line()
 {
+    // 创建一个孤立的行
     text_line *new_line = new (text_line);
     new_line->nr_chars = 0;
     new_line->prev = nullptr;
@@ -35,6 +36,7 @@ static inline text_line *create_isolate_line()
 
 text_buffer *text_buffer_create();
 {
+    // 创建一个文本缓冲区
     text_buffer *new_buffer = new (text_buffer);
     new_buffer->nr_lines = 0;
     text_line *new_line = create_isolate_line();
@@ -47,8 +49,70 @@ text_buffer *text_buffer_create();
     return new_buffer;
 }
 
+int text_buffer_count_lines(text_buffer *buffer)
+{
+    // 计算文本缓冲区中的行数
+    return buffer->nr_lines;
+}
+
+int text_buffer_count_chars(text_buffer *buffer)
+{
+    // 计算文本缓冲区中的字符数
+    int nr_chars = 0;
+    text_line *line = buffer->fst_line;
+    while (line != nullptr)
+    {
+        nr_chars += line->nr_chars;
+        line = line->next;
+    }
+    return nr_chars;
+}
+
+void text_buffer_load(text_buffer *buffer, char *str)
+{
+    // 从字符串中加载文本缓冲区
+    while (*str != '\0')
+    {
+        if (*str == '\n')
+        {
+            text_buffer_new_line(buffer);
+        }
+        else
+        {
+            text_buffer_insert_char(buffer, *str);
+        }
+        str++;
+    }
+}
+
+char *text_buffer_save(text_buffer *buffer)
+{
+    // 保存文本缓冲区到字符串
+    int nr_lines = text_buffer_count_lines(buffer);
+    int nr_chars = text_buffer_count_chars(buffer);
+    char *str = (char *)malloc(nr_chars + nr_lines + 1); // +1 for '\0'
+    char *ptr = str;
+    text_line *line = buffer->fst_line->next;
+    while (line != nullptr)
+    {
+        text_char *chr = line->fst_char->next;
+        while (chr != nullptr)
+        {
+            *ptr = chr->ch;
+            ptr++;
+            chr = chr->next;
+        }
+        *ptr = '\n';
+        ptr++;
+        line = line->next;
+    }
+    *ptr = '\0';
+    return str;
+}
+
 void text_buffer_destroy(text_buffer *buffer)
 {
+    // 销毁文本缓冲区
     text_line *line = buffer->fst_line;
     while (line != nullptr)
     {
@@ -136,22 +200,6 @@ void text_buffer_insert_char(text_buffer *buffer, char c)
     buffer->cur_char = new_char;
     cur_line->nr_chars++;
     buffer->cursor.x++;
-}
-
-void text_buffer_insert_string(text_buffer *buffer, char *str)
-{
-    while (*str != '\0')
-    {
-        if (*str == '\n')
-        {
-            text_buffer_new_line(buffer);
-        }
-        else
-        {
-            text_buffer_insert_char(buffer, *str);
-        }
-        str++;
-    }
 }
 
 void text_buffer_split_line(text_buffer *buffer)
