@@ -1,9 +1,17 @@
+#include "drivers/serial.h"
+
 #ifndef _SATORI_STD_OUT_H_
 #define _SATORI_STD_OUT_H_
 
 static inline void putc(const char c)
 {
     serial_send_char(c);
+}
+
+void newline()
+{
+    putc('\n');
+    putc('\r');
 }
 
 static inline void puts(const char *str)
@@ -16,11 +24,9 @@ static inline void puts(const char *str)
     newline();
 }
 
-static void print_int(int xx, int base, int sign);
-static void print_ptr(unsigned long x);
+void print_int(int xx, int base, int sign);
+void print_ptr(unsigned long x);
 
 void printf(const char *fmt, ...);
-
-void newline();
 
 #endif /* !_SATORI_STD_OUT_H_ */

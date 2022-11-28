@@ -1,4 +1,5 @@
 #include "lib/text.h"
+#include "mm/kmalloc.h"
 
 #define nullptr 0
 
@@ -34,7 +35,7 @@ static inline text_line *create_isolate_line()
     return new_line;
 }
 
-text_buffer *text_buffer_create();
+text_buffer *text_buffer_create()
 {
     // 创建一个文本缓冲区
     text_buffer *new_buffer = new (text_buffer);

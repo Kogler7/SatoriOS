@@ -1,18 +1,11 @@
 #include <stdarg.h>
 #include "arch/loongarch.h"
 #include "io/stdout.h"
-#include "drivers/serial.h"
 #include "drivers/kbd.h"
 
 static char digits[] = "0123456789abcdef";
 
-void newline()
-{
-	putc('\n');
-	putc('\r');
-}
-
-static void print_int(int xx, int base, int sign)
+void print_int(int xx, int base, int sign)
 {
 	char buf[16];
 	int i;
@@ -36,7 +29,7 @@ static void print_int(int xx, int base, int sign)
 		putc(buf[i]);
 }
 
-static void print_ptr(unsigned long x)
+void print_ptr(unsigned long x)
 {
 	int i;
 	putc('0');
