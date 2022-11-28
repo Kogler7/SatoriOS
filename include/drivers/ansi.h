@@ -1,32 +1,37 @@
-#include "io/serial.h"
+#include "drivers/serial.h"
 
 #ifndef _ANSI_ESCAPE_SEQUENCE_H_
 #define _ANSI_ESCAPE_SEQUENCE_H_
 
-#define ANSI_BLACK_FRONT 30
-#define ANSI_RED_FRONT 31
-#define ANSI_GREEN_FRONT 32
-#define ANSI_YELLOW_FRONT 33
-#define ANSI_BLUE_FRONT 34
-#define ANSI_MAGENTA_FRONT 35
-#define ANSI_CYAN_FRONT 36
-#define ANSI_WHITE_FRONT 37
+#define ANSI_BLACK_FRONT    0
+#define ANSI_RED_FRONT      1
+#define ANSI_GREEN_FRONT    2
+#define ANSI_YELLOW_FRONT   3
+#define ANSI_BLUE_FRONT     4
+#define ANSI_MAGENTA_FRONT  5
+#define ANSI_CYAN_FRONT     6
+#define ANSI_WHITE_FRONT    7
 
-#define ANSI_BLACK_BACK 40
-#define ANSI_RED_BACK 41
-#define ANSI_GREEN_BACK 42
-#define ANSI_YELLOW_BACK 43
-#define ANSI_BLUE_BACK 44
-#define ANSI_MAGENTA_BACK 45
-#define ANSI_CYAN_BACK 46
-#define ANSI_WHITE_BACK 47
+#define ANSI_BLACK_BACK     0
+#define ANSI_RED_BACK       1
+#define ANSI_GREEN_BACK     2
+#define ANSI_YELLOW_BACK    3
+#define ANSI_BLUE_BACK      4
+#define ANSI_MAGENTA_BACK   5
+#define ANSI_CYAN_BACK      6
+#define ANSI_WHITE_BACK     7
 
-#define ANSI_CURSOR_STYLE_BLINKING_BLOCK 5
-#define ANSI_CURSOR_STYLE_BLINKING_UNDERSCORE 6
-#define ANSI_CURSOR_STYLE_STEADY_BLOCK 7
-#define ANSI_CURSOR_STYLE_STEADY_UNDERSCORE 8
-#define ANSI_CURSOR_STYLE_BLINKING_BAR 9
-#define ANSI_CURSOR_STYLE_STEADY_BAR 10
+#define ANSI_CURSOR_STYLE_RESET         0
+#define ANSI_CURSOR_STYLE_BOLD          1
+#define ANSI_CURSOR_STYLE_FAINT         2
+#define ANSI_CURSOR_STYLE_ITALIC        3
+#define ANSI_CURSOR_STYLE_UNDERLINE     4
+#define ANSI_CURSOR_STYLE_SLOW_BLINK    5
+#define ANSI_CURSOR_STYLE_RAPID_BLINK   6
+#define ANSI_CURSOR_STYLE_REVERSE       7
+#define ANSI_CURSOR_STYLE_CONCEAL       8
+#define ANSI_CURSOR_STYLE_CROSSED_OUT   9
+#define ANSI_CURSOR_STYLE_PRIMARY_FONT  10
 
 static inline void put_head()
 {
@@ -55,7 +60,7 @@ static inline void put_char(char c)
     serial_send_char(c);
 }
 
-static inline void curser_move_to(int x, int y)
+static inline void cursor_move_to(int x, int y)
 {
     // \033[<L>;<C>H
     put_head(); 
@@ -65,14 +70,14 @@ static inline void curser_move_to(int x, int y)
     put_char('H');
 }
 
-static inline void curser_reset(void)
+static inline void cursor_reset(void)
 {
     // \033[H
     put_head();
     put_char('H');
 }
 
-static inline void curser_move_up(int n)
+static inline void cursor_move_up(int n)
 {
     // \033[<N>A
     put_head();
@@ -80,7 +85,7 @@ static inline void curser_move_up(int n)
     put_char('A');
 }
 
-static inline void curser_move_down(int n)
+static inline void cursor_move_down(int n)
 {
     // \033[<N>B
     put_head();
@@ -88,7 +93,7 @@ static inline void curser_move_down(int n)
     put_char('B');
 }
 
-static inline void curser_move_forward(int n)
+static inline void cursor_move_forward(int n)
 {
     // \033[<N>C
     put_head();
@@ -96,14 +101,15 @@ static inline void curser_move_forward(int n)
     put_char('C');
 }
 
-static inline void curser_move_backward(int n)
+static inline void cursor_move_backward(int n)
 {
     // \033[<N>D
     put_head();
     put_code(n);
+    put_char('D');
 }
 
-static inline void curser_move_next_line(int n)
+static inline void cursor_move_next_line(int n)
 {
     // \033[<N>E
     put_head();
@@ -111,14 +117,14 @@ static inline void curser_move_next_line(int n)
     put_char('E');
 }
 
-static inline void curser_move_previous_line(int n)
+static inline void cursor_move_previous_line(int n)
 {
     // \033[<N>F
     put_head();
     put_code(n);
 }
 
-static inline void curser_move_horizontal(int n)
+static inline void cursor_move_horizontal(int n)
 {
     // \033[<N>G
     put_head();
@@ -126,7 +132,7 @@ static inline void curser_move_horizontal(int n)
     put_char('G');
 }
 
-static inline void curser_move_horizontal_absolute(int n)
+static inline void cursor_move_horizontal_absolute(int n)
 {
     // \033[<N>d
     put_head();
@@ -196,21 +202,21 @@ static inline void scroll_down(int n)
     put_char('T');
 }
 
-static inline void save_curser_position()
+static inline void save_cursor_position()
 {
     // \033[s
     put_head();
     put_char('s');
 }
 
-static inline void restore_curser_position()
+static inline void restore_cursor_position()
 {
     // \033[u
     put_head();
     put_char('u');
 }
 
-static inline void hide_curser()
+static inline void hide_cursor()
 {
     // \033[?25l
     put_head();
@@ -219,7 +225,7 @@ static inline void hide_curser()
     put_char('l');
 }
 
-static inline void show_curser()
+static inline void show_cursor()
 {
     // \033[?25h
     put_head();
@@ -228,28 +234,30 @@ static inline void show_curser()
     put_char('h');
 }
 
-static inline void set_curser_style(int style)
+static inline void set_cursor_style(int style)
 {
     // \033[<N> q
     put_head();
     put_code(style);
-    put_char('q');
+    put_char('m');
 }
 
-static inline void set_curser_color(int color)
+static inline void set_cursor_color(int color)
 {
     // \033[<N> q
     put_head();
+    put_char('3');
     put_code(color);
-    put_char('q');
+    put_char('m');
 }
 
-static inline void set_curser_background_color(int color)
+static inline void set_cursor_background_color(int color)
 {
     // \033[<N> q
     put_head();
+    put_char('4');
     put_code(color);
-    put_char('q');
+    put_char('m');
 }
 
 #endif /* !_ANSI_ESCAPE_SEQUENCE_H_ */
