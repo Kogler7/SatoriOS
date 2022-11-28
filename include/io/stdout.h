@@ -8,7 +8,7 @@ static inline void putc(const char c)
     serial_send_char(c);
 }
 
-void newline()
+static void newline()
 {
     putc('\n');
     putc('\r');

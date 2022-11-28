@@ -1,7 +1,7 @@
 #ifndef _DEV_SERIAL_H_
 #define _DEV_SERIAL_H_
 
-unsigned long uart_base = 0x1fe001e0;
+static unsigned long uart_base = 0x1fe001e0;
 
 #define UART0_THR  (uart_base + 0)
 #define UART0_LSR  (uart_base + 5)

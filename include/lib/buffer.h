@@ -34,14 +34,17 @@ static inline int std_buffer_full(std_buffer *buffer)
 {
     return buffer->size == buffer->capacity;
 }
+
 static inline int std_buffer_full_p(std_buffer *buffer)
 {
     return buffer->peek == buffer->head;
 }
+
 static inline int std_buffer_empty(std_buffer *buffer)
 {
     return buffer->size == 0;
 }
+
 static inline int std_buffer_empty_p(std_buffer *buffer)
 {
     return buffer->peek == buffer->tail;
