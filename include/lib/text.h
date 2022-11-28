@@ -44,27 +44,38 @@ text_buffer *
 text_buffer_create();
 void text_buffer_destroy(text_buffer *buffer);
 
+void text_buffer_write_char(text_buffer *buffer, char c);
+
 void text_buffer_insert_line(text_buffer *buffer);
 void text_buffer_insert_char(text_buffer *buffer, char c);
 void text_buffer_insert_string(text_buffer *buffer, char *str);
 
-void text_buffer_new_line(text_buffer *buffer);
+void text_buffer_split_line(text_buffer *buffer);
+void text_buffer_merge_line(text_buffer *buffer);
+
+static void text_buffer_new_line(text_buffer *buffer)
+{
+    text_buffer_split_line(buffer);
+}
 
 void text_buffer_delete_char(text_buffer *buffer);
 void text_buffer_delete_line(text_buffer *buffer);
 
-void text_buffer_move_up(text_buffer *buffer);
-void text_buffer_move_down(text_buffer *buffer);
-void text_buffer_move_left(text_buffer *buffer);
-void text_buffer_move_right(text_buffer *buffer);
+void text_buffer_backspace(text_buffer *buffer);
 
-void text_buffer_move_to_line(text_buffer *buffer, int line);
-void text_buffer_move_to_col(text_buffer *buffer, int col);
+void text_buffer_cursor_up(text_buffer *buffer);
+void text_buffer_cursor_down(text_buffer *buffer);
+void text_buffer_cursor_prev(text_buffer *buffer);
+void text_buffer_cursor_next(text_buffer *buffer);
 
-void text_buffer_move_to_start(text_buffer *buffer);
-void text_buffer_move_to_end(text_buffer *buffer);
+void text_buffer_cursor_move_to(text_buffer *buffer, int x, int y);
+void text_buffer_cursor_to_line(text_buffer *buffer, int line);
+void text_buffer_cursor_to_col(text_buffer *buffer, int col);
 
-void text_buffer_move_to_start_of_line(text_buffer *buffer);
-void text_buffer_move_to_end_of_line(text_buffer *buffer);
+void text_buffer_cursor_home(text_buffer *buffer);
+void text_buffer_cursor_end(text_buffer *buffer);
+
+void text_buffer_cursor_line_home(text_buffer *buffer);
+void text_buffer_cursor_line_end(text_buffer *buffer);
 
 #endif /* !_SYSTEM_LIB_TEXT_H_ */
