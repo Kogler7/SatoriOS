@@ -4,6 +4,7 @@
 #include "config/info.h"
 #include "boot/boot_param.h"
 #include "io/stdio.h"
+#include "drivers/ansi.h"
 
 void shell_test(int cmd_id)
 {
@@ -38,6 +39,11 @@ void show_help()
 void echo()
 {
     puts(input_buff);
+}
+
+void clear_screen()
+{
+    clear_screen();
 }
 
 void exit_shell()

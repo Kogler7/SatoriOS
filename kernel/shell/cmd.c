@@ -26,6 +26,12 @@ shell_cmd shell_cmds[SHELL_CMD_MAX] = {
         .func = echo
     },
     {
+        .cmd = "cls",
+        .desc = "clear the screen",
+        .params = {},
+        .func = clear_screen
+    },
+    {
         .cmd = "exit",
         .desc = "exit the shell",
         .params = {},
