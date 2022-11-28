@@ -29,7 +29,7 @@ shell_cmd shell_cmds[SHELL_CMD_MAX] = {
         .cmd = "cls",
         .desc = "clear the screen",
         .params = {},
-        .func = clear_screen
+        .func = cls
     },
     {
         .cmd = "exit",

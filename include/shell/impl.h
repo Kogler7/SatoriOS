@@ -4,7 +4,7 @@
 void shell_test(int cmd_id);
 void show_help();
 void echo();
-void clear_screen();
+void cls();
 void exit_shell();
 void show_clock_info(int cmd_id);
 void show_about_info(int cmd_id);

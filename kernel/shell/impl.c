@@ -41,7 +41,7 @@ void echo()
     puts(input_buff);
 }
 
-void clear_screen()
+void cls()
 {
     clear_screen();
 }
