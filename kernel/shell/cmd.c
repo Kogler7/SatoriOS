@@ -1,5 +1,6 @@
 #include "shell/shell.h"
 #include "shell/impl.h"
+#include "app/vim.h"
 
 shell_cmd shell_cmds[SHELL_CMD_MAX] = {
     {
@@ -224,27 +225,9 @@ shell_cmd shell_cmds[SHELL_CMD_MAX] = {
         .func = 0
     },
     {
-        .cmd = "mount",
-        .desc = "mount a filesystem",
+        .cmd = "vim",
+        .desc = "a text editor",
         .params = {},
-        .func = 0
-    },
-    {
-        .cmd = "umount",
-        .desc = "unmount a filesystem",
-        .params = {},
-        .func = 0
-    },
-    {
-        .cmd = "ping",
-        .desc = "send ICMP ECHO_REQUEST to network hosts",
-        .params = {},
-        .func = 0
-    },
-    {
-        .cmd = "whoami",
-        .desc = "print effective userid",
-        .params = {},
-        .func = 0
+        .func = vim_entry
     }
 };
