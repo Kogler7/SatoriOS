@@ -44,7 +44,7 @@ static char digits[] = "0123456789";
 static inline void put_code(sint code)
 {
     static char buf[4];
-    static sint i;
+    static int i;
     i = 0;
     do
     {
