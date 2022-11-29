@@ -4,6 +4,7 @@
 #include "lib/string.h"
 #include "drivers/kbd.h"
 #include "drivers/ansi.h"
+#include "mm/kmalloc.h"
 
 text_buffer *vim_text_buffer;
 
@@ -21,6 +22,9 @@ void vim_test()
         case '\n':
             text_buffer_newline(vim_text_buffer);
             break;
+        case '\t':
+            text_buffer_destroy(vim_text_buffer);
+            return;
         case KEY_UP:
             text_buffer_cursor_up(vim_text_buffer);
             break;
@@ -37,9 +41,14 @@ void vim_test()
             text_buffer_insert_char(vim_text_buffer, c);
             break;
         }
-        char *text = text_buffer_save(vim_text_buffer);
+        int nr_lines = text_buffer_count_lines(vim_text_buffer);
+        int nr_chars = text_buffer_count_chars(vim_text_buffer);
+        int size = nr_lines * nr_chars + 1;
+        char *str = (char *)kmalloc(size * sizeof(char));
+        text_buffer_save(vim_text_buffer, str, size);
         clear_screen();
         puts(text);
+        kfree(text, size * sizeof(char));
     }
 }
 

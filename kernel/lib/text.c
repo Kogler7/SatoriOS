@@ -76,7 +76,7 @@ void text_buffer_load(text_buffer *buffer, char *str)
     {
         if (*str == '\n')
         {
-            text_buffer_new_line(buffer);
+            text_buffer_newline(buffer);
         }
         else
         {
@@ -86,12 +86,10 @@ void text_buffer_load(text_buffer *buffer, char *str)
     }
 }
 
-char *text_buffer_save(text_buffer *buffer)
+void text_buffer_save(text_buffer *buffer, char *str, int size)
 {
     // 保存文本缓冲区到字符串
-    int nr_lines = text_buffer_count_lines(buffer);
-    int nr_chars = text_buffer_count_chars(buffer);
-    char *str = (char *)malloc(nr_chars + nr_lines + 1); // +1 for '\0'
+    char *str_end = str + size;
     char *ptr = str;
     text_line *line = buffer->fst_line->next;
     while (line != nullptr)
@@ -100,11 +98,19 @@ char *text_buffer_save(text_buffer *buffer)
         while (chr != nullptr)
         {
             *ptr = chr->ch;
-            ptr++;
+            if (++ptr == str_end)
+            {
+                *ptr = '\0';
+                return;
+            }
             chr = chr->next;
         }
         *ptr = '\n';
-        ptr++;
+        if (++ptr == str_end)
+            {
+                *ptr = '\0';
+                return;
+            }
         line = line->next;
     }
     *ptr = '\0';

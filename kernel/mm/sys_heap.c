@@ -82,5 +82,5 @@ void sys_heap_print_usage()
         }
     }
     mm_info("System heap usage: %d bytes used, %d bytes free.", used, free);
-    print_bitmap(sys_heap_bitmap, 256);
+    print_bitmap(sys_heap_bitmap, sys_heap_bitmap_size);
 }
