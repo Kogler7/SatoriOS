@@ -1,5 +1,5 @@
 #include "io/stdout.h"
-#include "io/ansi.h"
+#include "drivers/ansi.h"
 
 #ifndef _SATORI_KERNEL_INFO_H_
 #define _SATORI_KERNEL_INFO_H_

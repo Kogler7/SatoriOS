@@ -25,8 +25,13 @@
 #define ANSI_CURSOR_STYLE_CROSSED_OUT   9
 #define ANSI_CURSOR_STYLE_PRIMARY_FONT  10
 
-static sint ansi_tmp_color;
-static sint ansi_tmp_style;
+#define ANSI_STACK_SIZE 16
+
+extern sint ansi_cur_color;
+extern sint ansi_cur_style;
+
+extern sint ansi_color_stack[ANSI_STACK_SIZE];
+extern sint ansi_style_stack[ANSI_STACK_SIZE];
 
 static inline void put_head()
 {
@@ -255,24 +260,9 @@ static inline void set_cursor_background_color(sint color)
     put_char('m');
 }
 
-static inline void save_cursor_style()
-{
-    ansi_tmp_style = ansi_cursor_style;
-}
-
-static inline void restore_cursor_style()
-{
-    set_cursor_style(ansi_tmp_style);
-}
-
-static inline void save_cursor_color()
-{
-    ansi_tmp_color = ansi_cursor_color;
-}
-
-static inline void restore_cursor_color()
-{
-    set_cursor_color(ansi_tmp_color);
-}
+void save_cursor_style();
+void restore_cursor_style();
+void save_cursor_color();
+void restore_cursor_color();
 
 #endif /* !_ANSI_ESCAPE_SEQUENCE_H_ */
