@@ -42,6 +42,6 @@ rtx_buffer *rtx_create_buffer(rtx_align align)
 void rtx_destroy_buffer(rtx_buffer *buffer)
 {
     int buffer_size = buffer->width * buffer->height;
-    free(buffer->buffer, buffer_size * sizeof(char));
+    // free(buffer->buffer, buffer_size * sizeof(char));
     del(buffer, rtx_buffer);
 }

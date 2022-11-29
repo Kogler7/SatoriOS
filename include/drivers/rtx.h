@@ -26,17 +26,6 @@ typedef enum rtx_align
     rtx_align_exp = 1 << 6, // expand (full width and height)
 } rtx_align;
 
-typedef struct rtx_buffer
-{
-    int width;
-    int height;
-    int offset_x;
-    int offset_y;
-    int active;
-    int cursor_x;
-    int cursor_y;
-    char **buffer;
-} rtx_buffer;
 typedef struct rtx_char
 {
     char ch;
