@@ -3,23 +3,14 @@
 #ifndef _ANSI_ESCAPE_SEQUENCE_H_
 #define _ANSI_ESCAPE_SEQUENCE_H_
 
-#define ANSI_BLACK_FRONT    0
-#define ANSI_RED_FRONT      1
-#define ANSI_GREEN_FRONT    2
-#define ANSI_YELLOW_FRONT   3
-#define ANSI_BLUE_FRONT     4
-#define ANSI_MAGENTA_FRONT  5
-#define ANSI_CYAN_FRONT     6
-#define ANSI_WHITE_FRONT    7
-
-#define ANSI_BLACK_BACK     0
-#define ANSI_RED_BACK       1
-#define ANSI_GREEN_BACK     2
-#define ANSI_YELLOW_BACK    3
-#define ANSI_BLUE_BACK      4
-#define ANSI_MAGENTA_BACK   5
-#define ANSI_CYAN_BACK      6
-#define ANSI_WHITE_BACK     7
+#define ANSI_BLACK      0
+#define ANSI_RED        1
+#define ANSI_GREEN      2
+#define ANSI_YELLOW     3
+#define ANSI_BLUE       4
+#define ANSI_MAGENTA    5
+#define ANSI_CYAN       6
+#define ANSI_WHITE      7
 
 #define ANSI_CURSOR_STYLE_RESET         0
 #define ANSI_CURSOR_STYLE_BOLD          1

@@ -11,4 +11,6 @@ void* sys_heap_realloc(void* addr, unsigned int old_size, unsigned int new_size)
 void* sys_heap_calloc(unsigned int size);
 void* sys_heap_memalign(unsigned int size, unsigned int align);
 
+void sys_heap_print_usage();
+
 #endif /* !_SYS_HEAP_H_ */

@@ -5,6 +5,7 @@
 #include "boot/boot_param.h"
 #include "io/stdio.h"
 #include "drivers/ansi.h"
+#include "mm/sys_heap.h"
 
 void shell_test(int cmd_id)
 {
@@ -87,19 +88,20 @@ void show_satori_info(int cmd_id)
     }
     else
     {
-        if (get_param('c') != 0)
+        char *param;
+        if ((param = get_param('c')) != 0)
         {
             puts("CPU Info:");
             // print_cpu_info();
             puts("Not implemented yet.");
         }
-        if (get_param('m') != 0)
+        if ((param = get_param('m')) != 0)
         {
             puts("Memory Info:");
-            // print_mem_info();
-            puts("Not implemented yet.");
+            if (strcmp(param, "sys_heap_usage") == 0)
+                sys_heap_print_usage();
         }
-        if (get_param('b') != 0)
+        if ((param = get_param('b')) != 0)
         {
             puts("Boot Info:");
             print_args();
