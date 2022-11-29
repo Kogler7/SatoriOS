@@ -1,7 +1,7 @@
 #include "drivers/ansi.h"
 
-sint ansi_cur_color;
-sint ansi_cur_style;
+sint ansi_cur_color = 7;
+sint ansi_cur_style = 7;
 
 sint ansi_color_stack[ANSI_STACK_SIZE];
 sint ansi_style_stack[ANSI_STACK_SIZE];
@@ -9,7 +9,7 @@ sint ansi_style_stack[ANSI_STACK_SIZE];
 void save_cursor_style()
 {
     static sint i = 0;
-    if(i >= ANSI_STACK_SIZE)
+    if (i >= ANSI_STACK_SIZE)
     {
         return;
     }
@@ -30,7 +30,7 @@ void restore_cursor_style()
 void save_cursor_color()
 {
     static sint i = 0;
-    if(i >= ANSI_STACK_SIZE)
+    if (i >= ANSI_STACK_SIZE)
     {
         return;
     }
