@@ -28,14 +28,14 @@
 
 #endif // __PRINTF_H__
 
-#define mm_info(fmt, ...) pr_info("MM", fmt, ##__VA_ARGS__)
+#define mm_info(fmt, ...) pr_info(MM, fmt, ##__VA_ARGS__)
 
-#define mm_warn(fmt, ...) pr_warn("MM", fmt, ##__VA_ARGS__)
+#define mm_warn(fmt, ...) pr_warn(MM, fmt, ##__VA_ARGS__)
 
-#define mm_error(fmt, ...) pr_error("MM", fmt, ##__VA_ARGS__)
+#define mm_error(fmt, ...) pr_error(MM, fmt, ##__VA_ARGS__)
 
 #ifdef _SATORI_DEBUG_
-#define mm_debug(fmt, ...) pr_debug("MM", fmt, ##__VA_ARGS__)
+#define mm_debug(fmt, ...) pr_debug(MM, fmt, ##__VA_ARGS__)
 
 #else
 #define mm_debug(fmt, ...)
