@@ -51,7 +51,7 @@ void text_buffer_insert_char(text_buffer *buffer, char c);
 void text_buffer_split_line(text_buffer *buffer);
 void text_buffer_merge_line(text_buffer *buffer);
 
-static void text_buffer_new_line(text_buffer *buffer)
+static void text_buffer_newline(text_buffer *buffer)
 {
     text_buffer_split_line(buffer);
 }

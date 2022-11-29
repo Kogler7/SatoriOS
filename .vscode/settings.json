@@ -22,7 +22,8 @@
         "string.h": "c",
         "stdout.h": "c",
         "ansi.h": "c",
-        "kinfo.h": "c"
+        "kinfo.h": "c",
+        "text.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled",
     "cSpell.words": [

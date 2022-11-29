@@ -61,10 +61,7 @@ char getc()
 {
     stdin_enable();
     byte c = 0;
-    while (c == 0)
-    {
-        c = std_buffer_get(stdin_buffer);
-    }
+    c = std_buffer_wait_char(stdin_buffer);
     stdin_disable();
     return c;
 }

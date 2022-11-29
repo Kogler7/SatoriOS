@@ -103,6 +103,13 @@ void std_buffer_back(std_buffer *buffer)
     step_back(buffer->peek, buffer->capacity);
 }
 
+char std_buffer_wait_char(std_buffer *buffer)
+{
+    while (std_buffer_empty(buffer))
+        asm volatile("nop");
+    return std_buffer_get(buffer);
+}
+
 // 从缓冲区中获取一行，以换行符结束，换行符被替换为0，若缓冲区为空，则等待
 int std_buffer_wait_line(std_buffer *buffer, char *data, int size)
 {

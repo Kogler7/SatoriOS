@@ -73,12 +73,27 @@ void free_aligned_bits(byte *bitmap, int index, int size)
 
 void print_bitmap(byte *bitmap, int size)
 {
+    int used_count = 0;
+    int blank_lines = 0;
+    printf(" - ");
     for (int i = 0; i < size; i++)
     {
+        if (bitmap[i])
+            used_count++;
         for (int j = 0; j < 8; j++)
             printf("%d", (bitmap[i] >> j) & 1);
-        printf(" ");
-        if (i % 4 == 3)
-            printf("\n");
+        putc(' ');
+        if (i % 8 == 7)
+        {
+            if (!used_count)
+                blank_lines++;
+            if (blank_lines == 2)
+            {
+                printf("\n\r");
+                return;
+            }
+            used_count = 0;
+            printf("\n\r - ");
+        }
     }
 }

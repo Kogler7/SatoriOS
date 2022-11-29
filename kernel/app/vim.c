@@ -1,27 +1,46 @@
 #include "app/vim.h"
+#include "lib/text.h"
 #include "io/stdio.h"
 #include "lib/string.h"
 #include "drivers/kbd.h"
 #include "drivers/ansi.h"
 
+text_buffer *vim_text_buffer;
+
 void vim_test()
 {
-    clear_screen();
-    cursor_move_to(1,2);
-    put_char('*');
-    cursor_reset();
-    put_char('*');
-    cursor_move_down(2);
-    put_char('|');
-    cursor_move_forward(3);
-    put_char('*');
-    // cursor_move_backward(80);
-    put_char('-');
-    // clear_screen_to_cursor();
-    clear_line_to_cursor();
-    scroll_down(10);
-    set_cursor_style(9);
-    set_cursor_color(33);
+    vim_text_buffer = text_buffer_create();
+    char c;
+    while (c = getc())
+    {
+        switch (c)
+        {
+        case '\b':
+            text_buffer_backspace(vim_text_buffer);
+            break;
+        case '\n':
+            text_buffer_newline(vim_text_buffer);
+            break;
+        case KEY_UP:
+            text_buffer_cursor_up(vim_text_buffer);
+            break;
+        case KEY_DOWN:
+            text_buffer_cursor_down(vim_text_buffer);
+            break;
+        case KEY_LEFT:
+            text_buffer_cursor_prev(vim_text_buffer);
+            break;
+        case KEY_RIGHT:
+            text_buffer_cursor_next(vim_text_buffer);
+            break;
+        default:
+            text_buffer_insert_char(vim_text_buffer, c);
+            break;
+        }
+        char *text = text_buffer_save(vim_text_buffer);
+        clear_screen();
+        puts(text);
+    }
 }
 
 void vim_entry(char *file_path)
