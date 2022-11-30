@@ -30,6 +30,7 @@
         "fappendln",
         "fdelete",
         "fmove",
+        "getk",
         "Jiaotong",
         "kcalloc",
         "kfree",

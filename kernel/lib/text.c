@@ -153,8 +153,10 @@ void text_buffer_insert_line(text_buffer *buffer)
     // 在当前行之后插入新行
     text_line *cur_line = buffer->cur_line;
     text_line *new_line = create_isolate_line();
+    new_line->prev = cur_line;
     if (is_isolated(cur_line))
     {
+        cur_line->next = new_line;
         buffer->lst_line = new_line;
         buffer->cur_line = new_line;
         buffer->cur_char = new_line->fst_char;
@@ -162,7 +164,6 @@ void text_buffer_insert_line(text_buffer *buffer)
         buffer->cursor.y = 1;
         return;
     }
-    new_line->prev = cur_line;
     if (is_the_last(cur_line))
     {
         cur_line->next = new_line;

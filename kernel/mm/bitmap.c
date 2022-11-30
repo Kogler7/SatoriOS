@@ -87,7 +87,9 @@ void print_bitmap(byte *bitmap, int size)
         {
             if (!used_count)
                 blank_lines++;
-            if (blank_lines == 2)
+            else
+                blank_lines = 0;
+            if (blank_lines == 3)
             {
                 printf("\n\r");
                 return;

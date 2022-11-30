@@ -97,9 +97,11 @@ void show_satori_info(int cmd_id)
         }
         if ((param = get_param('m')) != 0)
         {
-            puts("Memory Info:");
-            if (strcmp(param, "sys_heap") == 0)
+            // puts("Memory Info:");
+            // if (strcmp(param, "heap") == 0)
                 sys_heap_print_usage();
+            // if (strcmp(param, "bitmap") == 0)
+            //     puts("Not implemented yet.");
         }
         if ((param = get_param('b')) != 0)
         {

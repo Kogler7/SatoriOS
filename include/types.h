@@ -24,8 +24,12 @@ typedef unsigned long 	    u64;
 
 #define true        (bool)1
 #define false       (bool)0
+#define done        1
+#define error       -1
 #define null        0
 #define nullstr     ""
 #define nullptr     ((void *)0)
+
+#define nop()       asm volatile("nop")
 
 #endif /* !_SATORI_TYPES_H_ */

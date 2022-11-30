@@ -11,11 +11,11 @@ void stdin_init()
     stdin_buffer = std_buffer_create(STDIN_BUFFER_SIZE);
 }
 
-void stdin_kbd_cbk(char c, int state)
+void stdin_kbd_cbk(kbd_event e)
 {
-    if (stdin_enabled && state == KEY_STATE_DOWN)
+    if (stdin_enabled && e.state == KEY_STATE_DOWN)
     {
-        if (c == '\b')
+        if (e.key == '\b')
         {
             if (std_buffer_empty(stdin_buffer))
                 return;
@@ -26,10 +26,10 @@ void stdin_kbd_cbk(char c, int state)
         }
         else
         {
-            std_buffer_put(stdin_buffer, c);
-            putc(c);
-            if (c == '\n')
-                putc('\r');
+            std_buffer_put(stdin_buffer, e.key);
+            putc(e.key);
+            if (e.key == '\n')
+                putc('\r'); //?忘了当时为啥要这样了
         }
     }
 }
