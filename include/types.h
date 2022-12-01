@@ -30,6 +30,4 @@ typedef unsigned long 	    u64;
 #define nullstr     ""
 #define nullptr     ((void *)0)
 
-#define nop()       asm volatile("nop")
-
 #endif /* !_SATORI_TYPES_H_ */

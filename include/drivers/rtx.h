@@ -5,7 +5,7 @@
 #define _RICH_TEXT_GRAPHICS_H_
 
 #define RTX_MAX_WIDTH 80
-#define RTX_MAX_HEIGHT 25
+#define RTX_MAX_HEIGHT 24
 
 #define RTX_BUFFER_LINES 100
 
@@ -14,6 +14,8 @@
      y >= buffer->offset_y && y < buffer->offset_y + buffer->height)
 
 #define hit_align(cur_align, tgt_align) (cur_align & tgt_align)
+
+extern char _rtx_buffer[RTX_BUFFER_LINES][RTX_MAX_WIDTH];
 
 typedef enum rtx_align
 {
@@ -94,6 +96,8 @@ void rtx_restore_cursor_color(rtx_buffer *buffer);
 
 void rtx_roll_up(rtx_buffer *buffer, int lines);
 void rtx_roll_down(rtx_buffer *buffer, int lines);
+
+void rtx_render_all();
 
 // void rtx_set_tab(rtx_buffer *buffer, int x);
 // void rtx_show_tabs(rtx_buffer *buffer);

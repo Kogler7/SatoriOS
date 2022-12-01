@@ -1,4 +1,5 @@
 #include "io/kbdin.h"
+#include "gcc.h"
 
 bool kbd_input_enabled = false;
 int kbd_input_cbk_id = -1;

@@ -1,5 +1,6 @@
 #include "lib/buffer.h"
 #include "mm/kmalloc.h"
+#include "gcc.h"
 
 #define step_next(x, size) (x = (x + 1) % size)
 #define step_back(x, size) (x = (x - 1 + size) % size)
@@ -106,7 +107,7 @@ void std_buffer_back(std_buffer *buffer)
 char std_buffer_wait_char(std_buffer *buffer)
 {
     while (std_buffer_empty(buffer))
-        asm volatile("nop");
+        nop();
     return std_buffer_get(buffer);
 }
 
@@ -117,9 +118,7 @@ int std_buffer_wait_line(std_buffer *buffer, char *data, int size)
     while (i < size)
     {
         while (std_buffer_empty_p(buffer))
-        {
-            asm volatile("nop");
-        }
+            nop()
         if (std_buffer_peek(buffer) == '\n')
             break;
         i++;

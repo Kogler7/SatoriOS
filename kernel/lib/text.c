@@ -92,14 +92,14 @@ int text_buffer_count_chars(text_buffer *buffer)
     return nr_chars;
 }
 
-void text_buffer_load(text_buffer *buffer, char *str)
+void text_buffer_load_text(text_buffer *buffer, char *str)
 {
     // 从字符串中加载文本缓冲区
     text_buffer_clear(buffer);
     text_buffer_insert_string(buffer, str);
 }
 
-void text_buffer_save(text_buffer *buffer, char *str, int size)
+void text_buffer_save_text(text_buffer *buffer, char *str, int size)
 {
     // 保存文本缓冲区到字符串
     char *str_end = str + size;
@@ -127,6 +127,26 @@ void text_buffer_save(text_buffer *buffer, char *str, int size)
             return;
         }
         line = line->next;
+    }
+    *ptr = '\0';
+    return str;
+}
+
+void text_buffer_save_line(text_line *line, char *str, int size)
+{
+    // 保存当前行到字符串
+    char *str_end = str + size;
+    char *ptr = str;
+    text_char *chr = line->fst_char->next;
+    while (chr != nullptr)
+    {
+        *ptr = chr->ch;
+        if (++ptr == str_end)
+        {
+            *ptr = '\0';
+            return;
+        }
+        chr = chr->next;
     }
     *ptr = '\0';
     return str;
@@ -605,7 +625,7 @@ void text_buffer_print_text(text_buffer *buffer)
     int nr_chars = text_buffer_count_chars(buffer);
     int size = nr_lines * nr_chars + 1;
     char *str = (char *)malloc(size * sizeof(char));
-    text_buffer_save(buffer, str, size);
+    text_buffer_save_text(buffer, str, size);
     puts(str);
     free(str, size * sizeof(char));
 }

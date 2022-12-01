@@ -38,8 +38,10 @@ text_buffer *text_buffer_create();
 int text_buffer_count_lines(text_buffer *buffer);
 int text_buffer_count_chars(text_buffer *buffer);
 
-void text_buffer_load(text_buffer *buffer, char *str);
-void text_buffer_save(text_buffer *buffer, char *str, int size);
+void text_buffer_load_text(text_buffer *buffer, char *str);
+void text_buffer_save_text(text_buffer *buffer, char *str, int size);
+
+void text_buffer_save_line(text_line *line, char *str, int size);
 
 void text_buffer_clear(text_buffer *buffer);
 void text_buffer_destroy(text_buffer *buffer);

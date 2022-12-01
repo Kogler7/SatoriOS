@@ -7,6 +7,8 @@
 #define new(type) (type *)malloc(sizeof(type))
 #define del(obj, type) free(obj, sizeof(type))
 
+char _rtx_buffer[RTX_BUFFER_LINES][RTX_MAX_WIDTH] = {0};
+
 void rtx_init()
 {
     clear_screen();
@@ -44,4 +46,36 @@ void rtx_destroy_buffer(rtx_buffer *buffer)
     int buffer_size = buffer->width * buffer->height;
     // free(buffer->buffer, buffer_size * sizeof(char));
     del(buffer, rtx_buffer);
+}
+
+void rtx_render_buffer(rtx_buffer *buffer)
+{
+    if (buffer->active)
+    {
+        int buffer_size = buffer->width * buffer->height;
+        for (int i = 0; i < buffer_size; i++)
+        {
+            int x = i % buffer->width;
+            int y = i / buffer->width;
+            char ch = _rtx_buffer[y][x];
+            if (ch == 0)
+                ch = ' ';
+            // print_char(ch, x, y);
+        }
+    }
+}
+
+void rtx_render_all()
+{
+    cursor_reset();
+    char ch;
+    for (int i = 0; i < RTX_MAX_HEIGHT; i++)
+    {
+        for (int j = 0; j < RTX_MAX_WIDTH; j++)
+        {
+            ch = _rtx_buffer[i][j];
+            if (ch == 0) break;
+            putc(ch);
+        }
+    }
 }

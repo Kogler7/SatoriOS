@@ -16,12 +16,25 @@ static void newline()
 
 static inline void puts(const char *str)
 {
+    puts_st(str);
+    newline();
+}
+
+static inline void puts_st(const char *str)
+{
     while (*str != 0)
     {
         putc(*str);
         str++;
     }
-    newline();
+}
+
+static inline void puts_nr(const char c, int nr)
+{
+    for (int i = 0; i < nr; i++)
+    {
+        putc(c);
+    }
 }
 
 void print_int(int xx, int base, int sign);
