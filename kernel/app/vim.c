@@ -7,16 +7,16 @@
 
 text_buffer *vim_text_buffer;
 
-const char* vim_prompt = 
-"void text_buffer_write_char(text_buffer *buffer, char c)\n
-{\n
-    if (is_reserved(buffer->cur_char))\n
-    {\n
-        text_buffer_insert_char(buffer, c);\n
-    }\n
-    buffer->cur_char->ch = c;\n
-    text_buffer_cursor_next(buffer);\n
-}";
+const char vim_prompt[] =
+    "void text_buffer_write_char(text_buffer *buffer, char c)\n"
+    "{\n"
+    "    if (is_reserved(buffer->cur_char))\n"
+    "    {\n"
+    "        text_buffer_insert_char(buffer, c);\n"
+    "    }\n"
+    "    buffer->cur_char->ch = c;\n"
+    "    text_buffer_cursor_next(buffer);\n"
+    "}";
 
 void vim_test()
 {
@@ -25,6 +25,9 @@ void vim_test()
     kbd_event e;
     clear_screen();
     cursor_reset();
+    text_buffer_print_text(vim_text_buffer);
+    text_cursor cursor = vim_text_buffer->cursor;
+    cursor_move_to(cursor.x, cursor.y);
     while (true)
     {
         e = kbd_wait_key_down();
@@ -65,6 +68,7 @@ void vim_test()
         // text_buffer_print_info(vim_text_buffer);
         text_buffer_print_text(vim_text_buffer);
         text_cursor cursor = vim_text_buffer->cursor;
+        text_buffer_relocate_cursor(vim_text_buffer);
         cursor_move_to(cursor.x, cursor.y);
     }
 }

@@ -585,13 +585,45 @@ void text_buffer_print_info(text_buffer *buffer)
     }
 }
 
+void text_buffer_print_line(text_line *line)
+{
+    // 打印一行的内容
+    text_char *ch = line->fst_char->next;
+    for (int i = 0; i < line->nr_chars; i++)
+    {
+        putc(ch->ch);
+        ch = ch->next;
+    }
+}
+
 void text_buffer_print_text(text_buffer *buffer)
 {
+    // 打印缓冲区内容
     int nr_lines = text_buffer_count_lines(buffer);
     int nr_chars = text_buffer_count_chars(buffer);
     int size = nr_lines * nr_chars + 1;
     char *str = (char *)malloc(size * sizeof(char));
     text_buffer_save(buffer, str, size);
-    printf(str);
+    puts(str);
     free(str, size * sizeof(char));
+}
+
+void text_buffer_relocate_cursor(text_buffer *buffer)
+{
+    // 重新定位光标
+    int x=0, y=0;
+    text_line *line = buffer->fst_line;
+    text_char *ch = line->fst_char;
+    while (line != buffer->cur_line)
+    {
+        line = line->next;
+        y++;
+    }
+    while (ch != buffer->cur_char)
+    {
+        ch = ch->next;
+        x++;
+    }
+    buffer->cursor.x = x;
+    buffer->cursor.y = y;
 }

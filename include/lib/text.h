@@ -80,6 +80,10 @@ void text_buffer_cursor_line_home(text_buffer *buffer);
 void text_buffer_cursor_line_end(text_buffer *buffer);
 
 void text_buffer_print_info(text_buffer *buffer);
+
+void text_buffer_print_line(text_line *line);
 void text_buffer_print_text(text_buffer *buffer);
+
+void text_buffer_relocate_cursor(text_buffer *buffer);
 
 #endif /* !_SYSTEM_LIB_TEXT_H_ */
