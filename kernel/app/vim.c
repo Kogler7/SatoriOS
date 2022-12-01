@@ -32,6 +32,9 @@ void vim_test()
         case KEY_RIGHT_ADJUST:
             text_buffer_cursor_next(vim_text_buffer);
             break;
+        case KEY_DELETE_ADJUST:
+            text_buffer_delete_char(vim_text_buffer);
+            break;
         case KEY_BACKSPACE:
             text_buffer_backspace(vim_text_buffer);
             break;
@@ -44,10 +47,10 @@ void vim_test()
         }
         clear_screen();
         cursor_reset();
-        putc(e.key);
-        printf("[%d,%d]", vim_text_buffer->cursor.x, vim_text_buffer->cursor.y);
-        text_buffer_print_info(vim_text_buffer);
-        // text_buffer_print_text(vim_text_buffer);
+        // text_buffer_print_info(vim_text_buffer);
+        text_buffer_print_text(vim_text_buffer);
+        text_cursor cursor = vim_text_buffer->cursor;
+        cursor_move_to(cursor.x, cursor.y);
     }
 }
 

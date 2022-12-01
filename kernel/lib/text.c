@@ -366,9 +366,10 @@ void text_buffer_backspace(text_buffer *buffer)
 
 void text_buffer_cursor_up(text_buffer *buffer)
 {
-    // 光标上移
+    // 光标上移，如果是第一行则跳转至行首
     if (buffer->cursor.y == 0)
     {
+        buffer->cursor.x = 0;
         return;
     }
     buffer->cursor.y--;
@@ -386,9 +387,10 @@ void text_buffer_cursor_up(text_buffer *buffer)
 
 void text_buffer_cursor_down(text_buffer *buffer)
 {
-    // 光标下移
+    // 光标下移，如果是最后一行则跳至行尾
     if (buffer->cursor.y == buffer->nr_lines)
     {
+        buffer->cursor.x = buffer->cur_line->nr_chars;
         return;
     }
     buffer->cursor.y++;
