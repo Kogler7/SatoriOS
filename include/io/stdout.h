@@ -14,12 +14,6 @@ static void newline()
     putc('\r');
 }
 
-static inline void puts(const char *str)
-{
-    puts_st(str);
-    newline();
-}
-
 static inline void puts_st(const char *str)
 {
     while (*str != 0)
@@ -35,6 +29,12 @@ static inline void puts_nr(const char c, int nr)
     {
         putc(c);
     }
+}
+
+static inline void puts(const char *str)
+{
+    puts_st(str);
+    newline();
 }
 
 void print_int(int xx, int base, int sign);

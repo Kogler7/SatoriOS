@@ -118,7 +118,7 @@ int std_buffer_wait_line(std_buffer *buffer, char *data, int size)
     while (i < size)
     {
         while (std_buffer_empty_p(buffer))
-            nop()
+            nop();
         if (std_buffer_peek(buffer) == '\n')
             break;
         i++;

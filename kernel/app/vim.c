@@ -18,7 +18,7 @@ const char vim_prompt[] =
     "    text_buffer_cursor_next(buffer);\n"
     "}";
 
-void vim_render(text_buffer *_buffer)
+void vim_render(text_buffer *buffer)
 {
     cursor_reset();
     static char line_buffer[80];
@@ -26,26 +26,29 @@ void vim_render(text_buffer *_buffer)
     text_line *line = buffer->fst_line;
     char *ptr = nullptr;
     puts("SatoriOS Vim");
-    cursor_move_to(50, 1);
-    puts("Press ESC to exit");
+    cursor_move_to(60, 1);
+    puts("| Press ESC to exit");
     puts_nr('-', 80);
     putc('\n');
     while (line != nullptr)
     {
-        text_buffer_save_line(vim_text_buffer, line_buffer, 80);
+        text_buffer_save_line(buffer, line_buffer, 80);
         ptr = line_buffer;
         while (*ptr)
         {
             putc(*ptr);
             ptr++;
         }
+        newline();
         clear_line_from_cursor();
         line = line->next;
     }
     clear_screen_from_cursor();
+    cursor_move_to(1, 23);
+    puts_nr('-', 80);
     cursor_move_to(1, 24);
     puts_st("Test.txt");
-    cursor_move_to(50, 24);
+    cursor_move_to(60, 24);
     printf("Line: %d/%d, Col: %d/%d", buffer->cursor.y, buffer->nr_lines, buffer->cursor.x, buffer->cur_line->nr_chars);
     cursor_move_to(cursor.x, cursor.y);
 }
