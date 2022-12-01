@@ -21,7 +21,7 @@ const char vim_prompt[] =
 void vim_render(text_buffer *buffer)
 {
     cursor_reset();
-    static char line_buffer[80];
+    static char line_str[80];
     text_cursor cursor = buffer->cursor;
     text_line *line = buffer->fst_line;
     char *ptr = nullptr;
@@ -32,8 +32,8 @@ void vim_render(text_buffer *buffer)
     putc('\n');
     while (line != nullptr)
     {
-        text_buffer_save_line(buffer, line_buffer, 80);
-        ptr = line_buffer;
+        text_buffer_save_line(line, line_str, 80);
+        ptr = line_str;
         while (*ptr)
         {
             putc(*ptr);
@@ -49,7 +49,7 @@ void vim_render(text_buffer *buffer)
     cursor_move_to(1, 24);
     puts_st("Test.txt");
     cursor_move_to(60, 24);
-    printf("Line: %d/%d, Col: %d/%d", buffer->cursor.y, buffer->nr_lines, buffer->cursor.x, buffer->cur_line->nr_chars);
+    printf("| Line: %d/%d, Col: %d/%d", buffer->cursor.y, buffer->nr_lines, buffer->cursor.x, buffer->cur_line->nr_chars);
     cursor_move_to(cursor.x, cursor.y);
 }
 
