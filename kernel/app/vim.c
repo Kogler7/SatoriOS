@@ -7,9 +7,21 @@
 
 text_buffer *vim_text_buffer;
 
+const char* vim_prompt = 
+"void text_buffer_write_char(text_buffer *buffer, char c)\n
+{\n
+    if (is_reserved(buffer->cur_char))\n
+    {\n
+        text_buffer_insert_char(buffer, c);\n
+    }\n
+    buffer->cur_char->ch = c;\n
+    text_buffer_cursor_next(buffer);\n
+}";
+
 void vim_test()
 {
     vim_text_buffer = text_buffer_create();
+    text_buffer_load(vim_text_buffer, vim_prompt);
     kbd_event e;
     clear_screen();
     cursor_reset();

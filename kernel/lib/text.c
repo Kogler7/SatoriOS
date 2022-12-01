@@ -326,9 +326,7 @@ void text_buffer_delete_line(text_buffer *buffer)
     // 删除当前行，光标跳转到上一行末尾
     text_line *cur_line = buffer->cur_line;
     if (is_isolated(cur_line))
-    {
         return;
-    }
     if (is_the_last(cur_line))
     {
         unlink_lst(cur_line);
