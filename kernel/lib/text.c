@@ -293,9 +293,7 @@ void text_buffer_delete_char(text_buffer *buffer)
     text_line *cur_line = buffer->cur_line;
     text_char *cur_char = buffer->cur_char;
     if (is_isolated(cur_line))
-    {
         return;
-    }
     if (is_isolated(cur_char))
     {
         if (!is_the_last(cur_line))
@@ -332,18 +330,16 @@ void text_buffer_delete_line(text_buffer *buffer)
         unlink_lst(cur_line);
         buffer->lst_line = cur_line->prev;
         buffer->cur_line = buffer->lst_line;
-        buffer->cur_char = buffer->lst_line->lst_char;
-        buffer->cursor.y--;
-        buffer->cursor.x = buffer->cur_line->nr_chars;
     }
     else
     {
         unlink_mid(cur_line);
         buffer->cur_line = cur_line->next;
-        buffer->cur_char = cur_line->next->fst_char;
-        buffer->cursor.x = 0;
     }
     text_buffer_free_line(cur_line);
+    buffer->cur_char = buffer->cur_line->lst_char;
+    buffer->cursor.x = buffer->cur_line->nr_chars;
+    buffer->cursor.y--;
     buffer->nr_lines--;
 }
 
@@ -353,33 +349,39 @@ void text_buffer_backspace(text_buffer *buffer)
     text_line *cur_line = buffer->cur_line;
     text_char *cur_char = buffer->cur_char;
     if (is_isolated(cur_line))
-    {
         return;
-    }
-    if (is_reserved(cur_char))
-    {
-        if (is_reserved(cur_line->prev))
-            return;
-        buffer->cur_line = cur_line->prev;
-        buffer->cur_char = cur_line->prev->lst_char;
-        text_buffer_merge_line(buffer);
-    }
+    if (is_isolated(cur_char))
+        text_buffer_delete_line(buffer);
     else
     {
-        text_char *del_char = cur_char;
-        buffer->cur_char = cur_char->prev;
-        if (is_the_last(del_char))
+        text_char *del_char = cur_char->prev;
+        if (is_reserved(del_char))
         {
-            cur_line->lst_char = cur_char->prev;
-            unlink_lst(del_char);
+            if (is_reserved(cur_line->prev))
+                return;
+            buffer->cur_line = cur_line->prev;
+            buffer->cur_char = cur_line->prev->lst_char;
+            buffer->cursor.y--;
+            buffer->cursor.x = buffer->cur_line->nr_chars;
+            text_buffer_merge_line(buffer);
         }
         else
         {
-            unlink_mid(del_char);
+            text_char *del_char = cur_char;
+            buffer->cur_char = cur_char->prev;
+            if (is_the_last(del_char))
+            {
+                cur_line->lst_char = cur_char->prev;
+                unlink_lst(del_char);
+            }
+            else
+            {
+                unlink_mid(del_char);
+            }
+            del(del_char, text_char);
+            cur_line->nr_chars--;
+            buffer->cursor.x--;
         }
-        del(del_char, text_char);
-        cur_line->nr_chars--;
-        buffer->cursor.x--;
     }
 }
 
@@ -611,18 +613,18 @@ void text_buffer_print_text(text_buffer *buffer)
 void text_buffer_relocate_cursor(text_buffer *buffer)
 {
     // 重新定位光标
-    int x=0, y=0;
+    int x = 0, y = 0;
     text_line *line = buffer->fst_line;
-    text_char *ch = line->fst_char;
-    while (line != buffer->cur_line)
+    text_char *ch = buffer->cur_line->fst_char;
+    while (line != buffer->cur_line && line != nullptr)
     {
-        line = line->next;
         y++;
+        line = line->next;
     }
-    while (ch != buffer->cur_char)
+    while (ch != buffer->cur_char && ch != nullptr)
     {
-        ch = ch->next;
         x++;
+        ch = ch->next;
     }
     buffer->cursor.x = x;
     buffer->cursor.y = y;

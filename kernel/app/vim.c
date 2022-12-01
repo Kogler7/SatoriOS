@@ -32,7 +32,11 @@ void vim_test()
     {
         e = kbd_wait_key_down();
         if (e.key_no == KEY_ESC)
+        {
+            clear_screen();
+            cursor_reset();
             break;
+        }
         switch (e.key_no)
         {
         case KEY_UP_ADJUST:
@@ -67,8 +71,8 @@ void vim_test()
         cursor_reset();
         // text_buffer_print_info(vim_text_buffer);
         text_buffer_print_text(vim_text_buffer);
-        text_cursor cursor = vim_text_buffer->cursor;
         text_buffer_relocate_cursor(vim_text_buffer);
+        text_cursor cursor = vim_text_buffer->cursor;
         cursor_move_to(cursor.x, cursor.y);
     }
 }
