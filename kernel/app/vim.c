@@ -26,7 +26,7 @@ void vim_render(text_buffer *buffer)
     text_line *line = buffer->fst_line;
     char *ptr = nullptr;
     puts("SatoriOS Vim");
-    cursor_move_to(60, 1);
+    cursor_move_to(56, 1);
     puts("| Press ESC to exit");
     puts_nr('-', 80);
     putc('\n');
@@ -48,9 +48,9 @@ void vim_render(text_buffer *buffer)
     puts_nr('-', 80);
     cursor_move_to(1, 24);
     puts_st("Test.txt");
-    cursor_move_to(60, 24);
+    cursor_move_to(56, 24);
     printf("| Line: %d/%d, Col: %d/%d", buffer->cursor.y, buffer->nr_lines, buffer->cursor.x, buffer->cur_line->nr_chars);
-    cursor_move_to(cursor.x, cursor.y);
+    cursor_move_to(cursor.x, cursor.y + 2);
 }
 
 void vim_test()
