@@ -285,3 +285,11 @@
 extern const unsigned int keymap[];
 extern const char kbd_US[128];
 extern const char kbd_US_shift[128];
+
+// 实测数据有所不同
+
+#define KEY_LEFT_ADJUST         75
+#define KEY_UP_ADJUST           72
+#define KEY_RIGHT_ADJUST        77
+#define KEY_DOWN_ADJUST         80
+#define KEY_DELETE_ADJUST       83

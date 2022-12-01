@@ -42,6 +42,7 @@ void text_buffer_load(text_buffer *buffer, char *str);
 void text_buffer_save(text_buffer *buffer, char *str, int size);
 
 void text_buffer_destroy(text_buffer *buffer);
+void text_buffer_free_line(text_line *line);
 
 void text_buffer_write_char(text_buffer *buffer, char c);
 
@@ -75,5 +76,8 @@ void text_buffer_cursor_end(text_buffer *buffer);
 
 void text_buffer_cursor_line_home(text_buffer *buffer);
 void text_buffer_cursor_line_end(text_buffer *buffer);
+
+void text_buffer_print_info(text_buffer *buffer);
+void text_buffer_print_text(text_buffer *buffer);
 
 #endif /* !_SYSTEM_LIB_TEXT_H_ */

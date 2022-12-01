@@ -38,6 +38,16 @@ void print_ptr(unsigned long x)
 		putc(digits[x >> (sizeof(unsigned long) * 8 - 4)]);
 }
 
+void print_ptr_short(unsigned long x)
+{
+	int i;
+	putc('0');
+	putc('x');
+	x <<= 4 * sizeof(unsigned long);
+	for (i = 0; i < (sizeof(unsigned long)); i++, x <<= 4)
+		putc(digits[x >> (sizeof(unsigned long) * 8 - 4)]);
+}
+
 void printf(const char *fmt, ...)
 {
 	va_list ap;
@@ -69,8 +79,11 @@ void printf(const char *fmt, ...)
 		case 'x':
 			print_int(va_arg(ap, int), 16, 1);
 			break;
-		case 'p':
+		case 'P':
 			print_ptr(va_arg(ap, unsigned long));
+			break;
+		case 'p':
+			print_ptr_short(va_arg(ap, unsigned long));
 			break;
 		case 's':
 			if ((s = va_arg(ap, char *)) == 0)

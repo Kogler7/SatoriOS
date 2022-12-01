@@ -20,16 +20,16 @@ void vim_test()
             break;
         switch (e.key_no)
         {
-        case KEY_UP:
-            text_buffer_move_cursor(vim_text_buffer, 0, -1);
+        case KEY_UP_ADJUST:
+            text_buffer_cursor_up(vim_text_buffer);
             break;
-        case KEY_DOWN:
+        case KEY_DOWN_ADJUST:
             text_buffer_cursor_down(vim_text_buffer);
             break;
-        case KEY_LEFT:
+        case KEY_LEFT_ADJUST:
             text_buffer_cursor_prev(vim_text_buffer);
             break;
-        case KEY_RIGHT:
+        case KEY_RIGHT_ADJUST:
             text_buffer_cursor_next(vim_text_buffer);
             break;
         case KEY_BACKSPACE:
@@ -39,20 +39,15 @@ void vim_test()
             text_buffer_newline(vim_text_buffer);
             break;
         default:
+            text_buffer_insert_char(vim_text_buffer, e.key);
             break;
         }
-        text_buffer_insert_char(vim_text_buffer, e.key);
-        int nr_lines = text_buffer_count_lines(vim_text_buffer);
-        int nr_chars = text_buffer_count_chars(vim_text_buffer);
-        int size = nr_lines * nr_chars + 1;
-        char *str = (char *)kmalloc(size * sizeof(char));
-        text_buffer_save(vim_text_buffer, str, size);
         clear_screen();
         cursor_reset();
-        putc(c);
-        printf("[%d,%d]", vim_text_buffer->cursor.x,vim_text_buffer->cursor.y);
-        puts(str);
-        kfree(str, size * sizeof(char));
+        putc(e.key);
+        printf("[%d,%d]", vim_text_buffer->cursor.x, vim_text_buffer->cursor.y);
+        text_buffer_print_info(vim_text_buffer);
+        // text_buffer_print_text(vim_text_buffer);
     }
 }
 

@@ -17,7 +17,7 @@ static inline void kbd_input_enable()
 {
     if (!kbd_input_enabled)
     {
-        kbd_cbk_id = register_kbd_cbk(kbd_input_cbk);
+        kbd_input_cbk_id = register_kbd_cbk(kbd_input_cbk);
         if (kbd_input_cbk_id != -1)
             kbd_input_enabled = true;
     }
@@ -27,7 +27,7 @@ static inline void kbd_input_disable()
 {
     if (kbd_input_enabled)
     {
-        unregister_kbd_cbk(kbd_cbk_id);
+        unregister_kbd_cbk(kbd_input_cbk_id);
         kbd_input_cbk_id = -1;
         kbd_input_enabled = false;
     }

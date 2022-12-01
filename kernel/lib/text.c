@@ -13,6 +13,29 @@
 #define is_reserved(obj) (obj->prev == nullptr)
 #define is_the_last(obj) (obj->next == nullptr)
 
+#define join(obj1, obj2)   \
+    {                      \
+        obj1->next = obj2; \
+        obj2->prev = obj1; \
+    }
+
+#define insert(cur_obj, new_obj)           \
+    {                                      \
+        new_obj->prev = cur_obj;           \
+        new_obj->next = cur_obj->next;     \
+        cur_obj->next = new_obj;           \
+        if (new_obj->next != nullptr)      \
+            new_obj->next->prev = new_obj; \
+    }
+
+#define unlink_mid(obj)              \
+    {                                \
+        obj->prev->next = obj->next; \
+        obj->next->prev = obj->prev; \
+    }
+#define unlink_fst(obj) obj->next->prev = nullptr;
+#define unlink_lst(obj) obj->prev->next = nullptr;
+
 static inline text_char *create_isolate_char()
 {
     // 创建一个孤立的字符
@@ -105,12 +128,14 @@ void text_buffer_save(text_buffer *buffer, char *str, int size)
             }
             chr = chr->next;
         }
+        if (is_the_last(line))
+            break;
         *ptr = '\n';
         if (++ptr == str_end)
-            {
-                *ptr = '\0';
-                return;
-            }
+        {
+            *ptr = '\0';
+            return;
+        }
         line = line->next;
     }
     *ptr = '\0';
@@ -125,16 +150,23 @@ void text_buffer_destroy(text_buffer *buffer)
     {
         text_line *next = line->next;
         text_char *ch = line->fst_char;
-        while (ch != nullptr)
-        {
-            text_char *next_ch = ch->next;
-            del(ch, text_char);
-            ch = next_ch;
-        }
-        del(line, text_line);
+        text_buffer_free_line(line);
         line = next;
     }
     del(buffer, text_buffer);
+}
+
+void text_buffer_free_line(text_line *line)
+{
+    // 释放行
+    text_char *ch = line->fst_char;
+    while (ch != nullptr)
+    {
+        text_char *next_ch = ch->next;
+        del(ch, text_char);
+        ch = next_ch;
+    }
+    del(line, text_line);
 }
 
 void text_buffer_write_char(text_buffer *buffer, char c)
@@ -153,28 +185,9 @@ void text_buffer_insert_line(text_buffer *buffer)
     // 在当前行之后插入新行
     text_line *cur_line = buffer->cur_line;
     text_line *new_line = create_isolate_line();
-    new_line->prev = cur_line;
-    if (is_isolated(cur_line))
-    {
-        cur_line->next = new_line;
-        buffer->lst_line = new_line;
-        buffer->cur_line = new_line;
-        buffer->cur_char = new_line->fst_char;
-        buffer->nr_lines = 1;
-        buffer->cursor.y = 1;
-        return;
-    }
     if (is_the_last(cur_line))
-    {
-        cur_line->next = new_line;
         buffer->lst_line = new_line;
-    }
-    else
-    {
-        new_line->next = cur_line->next;
-        cur_line->next->prev = new_line;
-        cur_line->next = new_line;
-    }
+    insert(cur_line, new_line);
     buffer->cur_line = new_line;
     buffer->cur_char = new_line->fst_char;
     buffer->nr_lines++;
@@ -194,17 +207,8 @@ void text_buffer_insert_char(text_buffer *buffer, char c)
     text_char *new_char = create_isolate_char();
     new_char->ch = c;
     if (is_the_last(buffer->cur_char))
-    {
-        buffer->cur_char->next = new_char;
         cur_line->lst_char = new_char;
-    }
-    else
-    {
-        new_char->next = buffer->cur_char->next;
-        buffer->cur_char->next->prev = new_char;
-        buffer->cur_char->next = new_char;
-    }
-    new_char->prev = buffer->cur_char;
+    insert(buffer->cur_char, new_char);
     buffer->cur_char = new_char;
     cur_line->nr_chars++;
     buffer->cursor.x++;
@@ -217,9 +221,7 @@ void text_buffer_split_line(text_buffer *buffer)
     text_char *pre_char = buffer->cur_char;
     text_buffer_insert_line(buffer);
     if (is_the_last(pre_line) || is_the_last(pre_char))
-    {
         return;
-    }
     buffer->cur_line->lst_char = pre_line->lst_char;
     pre_line->lst_char = pre_char;
     text_char *nl_fst_char = pre_char->next;
@@ -241,13 +243,13 @@ void text_buffer_merge_line(text_buffer *buffer)
     {
         return;
     }
+    text_cursor cursor = buffer->cursor;
     text_line *cur_line = buffer->cur_line;
     text_line *next_line = cur_line->next;
     text_char *cur_char = buffer->cur_char;
     if (is_the_last(cur_char))
     {
-        cur_char->next = next_line->fst_char->next;
-        next_line->fst_char->next->prev = cur_char;
+        join(cur_char, next_line->fst_char->next);
     }
     else
     {
@@ -258,7 +260,11 @@ void text_buffer_merge_line(text_buffer *buffer)
     }
     cur_line->nr_chars += next_line->nr_chars;
     buffer->cur_line = next_line;
+    next_line->fst_char->next = nullptr;
     text_buffer_delete_line(buffer);
+    buffer->cur_line = cur_line;
+    buffer->cur_char = cur_char;
+    buffer->cursor = cursor;
 }
 
 void text_buffer_delete_char(text_buffer *buffer)
@@ -272,27 +278,22 @@ void text_buffer_delete_char(text_buffer *buffer)
     if (is_isolated(cur_char))
     {
         if (!is_the_last(cur_line))
-        {
             text_buffer_delete_line(buffer);
-        }
         return;
     }
     if (is_the_last(cur_char))
-    {
         text_buffer_merge_line(buffer);
-    }
     else
     {
         text_char *del_char = cur_char->next;
         if (is_the_last(del_char))
         {
-            cur_char->next = nullptr;
+            unlink_lst(del_char);
             cur_line->lst_char = cur_char;
         }
         else
         {
-            cur_char->next = del_char->next;
-            del_char->next->prev = cur_char;
+            unlink_mid(del_char);
         }
         del(del_char, text_char);
         cur_line->nr_chars--;
@@ -309,8 +310,8 @@ void text_buffer_delete_line(text_buffer *buffer)
     }
     if (is_the_last(cur_line))
     {
+        unlink_lst(cur_line);
         buffer->lst_line = cur_line->prev;
-        buffer->lst_line->next = nullptr;
         buffer->cur_line = buffer->lst_line;
         buffer->cur_char = buffer->lst_line->lst_char;
         buffer->cursor.y--;
@@ -318,13 +319,12 @@ void text_buffer_delete_line(text_buffer *buffer)
     }
     else
     {
-        cur_line->next->prev = cur_line->prev;
-        cur_line->prev->next = cur_line->next;
+        unlink_mid(cur_line);
         buffer->cur_line = cur_line->next;
         buffer->cur_char = cur_line->next->fst_char;
         buffer->cursor.x = 0;
     }
-    del(cur_line, text_line);
+    text_buffer_free_line(cur_line);
     buffer->nr_lines--;
 }
 
@@ -337,32 +337,26 @@ void text_buffer_backspace(text_buffer *buffer)
     {
         return;
     }
-    if (is_isolated(cur_char))
-    {
-        if (!is_reserved(cur_line))
-        {
-            buffer->cur_line = cur_line->prev;
-            buffer->cur_char = cur_line->prev->lst_char;
-            text_buffer_merge_line(buffer);
-        }
-        return;
-    }
     if (is_reserved(cur_char))
     {
-        text_buffer_delete_line(buffer);
+        if (is_reserved(cur_line->prev))
+            return;
+        buffer->cur_line = cur_line->prev;
+        buffer->cur_char = cur_line->prev->lst_char;
+        text_buffer_merge_line(buffer);
     }
     else
     {
         text_char *del_char = cur_char;
+        buffer->cur_char = cur_char->prev;
         if (is_the_last(del_char))
         {
             cur_line->lst_char = cur_char->prev;
-            cur_char->prev->next = nullptr;
+            unlink_lst(del_char);
         }
         else
         {
-            cur_char->prev->next = cur_char->next;
-            cur_char->next->prev = cur_char->prev;
+            unlink_mid(del_char);
         }
         del(del_char, text_char);
         cur_line->nr_chars--;
@@ -542,4 +536,41 @@ void text_buffer_cursor_line_end(text_buffer *buffer)
     // 光标移动到当前行末
     buffer->cur_char = buffer->cur_line->lst_char;
     buffer->cursor.x = buffer->cur_line->nr_chars;
+}
+
+void text_buffer_print_info(text_buffer *buffer)
+{
+    // 打印缓冲区信息
+    printf("nr_lines: %d, cursor: (%d, %d)\n\r", buffer->nr_lines, buffer->cursor.x, buffer->cursor.y);
+    printf("fst_line: %p, lst_line: %p\n\r", buffer->fst_line, buffer->lst_line);
+    printf("cur_line: %p, cur_char: %p\n\r", buffer->cur_line, buffer->cur_char);
+    // 打印每一行的信息
+    text_line *line = buffer->fst_line;
+    for (int i = 0; i <= buffer->nr_lines; i++)
+    {
+        printf(
+            "\n\rline %d: nr_chars: %d, fst_char: %c, lst_char: %c\n\r"
+            "\tloc: ptr: %p, prev: %p, next: %p\n\r",
+            i, line->nr_chars, line->fst_char->next->ch, line->lst_char->ch,
+            line, line->prev, line->next);
+        // 打印每一行的字符地址及链接情况
+        text_char *ch = line->fst_char;
+        for (int j = 0; j <= line->nr_chars; j++)
+        {
+            printf("\tch %d: %c, ptr: %p, prev: %p, next: %p\n\r", j, ch->ch, ch, ch->prev, ch->next);
+            ch = ch->next;
+        }
+        line = line->next;
+    }
+}
+
+void text_buffer_print_text(text_buffer *buffer)
+{
+    int nr_lines = text_buffer_count_lines(buffer);
+    int nr_chars = text_buffer_count_chars(buffer);
+    int size = nr_lines * nr_chars + 1;
+    char *str = (char *)malloc(size * sizeof(char));
+    text_buffer_save(buffer, str, size);
+    printf(str);
+    free(str, size * sizeof(char));
 }
