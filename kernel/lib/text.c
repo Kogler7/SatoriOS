@@ -95,18 +95,8 @@ int text_buffer_count_chars(text_buffer *buffer)
 void text_buffer_load(text_buffer *buffer, char *str)
 {
     // 从字符串中加载文本缓冲区
-    while (*str != '\0')
-    {
-        if (*str == '\n')
-        {
-            text_buffer_newline(buffer);
-        }
-        else
-        {
-            text_buffer_insert_char(buffer, *str);
-        }
-        str++;
-    }
+    text_buffer_clear(buffer);
+    text_buffer_insert_string(buffer, str);
 }
 
 void text_buffer_save(text_buffer *buffer, char *str, int size)
@@ -140,6 +130,24 @@ void text_buffer_save(text_buffer *buffer, char *str, int size)
     }
     *ptr = '\0';
     return str;
+}
+
+void text_buffer_clear(text_buffer *buffer)
+{
+    // 清空文本缓冲区
+    text_line *line = buffer->fst_line->next;
+    while (line != nullptr)
+    {
+        text_line *next = line->next;
+        text_char *ch = line->fst_char;
+        text_buffer_free_line(line);
+        line = next;
+    }
+    buffer->fst_line->next = nullptr;
+    buffer->cur_line = buffer->fst_line;
+    buffer->cur_char = buffer->fst_line->fst_char;
+    buffer->cursor.x = 0;
+    buffer->cursor.y = 0;
 }
 
 void text_buffer_destroy(text_buffer *buffer)
@@ -212,6 +220,19 @@ void text_buffer_insert_char(text_buffer *buffer, char c)
     buffer->cur_char = new_char;
     cur_line->nr_chars++;
     buffer->cursor.x++;
+}
+
+void text_buffer_insert_string(text_buffer *buffer, char *str)
+{
+    // 在光标位置插入字符串
+    while (*str != '\0')
+    {
+        if (*str == '\n')
+            text_buffer_newline(buffer);
+        else
+            text_buffer_insert_char(buffer, *str);
+        str++;
+    }
 }
 
 void text_buffer_split_line(text_buffer *buffer)

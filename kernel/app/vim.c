@@ -42,7 +42,10 @@ void vim_test()
             text_buffer_newline(vim_text_buffer);
             break;
         default:
-            text_buffer_insert_char(vim_text_buffer, e.key);
+            if (e.key == '\t')
+                text_buffer_insert_string(vim_text_buffer, "    ");
+            else
+                text_buffer_insert_char(vim_text_buffer, e.key);
             break;
         }
         clear_screen();
