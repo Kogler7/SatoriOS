@@ -1,32 +1,32 @@
+#include "vpu/vdt.h"
+
 #ifndef _VIRTUAL_PROCESSOR_UNIT_H_
 #define _VIRTUAL_PROCESSOR_UNIT_H_
 
 #define GENERAL_REGISTERS 16
 #define SYSCALL_REGISTERS 8
-#define SEGMENT_REGISTERS 6
-#define CSP_STACK_SIZE 1024
+
+typedef struct segment_registers
+{
+    void *cs; // Code segment
+    void *ds; // Data segment
+    void *es; // Extra segment
+    void *fs; // File segment
+    void *gs; // Global segment
+    void *ss; // Stack segment
+} segment_registers_t;
 
 typedef struct vpu
 {
-    int general_registers[GENERAL_REGISTERS];
-    int syscall_registers[SYSCALL_REGISTERS];
-    int segment_registers[SEGMENT_REGISTERS];
-    byte flags;
-    void *stack_pointer;
-    void *program_counter;
-} vpu;
-
-typedef struct csp_stack
-{
-    void *stack_pointer;
-    void *stack_base;
-    void *stack_top;
-} csp_stack;
-
-typedef struct csp_exec
-{
-    csp_cpu *cpu;
-    csp_stack *stack;
-} csp_exec;
+    u32 gpr[GENERAL_REGISTERS]; // General purpose registers
+    u32 scr[SYSCALL_REGISTERS]; // System call registers
+    segment_registers_t sgr;    // Segment registers
+    u32 ip;                     // Instruction pointer
+    u32 sp;                     // Stack pointer
+    u32 bp;                     // Base pointer
+    u32 flags;                  // Flags
+    vdt_entry_t gdtr;           // Global descriptor table register
+    selector_t ldtr;            // Local descriptor table register
+} vpu_t;
 
 #endif /* !_VIRTUAL_PROCESSOR_UNIT_H_ */

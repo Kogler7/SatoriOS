@@ -17,4 +17,18 @@
         (type *)((char *)p - offsetof(type, member)); \
     })
 
+#define array_size(x) (sizeof(x) / sizeof((x)[0]))
+
+#define attr_packed __attribute__((packed))
+#define attr_aligned(x) __attribute__((aligned(x)))
+
+#define attr_weak __attribute__((weak))
+#define attr_naked __attribute__((naked))
+
+#define attr_unused __attribute__((unused))
+#define attr_used __attribute__((used))
+#define attr_const __attribute__((const))
+#define attr_pure __attribute__((pure))
+#define attr_noreturn __attribute__((noreturn))
+
 #endif /* !_GCC_H_ */
