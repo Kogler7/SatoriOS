@@ -20,16 +20,17 @@ const char vim_prompt[] =
 
 void vim_render(text_buffer *buffer)
 {
-    cursor_reset();
+    // cursor_reset();
+    reset_screen();
     static char line_str[80];
     text_cursor cursor = buffer->cursor;
     text_line *line = buffer->fst_line;
     char *ptr = nullptr;
     puts("SatoriOS Vim");
+    clear_line_from_cursor();
     cursor_move_to(56, 1);
     puts("| Press ESC to exit");
     puts_nr('-', 80);
-    putc('\n');
     while (line != nullptr)
     {
         text_buffer_save_line(line, line_str, 80);

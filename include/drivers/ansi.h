@@ -4,26 +4,26 @@
 #ifndef _ANSI_ESCAPE_SEQUENCE_H_
 #define _ANSI_ESCAPE_SEQUENCE_H_
 
-#define ANSI_BLACK      0
-#define ANSI_RED        1
-#define ANSI_GREEN      2
-#define ANSI_YELLOW     3
-#define ANSI_BLUE       4
-#define ANSI_MAGENTA    5
-#define ANSI_CYAN       6
-#define ANSI_WHITE      7
+#define ANSI_BLACK 0
+#define ANSI_RED 1
+#define ANSI_GREEN 2
+#define ANSI_YELLOW 3
+#define ANSI_BLUE 4
+#define ANSI_MAGENTA 5
+#define ANSI_CYAN 6
+#define ANSI_WHITE 7
 
-#define ANSI_CURSOR_STYLE_RESET         0
-#define ANSI_CURSOR_STYLE_BOLD          1
-#define ANSI_CURSOR_STYLE_FAINT         2
-#define ANSI_CURSOR_STYLE_ITALIC        3
-#define ANSI_CURSOR_STYLE_UNDERLINE     4
-#define ANSI_CURSOR_STYLE_SLOW_BLINK    5
-#define ANSI_CURSOR_STYLE_RAPID_BLINK   6
-#define ANSI_CURSOR_STYLE_REVERSE       7
-#define ANSI_CURSOR_STYLE_CONCEAL       8
-#define ANSI_CURSOR_STYLE_CROSSED_OUT   9
-#define ANSI_CURSOR_STYLE_PRIMARY_FONT  10
+#define ANSI_CURSOR_STYLE_RESET 0
+#define ANSI_CURSOR_STYLE_BOLD 1
+#define ANSI_CURSOR_STYLE_FAINT 2
+#define ANSI_CURSOR_STYLE_ITALIC 3
+#define ANSI_CURSOR_STYLE_UNDERLINE 4
+#define ANSI_CURSOR_STYLE_SLOW_BLINK 5
+#define ANSI_CURSOR_STYLE_RAPID_BLINK 6
+#define ANSI_CURSOR_STYLE_REVERSE 7
+#define ANSI_CURSOR_STYLE_CONCEAL 8
+#define ANSI_CURSOR_STYLE_CROSSED_OUT 9
+#define ANSI_CURSOR_STYLE_PRIMARY_FONT 10
 
 #define ANSI_STACK_SIZE 16
 
@@ -63,7 +63,7 @@ static inline void put_char(char c)
 static inline void cursor_move_to(sint x, sint y)
 {
     // \033[<L>;<C>H
-    put_head(); 
+    put_head();
     put_code(y);
     put_char(';');
     put_code(x);
@@ -161,6 +161,15 @@ static inline void clear_screen()
     put_head();
     put_char('2');
     put_char('J');
+}
+
+static inline void reset_screen()
+{
+    // \033c[H
+    put_char('\033');
+    put_char('c');
+    put_head();
+    put_char('H');
 }
 
 static inline void clear_line_from_cursor()
