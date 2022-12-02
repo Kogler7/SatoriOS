@@ -1,0 +1,6 @@
+#ifndef _SATORI_SCHEDULER_H_
+#define _SATORI_SCHEDULER_H_
+
+
+
+#endif /* !_SATORI_SCHEDULER_H_ */

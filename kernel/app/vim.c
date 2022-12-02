@@ -20,13 +20,12 @@ const char vim_prompt[] =
 
 void vim_render(text_buffer *buffer)
 {
-    // cursor_reset();
-    reset_screen();
+    cursor_reset();
     static char line_str[80];
     text_cursor cursor = buffer->cursor;
     text_line *line = buffer->fst_line;
     char *ptr = nullptr;
-    puts("SatoriOS Vim");
+    puts_st("SatoriOS Vim");
     clear_line_from_cursor();
     cursor_move_to(56, 1);
     puts("| Press ESC to exit");
@@ -40,8 +39,8 @@ void vim_render(text_buffer *buffer)
             putc(*ptr);
             ptr++;
         }
-        newline();
         clear_line_from_cursor();
+        newline();
         line = line->next;
     }
     clear_screen_from_cursor();
@@ -50,12 +49,13 @@ void vim_render(text_buffer *buffer)
     cursor_move_to(1, 24);
     puts_st("Test.txt");
     cursor_move_to(56, 24);
-    printf("| Line: %d/%d, Col: %d/%d", buffer->cursor.y, buffer->nr_lines, buffer->cursor.x, buffer->cur_line->nr_chars);
+    printf("| Line: %d/%d, Col: %d/%d", cursor.y, buffer->nr_lines, cursor.x, buffer->cur_line->nr_chars);
     cursor_move_to(cursor.x, cursor.y + 2);
 }
 
 void vim_test()
 {
+    reset_screen();
     vim_text_buffer = text_buffer_create();
     text_buffer_load_text(vim_text_buffer, vim_prompt);
     kbd_event e;
@@ -65,7 +65,7 @@ void vim_test()
         e = kbd_wait_key_down();
         if (e.key_no == KEY_ESC)
         {
-            clear_screen();
+            reset_screen();
             cursor_reset();
             break;
         }

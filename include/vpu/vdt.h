@@ -1,0 +1,6 @@
+#ifndef _VPU_DESCRIPTOR_TABLE_H_
+#define _VPU_DESCRIPTOR_TABLE_H_
+
+
+
+#endif /* !_VPU_DESCRIPTOR_TABLE_H_ */
