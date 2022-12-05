@@ -41,7 +41,10 @@
         "Kogler",
         "krealloc",
         "ldtr",
+        "lgdt",
+        "lldt",
         "ptbr",
-        "putline"
+        "putline",
+        "vmmu"
     ]
 }

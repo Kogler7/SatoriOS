@@ -52,23 +52,17 @@ typedef struct descriptor
     u8 base_high;             // 段基地址的高8位
 } descriptor_t;
 
-typedef struct descriptor_table
-{
-    u16 limit;
-    descriptor_t *base;
-} descriptor_table_t;
-
 typedef struct virtual_descriptor
 {
     u32 base;
     u32 limit : 24;
     descriptor_attrs_t attrs;
-} virtual_descriptor_t;
+} attr_packed virtual_descriptor_t;
 
 typedef struct vdt_entry
 {
-    u16 limit; // 表界限
-    u32 base;  // 基地址
+    int limit;         // 表界限
+    descriptor_t base; // 基地址
 } vdt_entry_t;
 
 #endif /* !_VPU_DESCRIPTOR_TABLE_H_ */

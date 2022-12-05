@@ -1,3 +1,4 @@
+#include "gcc.h"
 #include "io/stdout.h"
 #include "drivers/ansi.h"
 
@@ -32,6 +33,7 @@
         printf(fmt, ##__VA_ARGS__);      \
         put_char('\n');                  \
         restore_cursor_color();          \
+        die();                           \
     }
 
 #define pr_debug(src, fmt, ...)          \

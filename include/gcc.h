@@ -2,6 +2,11 @@
 #define _GCC_H_
 
 #define nop() asm volatile("nop")
+#define die()  \
+    while (1)  \
+    {          \
+        nop(); \
+    }
 
 #define likely(x) __builtin_expect(!!(x), 1)
 #define unlikely(x) __builtin_expect(!!(x), 0)
