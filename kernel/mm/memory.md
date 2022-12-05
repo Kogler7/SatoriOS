@@ -84,6 +84,10 @@ TLB是translation lookaside buffer的简称。首先，我们知道MMU的作用�
 
 [(102条消息) 函数实现_如何实现一个malloc函数_躺着不干活的博客-CSDN博客](https://blog.csdn.net/weixin_34980267/article/details/112673550)
 
+[Linux：页表中PGD、PUD、PMD、TLB等概念介绍_老王不让用的博客-CSDN博客_linux pgd](https://blog.csdn.net/wangquan1992/article/details/105047639/)
+
+![1670043206618](image/memory/1670043206618.png)
+
 # 信息记录
 
 ## MEM_MAP

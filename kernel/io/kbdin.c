@@ -40,8 +40,8 @@ kbd_event kbd_wait_key()
     kbd_input_waiting = true;
     while (kbd_input_waiting)
         nop();
-    return kbd_tmp_event;
     kbd_input_disable();
+    return kbd_tmp_event;
 }
 
 kbd_event kbd_wait_key_down()

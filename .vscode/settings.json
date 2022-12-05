@@ -41,6 +41,7 @@
         "Kogler",
         "krealloc",
         "ldtr",
+        "ptbr",
         "putline"
     ]
 }
