@@ -88,6 +88,10 @@ TLB是translation lookaside buffer的简称。首先，我们知道MMU的作用�
 
 ![1670043206618](image/memory/1670043206618.png)
 
+[Linux内存管理 (6)vmalloc - ArnoldLu - 博客园 (cnblogs.com)](https://www.cnblogs.com/arnoldlu/p/8251333.html)
+
+![1670286103590](image/memory/1670286103590.png)
+
 # 信息记录
 
 ## MEM_MAP

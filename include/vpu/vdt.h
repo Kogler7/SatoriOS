@@ -6,15 +6,6 @@
 
 #define VDT_ENTRY_SIZE 8
 
-#define PRESENT(flag) ((flag) >> 1 & 1)
-#define WRITEABLE(flag) ((flag) >> 2 & 1)
-#define USER(flag) ((flag) >> 3 & 1)
-#define WRITE_THROUGH(flag) ((flag) >> 4 & 1)
-#define CACHE_DISABLED(flag) ((flag) >> 5 & 1)
-#define ACCESSED(flag) ((flag) >> 6 & 1)
-#define DIRTY(flag) ((flag) >> 7 & 1)
-#define PAGE_SIZE(flag) ((flag) >> 7 & 1)
-
 typedef struct selector
 {
     u16 rpl : 2;  // Requested Privilege Level

@@ -6,6 +6,12 @@
 #define vpu_debug(fmt, ...) pr_debug(VPU, fmt, ##__VA_ARGS__)
 #define vpu_error(fmt, ...) pr_error(VPU, fmt, ##__VA_ARGS__)
 
+vpu_t* cur_vpu;
+vpu_t* next_vpu;
+
+bool vpu_switch_flag = false;
+bool vpu_exit_flag = false;
+
 descriptor_t vpu_get_descriptor(vpu_t *vpu, selector_t selector)
 {
     descriptor_t *desc = nullptr;

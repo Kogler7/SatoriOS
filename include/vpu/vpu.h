@@ -7,6 +7,21 @@
 #define GENERAL_REGISTERS 16
 #define SYSCALL_REGISTERS 8
 
+#define VADDR_OFT_ODR 12
+#define VADDR_PGN_ODR 6
+#define VADDR_PDN_ODR 8
+#define VADDR_SGN_ODR 6
+
+typedef struct logi_addr
+{
+    u32 oft : VADDR_OFT_ODR; // offset: 4k
+    u32 pgn : VADDR_PGN_ODR; // page number: 64 pages
+    u32 pdn : VADDR_PDN_ODR; // page directory number: 256 page directories
+    u32 sgn : VADDR_SGN_ODR; // segment number: 64 segs
+} logi_addr_t;
+
+typedef addr phys_addr_t;
+
 typedef struct vpu_flags
 {
     u8 cf : 1; // carry flag
@@ -29,16 +44,16 @@ typedef struct segment_registers
     segment_register_t cs; // Code segment
     segment_register_t ds; // Data segment
     segment_register_t es; // Extra segment
-    segment_register_t fs; // File segment
+    segment_register_t fs; // Flags segment
     segment_register_t gs; // Global segment
     segment_register_t ss; // Stack segment
 } segment_registers_t;
 
-typedef struct page_table_base
+typedef struct page_dir_base
 {
     u32 valid : 1;
     u32 ppn : 31;
-} page_table_base_t;
+} page_dir_base_t;
 
 typedef struct vpu
 {
@@ -48,10 +63,11 @@ typedef struct vpu
     int ip;                     // Instruction pointer
     int sp;                     // Stack pointer
     int bp;                     // Base pointer
+    sint asid;                  // Address space identifier
     vpu_flags_t flags;          // Flags
     vdt_entry_t gdtr;           // Global descriptor table register
     selector_t ldtr;            // Local descriptor table register
-    page_table_base_t ptbr;     // Page table base register
+    page_dir_base_t pdbr;       // Page directory base register
 } vpu_t;
 
 descriptor_t vpu_get_descriptor(vpu_t *vpu, selector_t selector);
@@ -63,9 +79,19 @@ descriptor_t vpu_get_descriptor(vpu_t *vpu, selector_t selector);
         vpu->sgr.reg.descriptor = vpu_get_descriptor(vpu, selector); \
     } while (0)
 
+void vpu_entry();
+
 void vpu_init(vpu_t *vpu);
 
 void vpu_lgdt(vpu_t *vpu, vdt_entry_t gdtr);
 void vpu_lldt(vpu_t *vpu, selector_t ldtr);
+
+void construct_segment_descriptor(vpu_t *vpu, selector_t selector, virtual_descriptor_t *vdesc);
+
+extern vpu_t *cur_vpu;
+extern vpu_t *next_vpu;
+
+extern bool vpu_switch_flag = false;
+extern bool vpu_exit_flag = false;
 
 #endif /* !_VIRTUAL_PROCESSOR_UNIT_H_ */

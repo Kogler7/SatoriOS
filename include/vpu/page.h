@@ -29,21 +29,21 @@ typedef struct page_middle_directory
 {
     page_table_t *tables[1024];
     u32 tables_physical[1024];
-    u32 physical_address;
+    u32 phys_address;
 } page_middle_directory_t;
 
 typedef struct page_upper_directory
 {
     page_middle_directory_t *tables[1024];
     u32 tables_physical[1024];
-    u32 physical_address;
+    u32 phys_address;
 } page_upper_directory_t;
 
 typedef struct page_global_directory
 {
     page_upper_directory_t *tables[1024];
     u32 tables_physical[1024];
-    u32 physical_address;
+    u32 phys_address;
 } page_global_directory_t;
 
 typedef struct vaddr

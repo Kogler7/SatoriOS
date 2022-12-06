@@ -22,6 +22,8 @@ typedef unsigned int 		u32;
 typedef signed long 	    s64;
 typedef unsigned long 	    u64;
 
+typedef void*               addr;
+
 #define true        (bool)1
 #define false       (bool)0
 #define done        1
