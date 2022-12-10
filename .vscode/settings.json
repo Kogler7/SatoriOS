@@ -45,6 +45,8 @@
         "lldt",
         "logi",
         "pdbr",
+        "pdir",
+        "ptable",
         "ptbr",
         "putline",
         "vdesc",

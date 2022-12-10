@@ -45,8 +45,8 @@ typedef struct descriptor
 
 typedef struct virtual_descriptor
 {
-    u32 base;
-    u32 limit : 24;
+    addr entry;
+    u32 limit;
     descriptor_attrs_t attrs;
 } attr_packed virtual_descriptor_t;
 

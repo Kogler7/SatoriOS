@@ -7,8 +7,8 @@
 
 vtlb_entry_t virtual_tlb[VTLB_SIZE];
 
-#define get_vtlb_entry(logi_addr) (virtual_tlb + ((logi_addr) >> VTLB_OFT_SFT) & VTLB_OFT_MASK)
-#define get_vtlb_tag(logi_addr) ((logi_addr) >> VTLB_TAG_SFT & VTLB_TAG_MASK)
+#define get_vtlb_entry(logi_addr) (virtual_tlb + logi_addr.pgn)
+#define get_vtlb_tag(logi_addr) logi_addr.pdn
 
 void flush_tlb()
 {
@@ -18,14 +18,14 @@ void flush_tlb()
     }
 }
 
-void vtlb_insert(logi_addr_t logi_addr, phys_addr_t base_addr)
+void vtlb_insert(logi_addr_t logi_addr, phys_addr_t frame)
 {
     vtlb_entry_t *entry = get_vtlb_entry(logi_addr);
     entry->valid = true;
     entry->ng = true;
     entry->asid = cur_vpu->asid;
     entry->tag = get_vtlb_tag(logi_addr);
-    entry->base_addr = base_addr;
+    entry->frame = frame;
 }
 
 phys_addr_t *vtlb_lookup(logi_addr_t logi_addr)
@@ -37,7 +37,7 @@ phys_addr_t *vtlb_lookup(logi_addr_t logi_addr)
     }
     if (entry->tag == get_vtlb_tag(logi_addr))
     {
-        return entry->base_addr + (logi_addr & 0xfff);
+        return entry->frame + (logi_addr & 0xfff);
     }
     return nullptr;
 }

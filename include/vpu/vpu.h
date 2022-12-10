@@ -7,21 +7,6 @@
 #define GENERAL_REGISTERS 16
 #define SYSCALL_REGISTERS 8
 
-#define VADDR_OFT_ODR 12
-#define VADDR_PGN_ODR 6
-#define VADDR_PDN_ODR 8
-#define VADDR_SGN_ODR 6
-
-typedef struct logi_addr
-{
-    u32 oft : VADDR_OFT_ODR; // offset: 4k
-    u32 pgn : VADDR_PGN_ODR; // page number: 64 pages
-    u32 pdn : VADDR_PDN_ODR; // page directory number: 256 page directories
-    u32 sgn : VADDR_SGN_ODR; // segment number: 64 segs
-} logi_addr_t;
-
-typedef addr phys_addr_t;
-
 typedef struct vpu_flags
 {
     u8 cf : 1; // carry flag
@@ -49,20 +34,16 @@ typedef struct segment_registers
     segment_register_t ss; // Stack segment
 } segment_registers_t;
 
-typedef struct page_dir_base
-{
-    u32 valid : 1;
-    u32 ppn : 31;
-} page_dir_base_t;
-
 typedef struct vpu
 {
     u32 gpr[GENERAL_REGISTERS]; // General purpose registers
     u32 scr[SYSCALL_REGISTERS]; // System call registers
     segment_registers_t sgr;    // Segment registers
+    segment_register_t *csr;    // Current segment register
     int ip;                     // Instruction pointer
     int sp;                     // Stack pointer
     int bp;                     // Base pointer
+    sint cpl;                   // Current privilege level
     sint asid;                  // Address space identifier
     vpu_flags_t flags;          // Flags
     vdt_entry_t gdtr;           // Global descriptor table register

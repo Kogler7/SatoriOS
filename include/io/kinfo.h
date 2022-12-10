@@ -1,6 +1,7 @@
 #include "gcc.h"
 #include "io/stdout.h"
 #include "drivers/ansi.h"
+#include "config/config.h"
 
 #ifndef _SATORI_KERNEL_INFO_H_
 #define _SATORI_KERNEL_INFO_H_
@@ -36,6 +37,8 @@
         die();                           \
     }
 
+#ifdef CONFIG_DEBUG
+
 #define pr_debug(src, fmt, ...)          \
     {                                    \
         save_cursor_color();             \
@@ -45,5 +48,13 @@
         put_char('\n');                  \
         restore_cursor_color();          \
     }
+
+#else
+
+#define pr_debug(src, fmt, ...) \
+    {                           \
+    }
+
+#endif /* !CONFIG_DEBUG */
 
 #endif /* !_SATORI_KERNEL_INFO_H_ */
