@@ -10,7 +10,7 @@
 typedef struct vtlb_entry
 {
     byte valid : 1;
-    byte ng : 1;
+    byte ng : 1; // non global
     byte asid : 6;
     u16 tag : VADDR_PDN_ODR;
     addr frame;

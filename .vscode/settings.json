@@ -27,6 +27,8 @@
     },
     "C_Cpp.errorSquiggles": "disabled",
     "cSpell.words": [
+        "CLSL",
+        "DELW",
         "fappendln",
         "fdelete",
         "fmove",

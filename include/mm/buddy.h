@@ -21,6 +21,7 @@ int split_buddy(buddy_node *node);
 void merge_buddy(buddy_node *node);
 buddy_node *alloc_buddy(buddy_node *root, int order);
 void free_buddy(void* start, int order);
+
 void *buddy_alloc(int size);
 void buddy_free(void *addr, int size);
 void* buddy_realloc(void* addr, int old_size, int new_size);

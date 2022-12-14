@@ -4,6 +4,7 @@ const kmalloc_info kmalloc_info_arr[] = {
     INIT_KMALLOC_INFO(32, 32),
     INIT_KMALLOC_INFO(64, 64),
     INIT_KMALLOC_INFO(128, 128),
+    INIT_KMALLOC_INFO(192, 192),
     INIT_KMALLOC_INFO(256, 256),
     INIT_KMALLOC_INFO(512, 512),
     INIT_KMALLOC_INFO(1024, 1k),

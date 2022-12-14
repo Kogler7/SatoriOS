@@ -12,6 +12,4 @@ void handle_tlb_miss(logi_addr_t logi_addr, phys_addr_t phys_addr);
 
 phys_addr_t get_phys_addr(logi_addr_t logi_addr);
 
-phys_addr_t access_memory(logi_addr_t logi_addr);
-
 #endif /* !_VPU_MEMORY_MANAGEMENT_UNIT_H_ */

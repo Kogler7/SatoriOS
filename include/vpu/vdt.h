@@ -52,8 +52,8 @@ typedef struct virtual_descriptor
 
 typedef struct vdt_entry
 {
-    int limit;         // 表界限
-    descriptor_t base; // 基地址
+    int limit;                 // 表界限
+    virtual_descriptor_t base; // 基地址
 } vdt_entry_t;
 
 #endif /* !_VPU_DESCRIPTOR_TABLE_H_ */
