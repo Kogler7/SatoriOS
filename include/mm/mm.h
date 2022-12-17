@@ -34,13 +34,7 @@
 
 #define mm_error(fmt, ...) pr_error(MM, fmt, ##__VA_ARGS__)
 
-#ifdef _SATORI_DEBUG_
 #define mm_debug(fmt, ...) pr_debug(MM, fmt, ##__VA_ARGS__)
-
-#else
-#define mm_debug(fmt, ...)
-
-#endif /* !_SATORI_DEBUG_ */
 
 void mem_init();
 
