@@ -576,7 +576,7 @@ void extioi_init(void)
 
 这里分别对**拓展IO中断使能寄存器**、**中断路由寄存器**、**中断目标处理器核路由寄存器地址**和**中断目标结点映射方式寄存器**进行了配置。
 
-对CPU的配置完成后，我们还需要对桥片芯片进行配置，其配置也是针对控制使能：
+对CPU的配置完成后，我们还需要对桥片芯片进行配置，配置其中断使能寄存器、中断向量寄存器等：
 
 ```c
 void ls7a_intc_init(void)
@@ -596,17 +596,56 @@ void ls7a_intc_init(void)
 }
 ```
 
-并不代表中断就能够正常运行，我们还需要对外围设备进行配置。我们知道不同设备都会有不同的控制和输入输出端口，对应设备控制芯片的控制寄存器和数据寄存器，
+自此，中断还不能够正常运行，我们还需要对外围设备进行配置。我们知道不同设备都会有不同的控制状态和输入输出端口，对应设备控制芯片的控制寄存器、数据寄存器和状态寄存器（`i8042`的控制寄存器和状态寄存器共用一个端口），这里我们最直接涉及到的就是对键鼠进行控制的`i8042`芯片，我们需要在其控制端口写入我们需要的控制方式：
 
+```C
+void i8042_init(void)
+{
+  unsigned char data;
 
+  /* disable device */
+  *(volatile unsigned char*)(LS7A_I8042_COMMAND) = 0xAD;
+  *(volatile unsigned char*)(LS7A_I8042_COMMAND) = 0xA7;
+  /* flush */
+  data = *(volatile unsigned char*)(LS7A_I8042_DATA);
+  /* self test */
+  *(volatile unsigned char*)(LS7A_I8042_COMMAND) = 0xAA;
+  data = *(volatile unsigned char*)(LS7A_I8042_DATA);
 
-这里我们最直接涉及到的就是对键鼠进行控制`i8042`芯片，
+  /* set config byte, enable device and interrupt*/
+  *(volatile unsigned char*)(LS7A_I8042_COMMAND) = 0x20;
+  data = *(volatile unsigned char*)(LS7A_I8042_DATA);
+  *(volatile unsigned char*)(LS7A_I8042_COMMAND) = 0x60;
+  *(volatile unsigned char*)(LS7A_I8042_DATA) = 0x07;
 
+  /* test */
+  *(volatile unsigned char*)(LS7A_I8042_COMMAND) = 0xAB;
+  data = *(volatile unsigned char*)(LS7A_I8042_DATA);
 
+  /* enable first port */
+  *(volatile unsigned char*)(LS7A_I8042_COMMAND) = 0xAE;
+
+  /* reset device */
+  *(volatile unsigned char*)(LS7A_I8042_DATA) = 0xFF;
+  data = *(volatile unsigned char*)(LS7A_I8042_DATA);
+}
+```
+
+这样我们就是完整实现了键鼠中断以及时钟中断并将中断定向到我们设置的中断入口处。
 
 ### 4.3 键盘驱动设计与实现
 
+在操作系统的运行过程中，因为处于命令行状态下，我们最主要的交互方式就是通过键盘实现输入，下图为设计的键盘驱动处理过程。
+
+![kbd-2022-11-08-1451](.\assets\kbd-2022-11-08-1451.png)
+
+当我们通过中断进入键盘的中断处理程序后，会先通过状态端口判断`i8042`的数据端口是否有未读的数据，如果有，则可以通过数据端口读取数据。
+
+此时我们读取到的数据为键盘扫描码，我们需要通过键盘扫描码映射到键盘按键表，其中包含了每一个按键的`ascii码`（若没有则为0）。然后外部的应用可以通过注册键盘的回调，在键盘中断的过程中接收键盘驱动分发的键盘数据。
+
 ### 4.4 鼠标驱动设计与实现
+
+
 
 ## 5 内核标准库设计与实现（`lib`）
 
