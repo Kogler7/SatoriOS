@@ -292,15 +292,16 @@ SECTIONS
 对于串口的通信，龙芯3A5000提供了两块UART(Universal Asynchronous Receiver Transmitter)控制器进行控制，分别为UART0和UART1从**《龙芯3A5000_3B5000处理器寄存器使用手册》**中我们可以找到UART0控制器的物理地址为0x1FE00100，在输出过程中，涉及到的两个重要寄存器如下图：
 
 <center>
-    <img src="G:\SatoriOS\终期报告\assets\image-20221217141152350.png" width="36%">
-    <img src="G:\SatoriOS\终期报告\assets\image-20221217141212916.png" width="46%">
+    <img src=".\assets\image-20221217141152350.png" width="36%">
+    <img src=".\assets\image-20221217141212916.png" width="46%">
 </center>
+
 
 其中DAT寄存器，负责输入数据的传输，是我们向命令行窗口输出的端口，接收8位宽的 **ascii码**；LSR寄存器则负责在传输前后检测输出状态，其第5个标志位代表当前串口是否为空，即是否能够传输数据，防止对前面传入但未处理的数据造成直接覆盖。
 
-![image-20221217141228443](G:\SatoriOS\终期报告\assets\image-20221217141228443.png)
+![image-20221217141228443](.\assets\image-20221217141228443.png)
 
-![image-20221217141244426](G:\SatoriOS\终期报告\assets\image-20221217141244426.png)
+![image-20221217141244426](.\assets\image-20221217141244426.png)
 
 具体实现和管理代码如下：
 
