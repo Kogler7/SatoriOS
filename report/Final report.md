@@ -675,7 +675,64 @@ void memcpy(void *ptr1, void *ptr2, unsigned long size);
 
 ### 5.2 标准缓冲区设计与实现
 
+为了方便标准输入模块的开发，我们首先设计实现了标准字符输入缓冲区数据结构及其相关操作函数。缓冲区由顺序队列实现，并提供了自旋等待数据的API。
+
+```C
+typedef struct std_buffer
+{
+    byte *data;		// 数据
+    int size;		// 已装入数据大小（单位：字节）
+    int capacity;	// 缓冲区容量（单位：字节）
+    int head;		// 缓冲区头
+    int tail;		// 缓冲区尾
+    int peek;		// 访问指针
+} std_buffer;
+
+std_buffer *std_buffer_create(int capacity);
+void std_buffer_destroy(std_buffer *buffer);
+void std_buffer_clear(std_buffer *buffer);
+
+void std_buffer_put(std_buffer *buffer, const byte data);
+void std_buffer_puts(std_buffer *buffer, const char *data);
+
+byte std_buffer_pop(std_buffer *buffer);
+byte std_buffer_get(std_buffer *buffer);
+
+int std_buffer_gets(std_buffer *buffer, char *data, int size);
+
+byte std_buffer_peek(std_buffer *buffer);
+void std_buffer_back(std_buffer *buffer);
+
+char std_buffer_wait_char(std_buffer *buffer);
+
+int std_buffer_wait_line(std_buffer *buffer, char *data, int size);
+
+static inline int std_buffer_full(std_buffer *buffer)
+{
+    return buffer->size == buffer->capacity;
+}
+
+static inline int std_buffer_full_p(std_buffer *buffer)
+{
+    return buffer->peek == buffer->head;
+}
+
+static inline int std_buffer_empty(std_buffer *buffer)
+{
+    return buffer->size == 0;
+}
+
+static inline int std_buffer_empty_p(std_buffer *buffer)
+{
+    return buffer->peek == buffer->tail;
+}
+```
+
+
+
 ### 5.3 标准可编辑文本结构设计与实现
+
+为了支持建议文本编辑器`vim`的设计实现，我们利用二维双向链表设计了可编辑的文本数据结构，其核心数据结构定义与相关操作函数设计与实现如下：
 
 ## 6 命令解释器设计与实现（`shell`）
 
