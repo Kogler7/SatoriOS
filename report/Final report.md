@@ -20,11 +20,29 @@
 
 # 三、平台搭建与环境配置
 
-## 0 现有系统编译运行
+## 1 宿主机基础环境
+
+台式计算机【处理器：Intel(R) Core(TM) i7-10750H CPU @ 2.60GHz   2.59 GHz；内存：16GB，15.8GB可用】
+
+Windows 10 21H2
+
+系统类型：基于x64的处理器，64位操作系统
+
+## 2 虚拟机环境搭建
+
+虚拟机平台：VMware Workstation 16 Pro V16.2.4
+
+系统环境：Ubuntu20.04
+
+交叉编译工具：loongarch64-clfs-2021-12-18-cross-tools-gcc-full
+
+自制操作系统运行平台：QEMU 6.2.50
+
+## 3 现有系统编译运行
 
 这是一个攀登到巨人肩膀上的工作。
 
-### 0.1 交叉编译环境配置
+### 3.1 交叉编译环境配置
 
 这里创建一个shell脚本，用于设置交叉编译器的路径和环境。
 
@@ -40,7 +58,7 @@ export CROSS_COMPILE=loongarch64-unknown-linux-gnu-
 export LC_ALL=C; export LANG=C; export LANGUAGE=C
 ```
 
-### 0.2 交叉编译配置文件准备
+### 3.2 交叉编译配置文件准备
 
 交叉编译过程中需要的配置文件
 
@@ -64,7 +82,7 @@ CONFIG_HAVE_DMA_CONTIGUOUS=y
 ……
 ```
 
-### 0.3 相关工具和库的安装
+### 3.3 相关工具和库的安装
 
 ```shell
 sudo apt install make
@@ -76,7 +94,7 @@ sudo apt install bison
 sudo apt install libssl-dev
 ```
 
-### 0.4 正式编译
+### 3.4 正式编译
 
 ```shell
 make clean
@@ -84,29 +102,11 @@ source env.sh
 make
 ```
 
-### 0.5 linux-loongarch-v2022-03-10-1运行结果展示
+### 3.5 linux-loongarch-v2022-03-10-1运行结果展示
 
 ![运行结果](.\assets\image-20221217141058349.png)
 
 自此，我们的平台基础和开发环境正式测试完成。
-
-## 1 宿主机基础环境
-
-台式计算机【处理器：Intel(R) Core(TM) i7-10750H CPU @ 2.60GHz   2.59 GHz；内存：16GB，15.8GB可用】
-
-Windows 10 21H2
-
-系统类型：基于x64的处理器，64位操作系统
-
-## 2 虚拟机环境搭建
-
-虚拟机平台：VMware Workstation 16 Pro V16.2.4
-
-系统环境：Ubuntu20.04
-
-交叉编译工具：loongarch64-clfs-2021-12-18-cross-tools-gcc-full
-
-自制操作系统运行平台：QEMU 6.2.50
 
 # 四、过关斩将与模块设计
 
@@ -890,7 +890,106 @@ void show_about_info(int cmd_id)
 
 ### 8.1 进程控制块设计
 
+进程控制块的设计比较常规，根据龙芯的架构做了相应的条件，这其中也借鉴了`linux`的设计思路。
+
+- 进程标识符：内/外部、父/子进程、用户标识符
+- 处理器状态信息：通用、PC、PSW、用户栈指针寄存器、龙芯控制寄存器
+- 进程调度信息：进程状态、进程优先级、事件及其它
+- 进程控制信息：程序和数据地址、进程同步通信机制、资源清单、链接指针
+
+```C
+struct loongarch_fpu {
+	unsigned int	fcsr;
+	unsigned int	vcsr;
+	unsigned long int	fcc;	/* 8x8 */
+	union fpureg fpr[NUM_FPU_REGS];
+};
+
+struct thread_struct {
+	/* Saved main processor registers. */
+	unsigned long reg01, reg02, reg03, reg22; /* ra tp sp fp */
+	unsigned long reg04, reg05, reg06, reg07; /* a0-a3 */
+	unsigned long reg23, reg24, reg25, reg26; /* s0-s3 */
+	unsigned long reg27, reg28, reg29, reg30, reg31; /* s4-s8 */
+	/* Saved csr registers */
+	unsigned long csr_prmd;
+	unsigned long csr_crmd;
+	unsigned long csr_euen;
+	unsigned long csr_ecfg;
+	unsigned long csr_badvaddr;	//Last user fault
+	/* Saved scratch registers */
+	unsigned long scr0;
+	unsigned long scr1;
+	unsigned long scr2;
+	unsigned long scr3;
+	/* Saved eflags register */
+	unsigned long eflags;
+	/* Other stuff associated with the thread. */
+	unsigned long trap_nr;
+	unsigned long error_code;
+
+	struct loongarch_fpu fpu FPU_ALIGN;
+};
+
+struct task_struct
+{
+	long state;			/* -1 unrunnable, 0 runnable, >0 stopped */
+	long counter;
+	long priority;
+	long signal; /* bitmap of pending signals */
+	struct sigaction sigaction[32]; /* 32 is _NSIG_WORDS */
+	long blocked;			/* bitmap of masked signals */
+/* various fields */
+	int exit_code;
+	unsigned long start_code, end_code, end_data, brk, start_stack;
+	long pid, father, pgrp, session, leader;
+	unsigned short uid, euid, suid;
+	unsigned short gid, egid, sgid;
+	long utime, stime, cutime, cstime, start_time;
+/* tss for this task */
+	struct thread_struct tss;
+};
+```
+
 ### 8.2 进程调度算法设计与实现
+
+进程调度算法采用时间片轮转，在上述进程控制块的基础上，每当触发时钟中断达到指定的倒计时次数后，会进入进程调度算法，调度算法首先会判断现有各个进程的信号量，判断是否存在未被阻塞且可中断的进程，需要将其置为运行状态。
+
+而后正式进入进程调度的部分，通过判断哪一个进程的计数器值大，则将其确定为下一个占用CPU的程序，调用`switch_to`切换进程。
+
+```c
+void schedule (void)
+{
+	int i, next, c;
+	struct task_struct **p;
+
+	/*通过信号量激活进程，略*/
+
+    /*调度*/
+	while (1)
+	{
+		c = -1;
+		next = 0;
+		i = NR_TASKS;
+		p = &task[NR_TASKS];
+		while (--i)
+		{
+			if (!*--p)
+				continue;
+			if ((*p)->state == TASK_RUNNING && (*p)->counter > c)
+				c = (*p)->counter, next = i;
+		}
+		if (c)
+			break;
+		for (p = &LAST_TASK; p > &FIRST_TASK; --p)
+			if (*p)
+				(*p)->counter = ((*p)->counter >> 1) + (*p)->priority;
+	}
+	switch_to (current, task[next]);
+}
+```
+
+
 
 ### 8.3 基于VPU的进程调度设计
 
