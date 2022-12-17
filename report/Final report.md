@@ -511,7 +511,98 @@ void restore_cursor_color();	// 恢复光标（字体）颜色
 
 ### 4.1 中断处理流程概述
 
+（1）为了实现中断处理，首先是对中断的初始化，为各个中断相关的芯片写入控制方式，同时为CPU设置中断入口、中断使能等中断基本信息；
+
+（2）当接收到中断后，CPU会自动跳转到设置的中断入口处运行；
+
+（3）当前我们使用的是单个中断，在进入中断后，各个中断统一进入trap_entry函数进行现场保护，而后进入中断处理函数trap_handle；
+
+（4）在trap_handle函数中，我们通过读取例外配置寄存器获取当前中断状态并和配置的中断配置寄存器以及各中断设备进行比较，确定触发中断的设备并进入对应设备的中断处理函数。
+
+![trap_step](.\assets\trap_step.png)
+
 ### 4.2 中断控制过程初始化
+
+对于中断过程的初始化可以分为四部分：
+
+```C
+void trap_init(void)
+{
+    /*CPU控制状态寄存器设置*/
+    unsigned int ecfg = ( 0U << CSR_ECFG_VS_SHIFT ) | HWI_VEC | TI_VEC;
+    unsigned long tcfg = 0x0a000000UL | CSR_TCFG_EN | CSR_TCFG_PER;
+    w_csr_ecfg(ecfg);
+    w_csr_tcfg(tcfg);
+    w_csr_eentry((unsigned long)trap_entry);
+    /*拓展io中断初始化*/
+    extioi_init();
+    /*桥片初始化*/
+    ls7a_intc_init();
+    /*键鼠控制芯片初始化*/
+    i8042_init();
+}
+```
+
+首先是对**控制状态寄存器**的设置，不同于8086简单基础的架构，龙芯对CPU本身设置了大量的可配置内容，其通过**控制状态寄存器**进行设置。所有的**控制状态寄存器**需要通过龙芯的`csrwr/csrrd`指令进行控制。
+
+`ecfg`个`tcfg`分别为例外配置寄存器和时钟配置寄存器，这样我们就实现了对于中断的基础配置和一个十分重要的中断源——时钟中断源：
+
+<center>
+    <img src=".\assets\image-20221217152300743.png" width="40%">
+    <img src=".\assets\image-20221217152532642.png" width="35%">
+</center>
+
+同时我们还需要向`eentry`控制状态寄存器中写入我们编写的中断入口函数地址。
+
+对CPU的控制状态寄存器配置完成后，我们需要对CPU的IO端口的控制状态进行配置：
+
+```c
+void extioi_init(void)
+{
+    iocsr_writeq((0x1UL << UART0_IRQ) | (0x1UL << KEYBOARD_IRQ) | 
+                 (0x1UL << MOUSE_IRQ) | (0x1UL << DISK_IRQ), 
+                 LOONGARCH_IOCSR_EXTIOI_EN_BASE);
+
+    /* extioi[31:0] map to cpu irq pin INT1, other to INT0 */
+    iocsr_writeq(0x01UL,LOONGARCH_IOCSR_EXTIOI_MAP_BASE);
+
+    /* extioi IRQ 0-7 route to core 0, use node type 0 */
+    iocsr_writeq(0x0UL,LOONGARCH_IOCSR_EXTIOI_ROUTE_BASE);
+
+    /* nodetype0 set to 1, always trigger at node 0 */
+    iocsr_writeq(0x1,LOONGARCH_IOCSR_EXRIOI_NODETYPE_BASE);
+}
+```
+
+这里分别对**拓展IO中断使能寄存器**、**中断路由寄存器**、**中断目标处理器核路由寄存器地址**和**中断目标结点映射方式寄存器**进行了配置。
+
+对CPU的配置完成后，我们还需要对桥片芯片进行配置，其配置也是针对控制使能：
+
+```c
+void ls7a_intc_init(void)
+{
+    /* enable uart0/keyboard/mouse */
+    *(volatile unsigned long*)(LS7A_INT_MASK_REG) = ~((0x1UL << UART0_IRQ) | (0x1UL << KEYBOARD_IRQ) | 
+                                                      (0x1UL << MOUSE_IRQ));
+
+    *(volatile unsigned long*)(LS7A_INT_EDGE_REG) = (0x1UL << (UART0_IRQ | KEYBOARD_IRQ | MOUSE_IRQ));
+
+    /* route to the same irq in extioi */
+    *(volatile unsigned char*)(LS7A_INT_HTMSI_VEC_REG + UART0_IRQ) = UART0_IRQ;
+    *(volatile unsigned char*)(LS7A_INT_HTMSI_VEC_REG + KEYBOARD_IRQ) = KEYBOARD_IRQ;
+    *(volatile unsigned char*)(LS7A_INT_HTMSI_VEC_REG + MOUSE_IRQ) = MOUSE_IRQ;
+
+    *(volatile unsigned long*)(LS7A_INT_POL_REG) = 0x0UL;
+}
+```
+
+并不代表中断就能够正常运行，我们还需要对外围设备进行配置。我们知道不同设备都会有不同的控制和输入输出端口，对应设备控制芯片的控制寄存器和数据寄存器，
+
+
+
+这里我们最直接涉及到的就是对键鼠进行控制`i8042`芯片，
+
+
 
 ### 4.3 键盘驱动设计与实现
 
