@@ -17,6 +17,8 @@
 
 基于龙芯LoongArch64的操作系统的构建：要求实现启动初始化、进程管理、内存管理、显示器与键盘驱动、文件系统、系统调用及命令解释器等主要模块，并在QEMU虚拟机或龙芯处理器计算机上测试验证。
 
+
+
 ## 2 实验基本思路
 
 ### 2.1 集大家之所成
@@ -37,11 +39,15 @@
 
 可视化工作：shell、vim、游戏/图形展示
 
+
+
 ## 3 实验基本方法
 
 底层和上层结合
 
 确定核心概念，定义模块行为，设计数据结构，确定模块方法，进行开发优化，系统联调测试
+
+
 
 # 二、项目命名与内涵阐释
 
@@ -57,6 +63,8 @@
 
 [SatoriOS: 开悟操作系统，仅供个人学习使用。 (gitee.com)](https://gitee.com/Kogler/satori-os)
 
+
+
 ## 2 Echo Operating System（by.胡栩贤）
 
 > Echo：指回声，灵感来源于一款名为《Dark Echo》的解密游戏，寓意在黑暗中通过努力，获得反馈，不断探索。
@@ -67,33 +75,44 @@
 
 [EchoOS: my first OS (github.com)](https://github.com/Dontplay1003/EchoOS)
 
+
+
 # 三、平台搭建与环境配置
 
 ## 1 宿主机基础环境
 
-台式计算机【处理器：Intel(R) Core(TM) i7-10750H CPU @ 2.60GHz   2.59 GHz；内存：16GB，15.8GB可用】
+台式计算机
+
+【处理器：Intel(R) Core(TM) i7-10750H CPU @ 2.60GHz   2.59 GHz；内存：16GB，15.8GB可用】
+
+【处理器：AMD Ryzen 7 4800U with Radeon Graphics @ 1.80 GHz；内存：16GB，15.4GB可用】
 
 Windows 10 21H2
 
 系统类型：基于x64的处理器，64位操作系统
 
+
+
 ## 2 虚拟机环境搭建
 
-虚拟机平台：VMware Workstation 16 Pro V16.2.4
+| 平台需求               | 具体平台                                         |
+| ---------------------- | ------------------------------------------------ |
+| 虚拟机平台：           | VMware Workstation 16 Pro V16.2.4                |
+| 虚拟机系统环境：       | Ubuntu20.04                                      |
+| 交叉编译工具：         | loongarch64-clfs-2021-12-18-cross-tools-gcc-full |
+| 自制操作系统运行平台： | QEMU 6.2.50                                      |
 
-系统环境：Ubuntu20.04
 
-交叉编译工具：loongarch64-clfs-2021-12-18-cross-tools-gcc-full
-
-自制操作系统运行平台：QEMU 6.2.50
 
 ## 3 现有系统编译运行
+
+为了验证环境配置已经就绪，我们实现了对Mini Linux系统的编译运行，并将编译过程记录如下。
 
 这是一个攀登到巨人肩膀上的工作。
 
 ### 3.1 交叉编译环境配置
 
-这里创建一个shell脚本，用于设置交叉编译器的路径和环境。
+创建一个shell脚本，用于设置交叉编译器的路径和环境。
 
 **env.sh:**
 
@@ -157,6 +176,8 @@ make
 
 自此，我们的平台基础和开发环境正式测试完成。
 
+
+
 # 四、过关斩将与模块设计
 
 ## 1 文件组织与编译运行（`kernel`）
@@ -171,7 +192,7 @@ make
 
 `tools`文件夹用于放置一些辅助开发的工具，一般用`python`语言实现，其中包含一个查看内存分布的小工具。
 
-`output`文件夹用于放置一些中间产物（主要是由tools内的工具产生的），暂时并未启用。
+`output`文件夹用于放置一些中间产物（主要是由`tools`内的工具产生的），暂时并未启用。
 
 <center>
     <img src=".\assets\image-20221217124720705.png" width="26%">
@@ -275,6 +296,41 @@ $(SUBDIR)%.o : %.c
 
 ### 1.3 运行脚本编写说明
 
+基本参数设置如下：
+
+```shell
+MEM="4G"
+CPUS="1"
+BIOS="/opt/SatoriVenv/loongarch_bios_0310.bin"
+#BIOS="/opt/SatoriVenv/loongarch_bios_0310_debug.bin"
+KERNEL="./build/kernel"
+INITRD="/opt/SatoriVenv/busybox-rootfs.img"
+USE_GRAPHIC="yes"
+DEBUG=''
+QEMU="qemu-system-loongarch64"
+```
+
+由于键盘驱动需要QEMU启动可视化设备，因此可设置相关参数如下：
+
+```shell
+if [ $USE_GRAPHIC = "no" ] ; then
+   # run without graphic
+   CMDLINE="root=/dev/ram console=ttyS0,115200 rdinit=/init"
+   GRAPHIC="-vga none -nographic"
+else
+   # run with graphic
+   CMDLINE="root=/dev/ram console=tty0 rdinit=/init"
+   GRAPHIC="-vga virtio -serial stdio"
+```
+
+启动命令（借助QEMU）
+
+```shell
+$QEMU -m $MEM -smp $CPUS -bios $BIOS -kernel $KERNEL -append "$CMDLINE" $GRAPHIC $DEBUG
+```
+
+
+
 ## 2 固件简介与启动装载（`start.sh`）
 
 ### 2.1 UEFI固件简介
@@ -334,11 +390,11 @@ SECTIONS
 
 ### 3.1 显示第一个字符
 
-此时，我们设置了内核入口，就相当于给我们的操作系统“程序”设置了一个“main”函数，但是在这样的命令行窗口，没有输出，我们无法看到任何东西，也就无法做任何有意义的交互。亟待解决的第一个问题就是——printf。
+通过上述步骤，我们成功完成了内核装载并启动，同时设置了内核入口，就相当于给我们的操作系统“程序”设置了一个“`main`”函数，但是在这样的命令行窗口，没有输出，我们无法看到任何东西，也就无法做任何有意义的交互，甚至无法进行基本的调试工作。因此，摆在我们面前亟待解决的第一个问题就是——实现`printf`。
 
-作为一个操作系统，我们一开始并没有标准的输入输出库供我们使用，经过研究，想要在命令行窗口实现输出，需要通过串口通信。
+作为一个从0开始实现的操作系统，一开始并没有标准的输入输出库供我们使用，经过研究，想要在命令行窗口实现输出，我们决定通过串口实现输出与通信。
 
-对于串口的通信，龙芯3A5000提供了两块UART(Universal Asynchronous Receiver Transmitter)控制器进行控制，分别为UART0和UART1从**《龙芯3A5000_3B5000处理器寄存器使用手册》**中我们可以找到UART0控制器的物理地址为0x1FE00100，在输出过程中，涉及到的两个重要寄存器如下图：
+对于串口的通信，龙芯3A5000提供了两块**UART(Universal Asynchronous Receiver Transmitter)**控制器进行控制，分别为UART0和UART1从**《龙芯3A5000_3B5000处理器寄存器使用手册》**中我们可以找到UART0控制器的物理地址为**0x1FE00100**，在输出过程中，涉及到的两个重要寄存器如下图：
 
 <center>
     <img src=".\assets\image-20221217141152350.png" width="36%">
@@ -684,6 +740,8 @@ void i8042_init(void)
 
 ### 4.3 键盘驱动设计与实现
 
+#### 4.3.1 键盘驱动设计概述
+
 在操作系统的运行过程中，因为处于命令行状态下，我们最主要的交互方式就是通过键盘实现输入，下图为设计的键盘驱动处理过程。
 
 ![kbd-2022-11-08-1451](.\assets\kbd-2022-11-08-1451.png)
@@ -692,7 +750,160 @@ void i8042_init(void)
 
 此时我们读取到的数据为键盘扫描码，我们需要通过键盘扫描码映射到键盘按键表，其中包含了每一个按键的`ascii码`（若没有则为0）。然后外部的应用可以通过注册键盘的回调，在键盘中断的过程中接收键盘驱动分发的键盘数据。
 
+#### 4.3.2 键盘扫描码转换过程
+
+首先将键盘扫描码映射为键号：
+
+```C
+const unsigned int keymap[] = {
+...
+/* 28 */  KEY_RESERVED, KEY_SPACE,     KEY_V,         KEY_F,         KEY_T,         KEY_R,        KEY_5,         KEY_F6,
+/* 30 */  KEY_RESERVED, KEY_N,         KEY_B,         KEY_H,         KEY_G,         KEY_Y,        KEY_6,         KEY_F7,
+/* 38 */  KEY_RESERVED, KEY_RIGHTALT,  KEY_M,         KEY_J,         KEY_U,         KEY_7,        KEY_8,         KEY_F8,
+/* 40 */  KEY_RESERVED, KEY_COMMA,     KEY_K,         KEY_I,         KEY_O,         KEY_0,        KEY_9,         KEY_F9,
+...
+};
+```
+
+进一步将键号映射为ASCII码：
+
+```C
+const char kbd_US[128] =
+{
+        0, 27, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '\b',
+        '\t', /* <-- Tab */
+        'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n',
+        0, /* <-- control key */
+        'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', '`', 0, '\\', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 0,
+...
+};
+```
+
+若同时按下`shift`，则使用另一个表完成映射：
+
+```C
+const char kbd_US_shift[128] =
+    {
+        0, 27, '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', 0,
+        0, /* <-- Tab */
+        'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', '\n',
+        0, /* <-- control key */
+        'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', '\"', '~', 0, '|', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', 0,
+...
+};
+```
+
+至此，完成了从键盘扫描码到`ASCII`的转换。
+
+#### 4.3.3 键盘事件注册与分发
+
+我们设计的键盘驱动采用了事件注册与分发的机制，键盘事件的数据结构如下：
+
+```C
+typedef struct kbd_event {
+    char key;	// ASCII
+    int state;	// 键盘是否按下？
+    int key_no;	// 键号，用于判断特殊按键是否按下
+} kbd_event;
+```
+
+上层应用可以通过注册事件回调函数的方式来获取键盘按下的信息：
+
+```C
+int register_kbd_cbk(void (*cbk_func)(kbd_event));
+void unregister_kbd_cbk(int cbk_id);
+```
+
+当键盘中断发生时，键盘驱动会完成键盘信息的解析，并向注册了键盘事件的应用程序逐一分发键盘事件（即依次调用其注册的键盘回调）。键盘驱动处理中断的核心函数实现如下：
+
+```C
+void handle_kbd_irq(void)
+{
+    while (kbd_has_data()) // while 用于稳定键盘中断，具体原理不详
+    {
+        kbd_event e;
+        unsigned char code = kbd_read_byte();
+        e.key_no = keymap[(unsigned int)code];
+
+        e.state = KEY_STATE_DOWN;
+
+        if (code == 0xF0 && kbd_has_data()) // 处理由于键盘抬起准备的二次数据
+        {
+            e.key_no = keymap[(unsigned int)kbd_read_byte()];
+            e.state = KEY_STATE_UP;
+        }
+
+        ... // 一些特殊按键的判断
+        else
+        {
+            ... // 根据特殊按键的状态进行进一步转换
+            invoke_kbd_cbk(e);	// 完成键盘事件生成后，调用注册的回调函数
+        }
+    }
+}
+```
+
+
+
+#### 4.3.4 键盘驱动上层应用举例
+
+键盘驱动的最直接应用是`gets`函数的实现（是的没错，相比于`puts`函数，`gets`函数的实现要绕更大的弯子）。
+
+`stdin`的实现基于标准缓冲区库的实现，有关标准缓冲区库的讨论，请参见本章5.2小节。
+
+在有了标准缓冲区的基础上，`stdin`会动态地向键盘驱动注册回调函数，相关代码如下：
+
+```C
+void stdin_kbd_cbk(kbd_event e)
+{
+    if (stdin_enabled && e.state == KEY_STATE_DOWN)
+    {
+        if (e.key == '\b')
+        {
+            if (std_buffer_empty(stdin_buffer))
+                return;
+            std_buffer_pop(stdin_buffer);
+            putc('\b');
+            putc(' ');
+            putc('\b');
+        }
+        else
+        {
+            std_buffer_put(stdin_buffer, e.key);
+            putc(e.key);
+            if (e.key == '\n')
+                putc('\r');
+        }
+    }
+}
+```
+
+此时，便可借助便准缓冲区的相关方法实现`gets`函数：
+
+```C
+char getc()
+{
+    stdin_enable();
+    byte c = 0;
+    c = std_buffer_wait_char(stdin_buffer);
+    stdin_disable();
+    return c;
+}
+
+int gets(char *str, int size)
+{
+    stdin_enable();
+    int n = std_buffer_wait_line(stdin_buffer, str, size);
+    stdin_disable();
+    return n;
+}
+```
+
+
+
 ### 4.4 鼠标驱动设计与实现
+
+由于时间原因，鼠标驱动并未完全实现，在此不便介绍。
 
 
 
@@ -880,6 +1091,8 @@ void text_buffer_relocate_cursor(text_buffer *buffer);
 
 函数详细实现过程不再赘述，感兴趣的同学可以参考源码。
 
+
+
 ## 6 命令解释器设计与实现（`shell`）
 
 ### 6.1 核心常量及数据结构定义
@@ -1017,6 +1230,8 @@ void show_about_info(int cmd_id)
 `SatoriOS Shell`实际运行截图如下：
 
 ![image-20221218190711206](.\assets\image-20221218190711206.png)
+
+
 
 ## 7 内存管理设计与实现（`mm`）
 
@@ -1219,6 +1434,8 @@ void buddy_free(void *addr, int size)
 
 由于时间原因，本功能还处于实验开发阶段，在此不便展示。
 
+
+
 ## 8 进程管理设计与实现（`sched`）
 
 ### 8.1 进程控制块设计
@@ -1328,6 +1545,8 @@ void schedule (void)
 
 `VPU`的想法阐述请参见本章第十小节。在`VPU`的基础上，进程切换将变得非常简单。在虚拟进程进行切换时，不再需要进行额外的现场保护，只需将CPU的执行权交由不同的VPU执行即可。
 
+
+
 ## 9 文件系统设计与实现（`fs`）
 
 由于时间原因，本功能还处于实验开发阶段，在此不便展示。
@@ -1339,6 +1558,8 @@ void schedule (void)
 ### 9.3 内存虚拟硬盘（`tfs`）设计与实现
 
 ### 9.4 简易文件系统（`FAT32`）设计与实现
+
+
 
 ## 10 虚拟处理单元设计与实现（`vpu`）
 
@@ -1889,6 +2110,8 @@ syscall_t syscall_table[SYSCALL_NUM_MAX] = {
 
 我们计划将汇编分为预处理、符号解析、指令翻译、可执行文件生成等数个阶段。
 
+
+
 ## 11 富文本图形库设计与实现（`rtx`）
 
 长期以来，我们试图为自己的操作系统构建一个图形化界面。但从零开始的像素级操作的难度可想而知，于是我们打算先从文本化的界面入手。经过前期规划思考，我们大致敲定了一个名为`RTX(Rich Text Graphics)`的可视化框架，并正在设计开发中。
@@ -1991,11 +2214,15 @@ void rtx_render_all();
 
 由于时间原因，相关函数仍在开发测试中，在此不便详细展示。
 
+
+
 ## 12 简易vim设计与实现
 
 基于上述的可编辑文本数据结构、ANSI控制码，综合键盘驱动等已经实现的模块，我们设计了简易的vim应用，支持基础的文本编辑操作，其效果图如下：
 
 ![image-20221218190420759](.\assets\image-20221218190420759.png)
+
+
 
 # 五、项目统计与心得总结
 
@@ -2107,6 +2334,8 @@ void rtx_render_all();
 | kernel\sysio    |     2 |   114 |      10 |    20 |   144 |
 | kernel\trap     |     5 |   247 |      40 |    63 |   350 |
 | kernel\utils    |     3 |   164 |      16 |    19 |   199 |
+
+
 
 ## 2 项目心得总结
 

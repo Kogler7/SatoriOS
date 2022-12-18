@@ -29,7 +29,7 @@ void stdin_kbd_cbk(kbd_event e)
             std_buffer_put(stdin_buffer, e.key);
             putc(e.key);
             if (e.key == '\n')
-                putc('\r'); //?忘了当时为啥要这样了
+                putc('\r');
         }
     }
 }
