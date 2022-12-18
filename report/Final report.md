@@ -1180,25 +1180,25 @@ struct loongarch_fpu {
 };
 
 struct thread_struct {
-	/* Saved main processor registers. */
+	/* 保存主要的处理器寄存器 */
 	unsigned long reg01, reg02, reg03, reg22; /* ra tp sp fp */
 	unsigned long reg04, reg05, reg06, reg07; /* a0-a3 */
 	unsigned long reg23, reg24, reg25, reg26; /* s0-s3 */
 	unsigned long reg27, reg28, reg29, reg30, reg31; /* s4-s8 */
-	/* Saved csr registers */
+	/* 保存控制状态寄存器 */
 	unsigned long csr_prmd;
 	unsigned long csr_crmd;
 	unsigned long csr_euen;
 	unsigned long csr_ecfg;
 	unsigned long csr_badvaddr;	//Last user fault
-	/* Saved scratch registers */
+	/* 保存特权级寄存器 */
 	unsigned long scr0;
 	unsigned long scr1;
 	unsigned long scr2;
 	unsigned long scr3;
-	/* Saved eflags register */
+	/* 保存标志寄存器 */
 	unsigned long eflags;
-	/* Other stuff associated with the thread. */
+	/* 其他与进程相关的内容 */
 	unsigned long trap_nr;
 	unsigned long error_code;
 
@@ -1207,20 +1207,20 @@ struct thread_struct {
 
 struct task_struct
 {
-	long state;			/* -1 unrunnable, 0 runnable, >0 stopped */
+	long state;			/* -1 不可运行, 0 可运行, >0 终止 */
 	long counter;
 	long priority;
-	long signal; /* bitmap of pending signals */
-	struct sigaction sigaction[32]; /* 32 is _NSIG_WORDS */
-	long blocked;			/* bitmap of masked signals */
-/* various fields */
+	long signal; /* 挂起信号位图 */
+	struct sigaction sigaction[32]; /* 信号的相关信息 */
+	long blocked;			/* 屏蔽信号位图 */
+/* 进程信息 */
 	int exit_code;
 	unsigned long start_code, end_code, end_data, brk, start_stack;
 	long pid, father, pgrp, session, leader;
 	unsigned short uid, euid, suid;
 	unsigned short gid, egid, sgid;
 	long utime, stime, cutime, cstime, start_time;
-/* tss for this task */
+    
 	struct thread_struct tss;
 };
 ```
@@ -1359,12 +1359,15 @@ u32 scr[SYSCALL_REGISTERS]; // System call registers
 
 >  以`SatoriOS`为例。
 >
-> 统计工具采用 `VSCodeCounter`
-> 
-> Date : 2022-12-18 13:53:12
-> Total : 140 files, 7279 codes, 456 comments, 1508 blanks, all 9243 lines
+>  统计工具采用 `VSCodeCounter`
+>
+>  Date : 2022-12-18 13:53:12
+>  `SatoriOS` Total : 140 files, 7279 codes, 456 comments, 1508 blanks, all 9243 lines
+>  `EchoOS` Total : 82 files, 4263 codes, 960 comments, 827 blanks, all 6050 lines
 
 #### 1.1 Languages
+
+`SatoriOS`
 
 | language     | files |  code | comment | blank | total |
 | :----------- | ----: | ----: | ------: | ----: | ----: |
@@ -1376,7 +1379,21 @@ u32 scr[SYSCALL_REGISTERS]; // System call registers
 | Shell Script |     2 |    65 |      13 |     7 |    85 |
 | CSV          |     1 |    16 |       0 |     1 |    17 |
 
+`EchoOS`
+
+| language     | files |  code | comment | blank | total |
+| :----------- | ----: | ----: | ------: | ----: | ----: |
+| C            |    46 | 3,183 |     844 |   538 | 4,565 |
+| C++          |    19 |   703 |     103 |   144 |   950 |
+| Makefile     |    13 |   240 |       0 |    80 |   320 |
+| Markdown     |     2 |    70 |       0 |    57 |   127 |
+| Shell Script |     2 |    67 |      13 |     8 |    88 |
+
+
+
 #### 1.2 Directories
+
+`SatoriOS`
 
 | path            | files |  code | comment | blank | total |
 | :-------------- | ----: | ----: | ------: | ----: | ----: |
@@ -1414,6 +1431,38 @@ u32 scr[SYSCALL_REGISTERS]; // System call registers
 | kernel\vpu      |     5 |   438 |       0 |    56 |   494 |
 | report          |     1 | 1,009 |       0 |   325 | 1,334 |
 | tools           |     2 |   128 |       0 |    17 |   145 |
+
+`EchoOS`
+
+| path            | files |  code | comment | blank | total |
+| :-------------- | ----: | ----: | ------: | ----: | ----: |
+| .               |    82 | 4,263 |     960 |   827 | 6,050 |
+| include         |    33 | 1,530 |     313 |   340 | 2,183 |
+| include\app     |     1 |    12 |       0 |     9 |    21 |
+| include\arch    |     2 |   170 |      16 |    46 |   232 |
+| include\boot    |     1 |    74 |      13 |    19 |   106 |
+| include\config  |     1 |     4 |       0 |     2 |     6 |
+| include\drivers |     3 |   489 |      43 |    62 |   594 |
+| include\fs      |     1 |    27 |       1 |     7 |    35 |
+| include\mm      |     9 |   147 |       0 |    54 |   201 |
+| include\sched   |     3 |   204 |     132 |    45 |   381 |
+| include\serial  |     1 |    18 |       1 |     5 |    24 |
+| include\shell   |     1 |    11 |       0 |     5 |    16 |
+| include\sysio   |     2 |    49 |       0 |     8 |    57 |
+| include\temp    |     1 |   203 |      72 |    47 |   322 |
+| include\utils   |     3 |    27 |       0 |     7 |    34 |
+| kernel          |    45 | 2,653 |     634 |   474 | 3,761 |
+| kernel\app      |     4 |   303 |      62 |    27 |   392 |
+| kernel\boot     |     2 |   127 |      21 |    32 |   180 |
+| kernel\config   |     2 |    43 |       0 |    13 |    56 |
+| kernel\drivers  |     4 |   243 |      24 |    30 |   297 |
+| kernel\fs       |     2 |   221 |       3 |    24 |   248 |
+| kernel\mm       |    13 |   500 |     128 |   122 |   750 |
+| kernel\sched    |     4 |   361 |     274 |    80 |   715 |
+| kernel\shell    |     2 |   265 |      23 |    21 |   309 |
+| kernel\sysio    |     2 |   114 |      10 |    20 |   144 |
+| kernel\trap     |     5 |   247 |      40 |    63 |   350 |
+| kernel\utils    |     3 |   164 |      16 |    19 |   199 |
 
 ## 2 项目心得总结
 
