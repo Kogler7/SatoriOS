@@ -6,7 +6,17 @@
 
 基于龙芯LoongArch64的操作系统的构建：要求实现启动初始化、进程管理、内存管理、显示器与键盘驱动、文件系统、系统调用及命令解释器等主要模块，并在QEMU虚拟机或龙芯处理器计算机上测试验证。
 
+实验思路：
 
+参照……
+
+一边进行核心模块开发
+
+一边完成部分可视化工作
+
+底层和上层结合
+
+确定核心概念，定义模块行为，设计数据结构，确定模块方法，进行开发优化，系统联调测试
 
 # 二、项目命名与内涵阐释
 
@@ -14,9 +24,13 @@
 
 > Satori：佛教禅宗用语，指心灵之顿悟、开悟；期盼在设计学习的过程中有所顿悟。
 
+![image-20221218190342545](D:\CodeBase\satori-os\report\assets\image-20221218190342545.png)
+
 ## 2 Echo Operating System
 
 > Echo：指回声，灵感来源于一款名为《Dark Echo》的解密游戏，寓意在黑暗中通过努力，获得反馈，不断探索。
+
+![image-20221218190958878](D:\CodeBase\satori-os\report\assets\image-20221218190958878.png)
 
 # 三、平台搭建与环境配置
 
@@ -376,35 +390,35 @@ void printf(const char *fmt, ...)
 			break;
 		switch (c)
 		{
-		case 'd':													// 打印10进制整数
+		case 'd':										// 打印10进制整数
 			print_int(va_arg(ap, int), 10, 1);
 			break;
-		case 'x':													// 打印16进制整数
+		case 'x':										// 打印16进制整数
 			print_int(va_arg(ap, int), 16, 1);
 			break;
-		case 'P':													// 打印64位地址
+		case 'P':										// 打印64位地址
 			print_ptr(va_arg(ap, unsigned long));
 			break;
-		case 'p':													// 打印32位地址
+		case 'p':										// 打印32位地址
 			print_ptr_short(va_arg(ap, unsigned long));
 			break;
-		case 's':													// 打印字符串
+		case 's':										// 打印字符串
 			if ((s = va_arg(ap, char *)) == 0)
 				s = "(null)";
 			for (; *s; s++)
 				putc(*s);
 			break;
-		case 'c':													// 打印字符
+		case 'c':										// 打印字符
 			putc((char)(va_arg(ap, int)));
 			break;
-		case 'O':													// 打印字符串（16位左对齐）
+		case 'O':										// 打印字符串（16位左对齐）
 			n = 16;
 			if ((s = va_arg(ap, char *)) == 0)
 				s = "(null)  ";
 			for (; n; s++, n--)
 				putc(*s ? *s : ' ');
 			break;
-		case 'o':													// 打印字符串（8位左对齐）
+		case 'o':										// 打印字符串（8位左对齐）
 			n = 8;
 			if ((s = va_arg(ap, char *)) == 0)
 				s = "(null)  ";
@@ -965,7 +979,9 @@ void show_about_info(int cmd_id)
 }
 ```
 
+`SatoriOS Shell`实际运行截图如下：
 
+![image-20221218190711206](D:\CodeBase\satori-os\report\assets\image-20221218190711206.png)
 
 ## 7 内存管理设计与实现（`mm`）
 
@@ -1044,6 +1060,10 @@ int alloc_aligned_bits(byte *bitmap, int map_size, int size, int *last)
 ```
 
 此外，分别有两个函数负责内存的释放，并与上述两个函数一一匹配，一般不可混用。由于释放函数地实现较为简单，在此便不做展示。
+
+系统启动之初的位分配器内存分配情况：
+
+![image-20221218190942836](D:\CodeBase\satori-os\report\assets\image-20221218190942836.png)
 
 #### 7.2.1 `Buddy System`设计与实现
 
@@ -1840,9 +1860,107 @@ syscall_t syscall_table[SYSCALL_NUM_MAX] = {
 
 ### 11.1 富文本图形库架构概述
 
+在我们的设想中，该架构主要负责对虚拟显存的管理。用户应用程序可以向RTX申请一块特定大小的虚拟显存，并告诉RTX它想在这块虚拟显存上输出什么数据。RTX则在会判断该用户程序目前是否处于最顶层，若是，则在修改显存的同时将更改映射到真正的屏幕上，否则将只会修改显存。系统会向RTX申请一块保留显存用于展示系统的状态信息，以及完成不同应用间的切换等任务。RTX目前提供总计10种窗口尺寸，分别是上中下、左中右两两组合的9种尺寸以及全屏尺寸。
+
 ### 11.2 富文本图形库设计与实现
 
+RTX相关的数据结构及方法暂时定义如下：
+
+```C
+#define hit_align(cur_align, tgt_align) (cur_align & tgt_align)
+
+extern char _rtx_buffer[RTX_BUFFER_LINES][RTX_MAX_WIDTH];
+
+typedef enum rtx_align
+{
+    rtx_align_lft = 1 << 0, // left
+    rtx_align_mid = 1 << 1, // middle (full width)
+    rtx_align_rgt = 1 << 2, // right
+    rtx_align_top = 1 << 3, // top
+    rtx_align_ctr = 1 << 4, // center (vertical)
+    rtx_align_btm = 1 << 5, // bottom
+    rtx_align_exp = 1 << 6, // expand (full width and height)
+} rtx_align;
+
+typedef struct rtx_char
+{
+    char ch;
+    sint color;
+    sint style;
+} rtx_char;
+
+typedef struct rtx_line
+{
+    rtx_char *line;
+    sint width;
+    bool blank;
+    struct rtx_line *next;
+    struct rtx_line *prev;
+} rtx_line;
+
+typedef struct rtx_buffer
+{
+    sint prior;
+    sint width;
+    sint height;
+    bool active;
+    sint cursor_x;
+    sint cursor_y;
+    rtx_align align;
+    rtx_line *buf_line; // buffer line
+    rtx_line *pre_line; // previous line
+    rtx_line *cur_line; // current line
+    rtx_line *exs_line; // excessive line
+} rtx_buffer;
+
+void rtx_init();
+
+rtx_buffer *rtx_create_buffer(rtx_align align);
+void rtx_destroy_buffer(rtx_buffer *buffer);
+
+void rtx_clear_buffer(rtx_buffer *buffer);
+void rtx_clear_line(rtx_buffer *buffer, int line);
+void rtx_clear_char(rtx_buffer *buffer, int x, int y);
+
+void rtx_set_char(rtx_buffer *buffer, int x, int y, char c);
+void rtx_set_string(rtx_buffer *buffer, int x, int y, char *str);
+
+void rtx_append_char(rtx_buffer *buffer, char c);
+void rtx_append_string(rtx_buffer *buffer, char *str);
+
+void rtx_set_active(rtx_buffer *buffer);
+void rtx_set_inactive(rtx_buffer *buffer);
+
+void rtx_render_buffer(rtx_buffer *buffer);
+void rtx_render_back(rtx_buffer *buffer);
+void rtx_render_line(rtx_buffer *buffer, int line);
+
+void rtx_set_cursor(rtx_buffer *buffer, int x, int y);
+void rtx_move_cursor(rtx_buffer *buffer, int x, int y);
+void rtx_hide_cursor(rtx_buffer *buffer);
+void rtx_show_cursor(rtx_buffer *buffer);
+
+void rtx_set_cursor_style(rtx_buffer *buffer, int style);
+void rtx_save_cursor_style(rtx_buffer *buffer);
+void rtx_restore_cursor_style(rtx_buffer *buffer);
+
+void rtx_set_cursor_color(rtx_buffer *buffer, int color);
+void rtx_save_cursor_color(rtx_buffer *buffer);
+void rtx_restore_cursor_color(rtx_buffer *buffer);
+
+void rtx_roll_up(rtx_buffer *buffer, int lines);
+void rtx_roll_down(rtx_buffer *buffer, int lines);
+
+void rtx_render_all();
+```
+
+由于时间原因，相关函数仍在开发测试中，在此不便详细展示。
+
 ## 12 简易vim设计与实现
+
+基于上述的可编辑文本数据结构、ANSI控制码，综合键盘驱动等已经实现的模块，我们设计了简易的vim应用，支持基础的文本编辑操作，其效果图如下：
+
+![image-20221218190420759](D:\CodeBase\satori-os\report\assets\image-20221218190420759.png)
 
 # 五、项目统计与心得总结
 
@@ -1852,7 +1970,7 @@ syscall_t syscall_table[SYSCALL_NUM_MAX] = {
 >
 >  统计工具采用 `VSCodeCounter`
 >
->  Date : 2022-12-18 13:53:12
+>  Date : 2022-12-18
 >  `SatoriOS` Total : 140 files, 7279 codes, 456 comments, 1508 blanks, all 9243 lines
 >  `EchoOS` Total : 82 files, 4263 codes, 960 comments, 827 blanks, all 6050 lines
 
