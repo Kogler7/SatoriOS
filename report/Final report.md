@@ -981,25 +981,190 @@ void show_about_info(int cmd_id)
 
 ![1670286103590](D:\CodeBase\satori-os\report\assets\1670286103590.png)
 
-在我们设计的操作系统中，我们模仿Linux设计了最简单的`Buddy System`和`Slab Allocator`，并在此基础上实现了
+在我们设计的操作系统中，我们模仿Linux设计了最简单的`Buddy System`和`Slab Allocator`，并在此基础上实现了`kmalloc`函数。由于时间原因，我们并未实现`vmalloc`和`malloc`两个分配器。
+
+在我们实践的过程中，我们发现内存管理实际上存在鸡生蛋蛋生鸡的问题，也就是说，内存管理系统的搭建是为了能够动态的申请和释放内存，而内存管理系统本身在一定程度上也依赖于动态的内存申请和释放。对此，Linux的解决方案是设计了一个`boot_cache`的过程，而我们则采用了更为简单的方式，即在内核空间划分出一段内存用于临时的内核数据结构的动态内存申请，而管理这片内存的分配器是基于位示图原理的`Bit Allocator`。
 
 ### 7.2 连续物理内存分配器（`kmalloc`）设计与实现
 
+我们设计的连续物理内存分配器主要由底层的页分配器`Buddy System`、上层的对象分配器`Slab Allocator`以及初始化阶段的临时分配器`Bit Allocator`三个部分组成。
+
 #### 7.2.0 `Bit Allocator` 设计与实现
 
+位分配器的实现非常简单，其针对位示图进行位的分配操作。其中负责分配的函数主要有`alloc_bits`和`alloc_aligned_bits`两个函数，前者负责忠实的分配内核需要的内存大小，保证内存的利用率，后者则在内核需求的基础上考虑了内存对齐以及分配性能等因素，可以相对快速地分配大块的内存。两个函数的实现如下：
+
+```C
+int alloc_bits(byte *bitmap, int map_size, int size, int *last)
+{
+    int last_i = *last / 8;
+    int i = last_i, j = *last % 8, k = 0;
+    while (k < size)
+    {
+        if (j == 8)
+        {
+            j = 0;
+            i = (i + 1) % map_size;
+            if (i == last_i)
+                return -1;
+        }
+        if ((bitmap[i] & (1 << j)) == 0)
+            k++;
+        else
+            k = 0;
+        j++;
+    }
+    *last = i * 8 + j;
+    for (int l = 0; l < size; l++)
+        set_bit(bitmap, *last - l - 1, 1);
+    return *last - size;
+}
+```
+
+```C
+int alloc_aligned_bits(byte *bitmap, int map_size, int size, int *last)
+{
+    int last_i = (*last + 7) / 8 % map_size;
+    size = (size + 7) / 8;
+    int i = last_i, k = 0;
+    while (k < size)
+    {
+        if (bitmap[i] == 0)
+            k++;
+        else
+            k = 0;
+        i = (i + 1) % map_size;
+        if (i == last_i)
+            return -1;
+    }
+    *last = i * 8;
+    for (int l = 0; l < size; l++)
+        bitmap[i - l - 1] = 0xFF;
+    return *last - size * 8;
+}
+```
+
+此外，分别有两个函数负责内存的释放，并与上述两个函数一一匹配，一般不可混用。由于释放函数地实现较为简单，在此便不做展示。
+
 #### 7.2.1 `Buddy System`设计与实现
+
+在我们实现的系统中，伙伴系统是建立在树结构地基础上实现的。使用树实现的优点是代码结构简单，可靠性强，但缺点是内存分配效率相对较低。后续我们会择机对其进行优化改进。我们目前实现的伙伴系统的数据结构及方法的定义如下：
+
+```C
+#define ALLOCATED 1
+#define FREE 0
+
+typedef struct buddy_node
+{
+    struct buddy_node *left;
+    struct buddy_node *right;
+    int order;
+    int state;
+    void* start;
+} buddy_node;
+
+void init_buddy();
+int split_buddy(buddy_node *node);
+void merge_buddy(buddy_node *node);
+buddy_node *alloc_buddy(buddy_node *root, int order);
+void free_buddy(void* start, int order);
+
+void *buddy_alloc(int size);
+void buddy_free(void *addr, int size);
+void* buddy_realloc(void* addr, int old_size, int new_size);
+void* buddy_calloc(int size);
+```
+
+除去一些基本的树结构操作，我们的伙伴系统几个核心的方法实现如下：
+
+```C
+buddy_node *alloc_buddy(buddy_node *root, int order)
+{
+    if (order > root->order)
+        return NULL;
+    if (order == root->order)
+    {
+        root->state = ALLOCATED;
+        return root;
+    }
+    else
+    {
+        if (root->left == NULL)
+        {
+            if (split_buddy(root) == -1)
+                return NULL;
+        }
+        void *ret = alloc_buddy(root->left, order);
+        if (ret == NULL)
+            ret = alloc_buddy(root->right, order);
+        return ret;
+    }
+    return NULL;
+}
+
+void free_buddy(void *start, int order)
+{
+    buddy_node *root = &buddy_root;
+    buddy_node *node = root;
+    while (node->order != order)
+    {
+        if (node->left == NULL)
+        {
+            mm_error("free_buddy: invalid operation. (start: %p, order: %d)", start, order);
+            return;
+        }
+        root = node;
+        if (start < node->right->start)
+            node = node->left;
+        else
+            node = node->right;
+    }
+    node->state = FREE;
+    if (root->left->state == FREE && root->right->state == FREE)
+        merge_buddy(root);
+}
+
+void *buddy_alloc(int size)
+{
+    int order = 0;
+    while ((1 << order) < size)
+        order++;
+    buddy_node *node = alloc_buddy(&buddy_root, order);
+    if (node == NULL)
+        return NULL;
+    set_dead_beef(node->start + (1 << order) - 1);
+    return (void *)node->start;
+}
+
+void buddy_free(void *addr, int size)
+{
+    int order = 0;
+    while ((1 << order) < size)
+        order++;
+    if (!check_dead_beef(addr + (1 << order) - 1))
+    {
+        mm_error("buddy_free: Dead beef check failure. (addr: %p, size: %d)", addr, size);
+    }
+    free_buddy(addr, order);
+}
+```
+
+
 
 #### 7.2.2 `Slab Allocator`设计与实现
 
 ### 7.3 连续虚拟内存分配器（`vmalloc`）设计与实现
 
+由于时间原因，本功能还处于实验开发阶段，在此不便展示。
+
 ### 7.4 用户地址空间分配器（`malloc`）设计与实现
+
+由于时间原因，本功能还处于实验开发阶段，在此不便展示。
 
 ## 8 进程管理设计与实现（`sched`）
 
 ### 8.1 进程控制块设计
 
-进程控制块的设计比较常规，根据龙芯的架构做了相应的条件，这其中也借鉴了`linux`的设计思路。
+进程控制块的设计比较常规，根据龙芯的架构做了相应的调整，这其中也借鉴了`Linux`的设计思路。
 
 - 进程标识符：内/外部、父/子进程、用户标识符
 - 处理器状态信息：通用、PC、PSW、用户栈指针寄存器、龙芯控制寄存器
@@ -1102,7 +1267,11 @@ void schedule (void)
 
 ### 8.3 基于VPU的进程调度设计
 
+`VPU`的想法阐述请参见本章第十小节。在`VPU`的基础上，进程切换将变得非常简单。在虚拟进程进行切换时，不再需要进行额外的现场保护，只需将CPU的执行权交由不同的VPU执行即可。
+
 ## 9 文件系统设计与实现（`fs`）
+
+由于时间原因，本功能还处于实验开发阶段，在此不便展示。
 
 ### 9.1 文件系统架构概述
 
@@ -1116,7 +1285,43 @@ void schedule (void)
 
 ### 10.1 虚拟处理单元想法概述
 
+由于资料和时间的双重匮乏，我们对龙芯架构的了解还很浅薄，尚不能完成对龙芯CPU的完全控制。对我们来说，龙芯CPU就像是一个黑盒子，我们无法在短期内摸清其关键操纵方法，而这样的盲人摸象可能会在很大程度上阻碍我们研发的进度。进行操作系统实验，一方面是希望对龙芯架构有一定的研究和理解，另一方面，我们也希望在实践的过程中更深入地理解课堂中学习到的知识，去进一步对操作系统这一非具体的概念感兴趣。因此，我们决定走一个折中的路线——既然操纵龙芯CPU存在一定的难度，那我们就用软件的方式构建一个虚拟的处理单元（Virtual Processor Unit, VPU），并在此基础上完成虚拟的指令执行、地址转换、段页管理及用户-内核态的转换，等相关的算法成熟之后再移植到真正的CPU上。我们必须承认，这个想法的工作量很大，我们投入了大量的时间也未能将其完全实现，下面我们仅就已经完成的工作作以简要介绍和展示。
+
 #### 10.1.1 虚拟处理单元设计
+
+经过综合考虑，我们最终确定`VPU`设计如下：
+
+```C
+typedef struct vpu
+{
+    u32 gpr[GENERAL_REGISTERS]; // General purpose registers
+    u32 scr[SYSCALL_REGISTERS]; // System call registers
+    segment_registers_t sgr;    // Segment registers
+    segment_register_t *csr;    // Current segment register
+    int ip;                     // Instruction pointer
+    int sp;                     // Stack pointer
+    int bp;                     // Base pointer
+    sint cpl;                   // Current privilege level
+    sint asid;                  // Address space identifier
+    vpu_flags_t flags;          // Flags
+    vdt_entry_t gdtr;           // Global descriptor table register
+    selector_t ldtr;            // Local descriptor table register
+} vpu_t;
+```
+
+下面进行逐一介绍。
+
+```C
+u32 gpr[GENERAL_REGISTERS]; // General purpose registers
+```
+
+通用寄存器。每个寄存器占用32位空间，共计16个。
+
+```C
+u32 scr[SYSCALL_REGISTERS]; // System call registers
+```
+
+系统调用专用寄存器。用于系统调用参数传递
 
 #### 10.1.2 虚拟处理执行循环
 
@@ -1150,7 +1355,65 @@ void schedule (void)
 
 # 五、项目统计与心得总结
 
-## 1 项目代码统计
+## 1 项目代码统计报告
+
+>  以`SatoriOS`为例。
+>
+> 统计工具采用 `VSCodeCounter`
+> 
+> Date : 2022-12-18 13:53:12
+> Total : 140 files, 7279 codes, 456 comments, 1508 blanks, all 9243 lines
+
+#### 1.1 Languages
+
+| language     | files |  code | comment | blank | total |
+| :----------- | ----: | ----: | ------: | ----: | ----: |
+| C            |    69 | 4,847 |     429 |   673 | 5,949 |
+| Markdown     |    15 | 1,219 |       0 |   466 | 1,685 |
+| C++          |    36 |   726 |      14 |   247 |   987 |
+| Makefile     |    16 |   294 |       0 |    98 |   392 |
+| Python       |     1 |   112 |       0 |    16 |   128 |
+| Shell Script |     2 |    65 |      13 |     7 |    85 |
+| CSV          |     1 |    16 |       0 |     1 |    17 |
+
+#### 1.2 Directories
+
+| path            | files |  code | comment | blank | total |
+| :-------------- | ----: | ----: | ------: | ----: | ----: |
+| .               |   140 | 7,279 |     456 | 1,508 | 9,243 |
+| include         |    60 | 2,071 |     152 |   564 | 2,787 |
+| include\app     |     1 |     4 |       0 |     2 |     6 |
+| include\arch    |     3 |   211 |      17 |    49 |   277 |
+| include\boot    |     1 |    81 |       6 |    20 |   107 |
+| include\config  |     3 |   275 |      16 |    20 |   311 |
+| include\drivers |     6 |   346 |      31 |    89 |   466 |
+| include\fs      |     6 |    56 |       1 |    22 |    79 |
+| include\io      |     5 |   118 |       0 |    38 |   156 |
+| include\isp     |     3 |    26 |       0 |    12 |    38 |
+| include\lib     |     4 |   132 |       0 |    45 |   177 |
+| include\mm      |     9 |   141 |       0 |    53 |   194 |
+| include\sched   |     2 |    19 |       0 |     6 |    25 |
+| include\shell   |     3 |    50 |       0 |    14 |    64 |
+| include\sys     |     1 |    36 |       0 |    13 |    49 |
+| include\temp    |     1 |   178 |      72 |    47 |   297 |
+| include\vpu     |    10 |   342 |       9 |   116 |   467 |
+| kernel          |    71 | 3,971 |     291 |   585 | 4,847 |
+| kernel\app      |     3 |   122 |      19 |    12 |   153 |
+| kernel\boot     |     2 |   161 |      16 |    36 |   213 |
+| kernel\config   |     4 |   189 |       6 |    24 |   219 |
+| kernel\drivers  |     5 |   239 |       5 |    36 |   280 |
+| kernel\fs       |     4 |   283 |       3 |    35 |   321 |
+| kernel\io       |     4 |   246 |       8 |    33 |   287 |
+| kernel\isp      |     4 |    19 |       0 |     8 |    27 |
+| kernel\lib      |     4 |   822 |      47 |    70 |   939 |
+| kernel\mm       |    13 |   504 |     127 |   126 |   757 |
+| kernel\sched    |     3 |    22 |       4 |    10 |    36 |
+| kernel\shell    |     6 |   514 |      12 |    31 |   557 |
+| kernel\sys      |     3 |    51 |       0 |    10 |    61 |
+| kernel\trap     |     8 |   295 |      40 |    80 |   415 |
+| kernel\vpu      |     5 |   438 |       0 |    56 |   494 |
+| report          |     1 | 1,009 |       0 |   325 | 1,334 |
+| tools           |     2 |   128 |       0 |    17 |   145 |
 
 ## 2 项目心得总结
 

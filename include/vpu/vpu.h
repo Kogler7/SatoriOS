@@ -61,7 +61,6 @@ typedef struct vpu
     vpu_flags_t flags;          // Flags
     vdt_entry_t gdtr;           // Global descriptor table register
     selector_t ldtr;            // Local descriptor table register
-    // page_dir_base_t pdbr;       // Page directory base register
 } vpu_t;
 
 descriptor_t vpu_get_descriptor(vpu_t *vpu, selector_t selector);
