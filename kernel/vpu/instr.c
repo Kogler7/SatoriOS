@@ -233,7 +233,7 @@ void vpu_instr_call(vpu_operand_t *op1)
 
 void vpu_instr_ret()
 {
-    if (cur_vpu->sp +4> cur_vpu->bp)
+    if (cur_vpu->sp + 4 > cur_vpu->bp)
     {
         vpu_error("Stack underflow");
     }

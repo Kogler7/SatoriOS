@@ -23,7 +23,8 @@
         "stdout.h": "c",
         "ansi.h": "c",
         "kinfo.h": "c",
-        "text.h": "c"
+        "text.h": "c",
+        "port.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled",
     "cSpell.words": [

@@ -732,7 +732,104 @@ static inline int std_buffer_empty_p(std_buffer *buffer)
 
 ### 5.3 标准可编辑文本结构设计与实现
 
-为了支持建议文本编辑器`vim`的设计实现，我们利用二维双向链表设计了可编辑的文本数据结构，其核心数据结构定义与相关操作函数设计与实现如下：
+为了支持建议文本编辑器`vim`的设计实现，我们利用二维双向链表设计了可编辑的文本数据结构，其核心数据结构定义与相关操作函数设计与实现如下。
+
+核心数据结构：
+
+```C
+typedef struct text_cursor	// 光标位置
+{
+    int x;
+    int y;
+} text_cursor;
+
+typedef struct text_char	// 字符结点
+{
+    char ch;
+    struct text_char *next;
+    struct text_char *prev;
+} text_char;
+
+typedef struct text_line	// 行节点
+{
+    int nr_chars;
+    text_char *fst_char;
+    text_char *lst_char;
+    struct text_line *next;
+    struct text_line *prev;
+} text_line;
+
+typedef struct text_buffer	// 可编辑文本缓冲
+{
+    int nr_lines;
+    text_line *fst_line;
+    text_line *lst_line;
+    text_line *cur_line;
+    text_char *cur_char;
+    text_cursor cursor;
+} text_buffer;
+```
+
+相关操作函数：
+
+```C
+text_buffer *text_buffer_create();
+
+int text_buffer_count_lines(text_buffer *buffer);
+int text_buffer_count_chars(text_buffer *buffer);
+
+void text_buffer_load_text(text_buffer *buffer, char *str);
+void text_buffer_save_text(text_buffer *buffer, char *str, int size);
+
+void text_buffer_save_line(text_line *line, char *str, int size);
+
+void text_buffer_clear(text_buffer *buffer);
+void text_buffer_destroy(text_buffer *buffer);
+void text_buffer_free_line(text_line *line);
+
+void text_buffer_write_char(text_buffer *buffer, char c);
+
+void text_buffer_insert_line(text_buffer *buffer);
+void text_buffer_insert_char(text_buffer *buffer, char c);
+void text_buffer_insert_string(text_buffer *buffer, char *str);
+
+void text_buffer_split_line(text_buffer *buffer);
+void text_buffer_merge_line(text_buffer *buffer);
+
+static inline void text_buffer_newline(text_buffer *buffer)
+{
+    text_buffer_split_line(buffer);
+}
+
+void text_buffer_delete_char(text_buffer *buffer);
+void text_buffer_delete_line(text_buffer *buffer);
+
+void text_buffer_backspace(text_buffer *buffer);
+
+void text_buffer_cursor_up(text_buffer *buffer);
+void text_buffer_cursor_down(text_buffer *buffer);
+void text_buffer_cursor_prev(text_buffer *buffer);
+void text_buffer_cursor_next(text_buffer *buffer);
+
+void text_buffer_cursor_move_to(text_buffer *buffer, int x, int y);
+void text_buffer_cursor_to_line(text_buffer *buffer, int line);
+void text_buffer_cursor_to_col(text_buffer *buffer, int col);
+
+void text_buffer_cursor_home(text_buffer *buffer);
+void text_buffer_cursor_end(text_buffer *buffer);
+
+void text_buffer_cursor_line_home(text_buffer *buffer);
+void text_buffer_cursor_line_end(text_buffer *buffer);
+
+void text_buffer_print_info(text_buffer *buffer);
+
+void text_buffer_print_line(text_line *line);
+void text_buffer_print_text(text_buffer *buffer);
+
+void text_buffer_relocate_cursor(text_buffer *buffer);
+```
+
+函数详细实现过程不再赘述，感兴趣的同学可以参考源码。
 
 ## 6 命令解释器设计与实现（`shell`）
 
@@ -873,6 +970,18 @@ void show_about_info(int cmd_id)
 ## 7 内存管理设计与实现（`mm`）
 
 ### 7.1 `SatoriOS`/`EchoOS`内存管理架构概述
+
+在设计内存管理系统时，我们着重参考了Linux相关的设计理念和设计思路，但由于Linux的内存管理系统过于庞大复杂，我们并未完全遵循Linux的实现方式，而是混入了大量的自己的理解和思考。在实现上，我们以根据现有需求自行实现代码为主，以参考Linux相关概念命名为辅，设计了一个简易可用的内存管理系统。
+
+由于时间原因，这个系统尚有诸多等待完善的部分。同时，由于资料和时间的双重匮乏，我们目前并未对龙芯的硬件架构有透彻的研究，因此并未针对龙芯的相关控制寄存器进行设置，也并未启用硬件的MMU，无法对地址进行翻译转换，从而无法真正意义上进入保护模式，对内存进行段页式的管理。对于这个问题，一方面我们只能使系统仍然在内核态运行，另一方面我们提出了`vpu`的概念，希望以模拟硬件逻辑的方式来虚拟地实现段页式的内存管理，该想法将在本章第10小节进行详细讨论和阐述。
+
+下面先对内存分配系统整体的设计思路进行介绍。
+
+研究Linux内核可以发现，Linux中重要的内存分配接口主要由`kmalloc`、`vmalloc`、`malloc`等组成。其中`kmalloc`用于内核空间动态内存分配，其本质是分配大小不定的连续物理内存，依靠`slab`系统实现。在Linux中，`slab`系统是以对象为单位的，在`buddy system`基础上分配较小连续物理内存的系统。Linux底层所使用的页分配器是`buddy system`。在Linux系统中，`vmalloc`负责分配虚拟连续，但物理上并不一定连续的内存空间，而`malloc`则是用于在用户空间进行连续内存分配的接口。
+
+![1670286103590](D:\CodeBase\satori-os\report\assets\1670286103590.png)
+
+在我们设计的操作系统中，我们模仿Linux设计了最简单的`Buddy System`和`Slab Allocator`，并在此基础上实现了
 
 ### 7.2 连续物理内存分配器（`kmalloc`）设计与实现
 
