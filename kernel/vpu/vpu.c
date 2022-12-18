@@ -71,12 +71,18 @@ void vpu_switch_seg(seg_type type)
     }
 }
 
+void vpu_exec_instr(vpu_instr_t instr)
+{
+    return
+}
+
 void vpu_cycle()
 {
     logi_addr_t ip = cur_vpu->ip;
     phys_addr_t *phys_ip = get_phys_addr(ip);
-    vpu_opcode_t opcode = *(vpu_opcode_t *)phys_ip;
-    vpu_info("opcode: %d", opcode);
+    vpu_instr_t *instr = (vpu_instr_t *)phys_ip;
+    cur_vpu->ip += sizeof(vpu_instr_t);
+    vpu_exec_instr(*instr);
 }
 
 void go_to_vpu_cycle()

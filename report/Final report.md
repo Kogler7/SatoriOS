@@ -1152,6 +1152,10 @@ void buddy_free(void *addr, int size)
 
 #### 7.2.2 `Slab Allocator`设计与实现
 
+由于时间原因，我们自己的Slab分配器尚未完全实现，下面附上Linux的具体实现示意图，感兴趣的同学可以深入了解。
+
+![1668869941719](D:\CodeBase\satori-os\report\assets\1668869941719.png)
+
 ### 7.3 连续虚拟内存分配器（`vmalloc`）设计与实现
 
 由于时间原因，本功能还处于实验开发阶段，在此不便展示。
@@ -1321,31 +1325,518 @@ u32 gpr[GENERAL_REGISTERS]; // General purpose registers
 u32 scr[SYSCALL_REGISTERS]; // System call registers
 ```
 
-系统调用专用寄存器。用于系统调用参数传递
+系统调用专用寄存器。用于系统调用参数传递，共8个。这样的设计可能并不规范，仅仅是为了方便。
+
+```C
+segment_registers_t sgr;    // Segment registers
+```
+
+段寄存器组。其详细定义如下，本VPU设计共将应用程序划分成了四段，即代码段、数据段、栈段、堆段。
+
+```C
+typedef struct segment_registers
+{
+    segment_register_t cs; // Code segment
+    segment_register_t ds; // Data segment
+    segment_register_t ss; // Stack segment
+    segment_register_t hs; // Heap segment
+} segment_registers_t;
+```
+
+其中，每一个段寄存器由一个段选择子和一个段描述符组成。这里是参照了8086的经典设计，在设置段选择子时，VPU会自动将该选择子对应的段描述符填入段寄存器中。
+
+```C
+typedef struct segment_register
+{
+    selector_t selector;
+    virtual_descriptor_t descriptor;
+} segment_register_t;
+```
+
+其余有关分段设计将在10.2.2进行阐述。
+
+```C
+segment_register_t *csr;    // Current segment register
+```
+
+当前段寄存器。用于标记CPU当前正处于工作的段。该设计暂时没有参考依据，仅仅是为了方便而设置。
+
+```C
+int ip;                     // Instruction pointer
+int sp;                     // Stack pointer
+int bp;                     // Base pointer
+```
+
+程序计数器、栈顶指针和栈底指针。
+
+```C
+sint cpl;                   // Current privilege level
+sint asid;                  // Address space identifier
+```
+
+当前工作特权级、进程地址空间ID。
+
+```C
+vpu_flags_t flags;          // Flags
+```
+
+标志寄存器，详细定义如下：
+
+```C
+typedef struct vpu_flags
+{
+    u8 cf : 1; // carry flag
+    u8 zf : 1; // zero flag
+    u8 of : 1; // overflow flag
+    u8 sf : 1; // sign flag
+    u8 pf : 1; // parity flag
+    u8 tf : 1; // trace flag
+    u8 rf : 1; // interrupt flag
+} vpu_flags_t;
+```
+
+以上定义参考了经典的CPU设计，并结合实际需求制定。
+
+```C
+vdt_entry_t gdtr;           // Global descriptor table register
+selector_t ldtr;            // Local descriptor table register
+```
+
+全局描述符表寄存器、局部描述符表寄存器。根据8086经典设计，`gdtr`中保存的是全局描述符表的入口信息，而`ldtr`中保存的是其对应的局部描述符表在全局描述符表中的位置，即段选择子。
 
 #### 10.1.2 虚拟处理执行循环
 
+在VPU中，我们模拟了微处理器处理解析并运行指令的完整过程，并将其封装成一个循环，规定每一个循环都是一个原子操作，在执行循环的过程中不可被打断执行。（注意，此处的不可被中断是指，不可被同样是运行在VPU上的其他虚拟进程中断，而并非屏蔽了硬件意义上的中断。事实上，硬件中断后会恢复现场，并不影响虚拟进程的正常执行。）
+
+```C
+void vpu_cycle()
+{
+    logi_addr_t ip = cur_vpu->ip;
+    phys_addr_t *phys_ip = get_phys_addr(ip);
+    vpu_instr_t *instr = (vpu_instr_t *)phys_ip;
+    cur_vpu->ip += sizeof(vpu_instr_t);
+    vpu_exec_instr(*instr);
+}
+```
+
+那在什么情况下CPU会进入`VPU Cycle`中执行呢？答案是当内核代码在执行空操作时。我们暂时约定，当内核代码在执行空操作时，便会跳转到VPU并执行一个Cycle，这样便可利用CPU的空闲实现来执行VPU的相关任务。事实上，空操作函数已经被替换为如下操作：
+
+```C
+void go_to_vpu_cycle()
+{
+    if(vpu_exit_flag || !cur_vpu)
+    {
+        return;
+    }
+    if (vpu_switch_flag)
+    {
+        vpu_switch_flag = false;
+        cur_vpu = next_vpu;
+    }
+    vpu_cycle();
+}
+```
+
+从上面的代码中也可以看到，虚拟进程的切换是通过不通过VPU之间交换CPU的执行权来实现的，而且这个过程发生在一个`VPU Cycle`之外。
+
 ### 10.2 虚拟段页式内存管理机构
+
+在建立了初步的VPU概念之后，我们就可以开始大展拳脚，开始模拟实现真正的段页式内存管理系统了。由于由软件模拟实现的虚拟执行单元的所有细节都是由我们决定的，VPU相对于龙芯的CPU来说，对于我们已经不再是一个黑盒子，其所有细节都可以被跟踪确定的。基于以上设计，我们设计了虚拟的段页式内存管理架构如下。
 
 #### 10.2.1 虚拟逻辑地址组成
 
+我们首先对地址类型进行了如下定义：
+
+```C
+#define VADDR_OFT_ODR 12
+#define VADDR_PGN_ODR 6
+#define VADDR_PDN_ODR 14
+
+typedef struct logi_addr
+{
+    u32 oft : VADDR_OFT_ODR; // offset: 4k
+    u32 pgn : VADDR_PGN_ODR; // page number: 64 pages
+    u32 pdn : VADDR_PDN_ODR; // page directory number: 16k page tables
+} logi_addr_t;
+
+typedef addr phys_addr_t;
+```
+
+可以看到，我们采用了两级分页结构，内存页的大小为4k，逻辑地址一共占用32位内存空间。处于一些实际的考虑，我们并没有按照课本上讲述的在逻辑地址中加入段号。在我们的虚拟VPU中，分段管理是由操作系统自动完成的，这便意味着，虚拟用户程序的每个段都认为自己拥有32位总计4G的内存空间。
+
 #### 10.2.2 分段分页数据结构
+
+经过对各类资料的学习和分析，我们最终确定的页表项数据结构如下所示：
+
+```C
+typedef struct page
+{
+    u32 present : 1;  // Page present in memory
+    u32 rw : 1;       // Read-only if clear, readwrite if set
+    u32 user : 1;     // Supervisor level only if clear
+    u32 accessed : 1; // Has the page been accessed since last refresh?
+    u32 dirty : 1;    // Has the page been written to since last refresh?
+    u32 unused : 7;   // Amalgamation of unused and reserved bits
+    u32 frame : 20;   // Frame address (shifted right 12 bits)
+} page_t;
+```
+
+其中物理页框号占20位，结合12位的页内偏移，我们的分页结构可以访问32位的地址空间。
+
+在此基础上的页表和页目录数据结构则呼之欲出：
+
+```C
+typedef struct page_table
+{
+    int nr_pages;
+    page_t *pages;
+} page_table_t;
+
+typedef struct page_directory
+{
+    int nr_tables;
+    page_table_t *tables;
+} page_directory_t;
+```
+
+以上是分页的数据结构。下面是分段的数据结构：
+
+根据惯例，我们确定了16位的段选择子结构：
+
+```C
+typedef struct selector
+{
+    u16 rpl : 2;  // Requested Privilege Level
+    u16 tbl : 1;  // Table Indicator (0 = GDT, 1 = LDT)
+    u16 idx : 13; // Index
+} selector_t;
+```
+
+段选择子用于在描述符表中查找定位某个段的段描述符，而段描述符的数据结构如下：
+
+```C
+typedef struct descriptor
+{
+    u16 limit_low;            // 段界限的低16位
+    u16 base_low;             // 段基地址的低16位
+    u8 base_mid;              // 段基地址的中8位
+    descriptor_attrs_t attrs; // 段属性
+    descriptor_flags_t flags; // 段标志
+    u8 base_high;             // 段基地址的高8位
+} descriptor_t;
+```
+
+这里段描述符数据结构的设计参考了8086的经典设计，但原设计由于历史兼容原因过于复杂，结合实际的使用需求，我们实际使用的是自定义的虚拟描述符结构：
+
+```C
+typedef struct virtual_descriptor
+{
+    addr entry;
+    u32 limit;
+    descriptor_attrs_t attrs;
+} attr_packed virtual_descriptor_t;
+```
+
+上述两种描述符结构共用段属性结构，其详细定义如下：
+
+```C
+typedef struct descriptor_attrs
+{
+    u8 accessed : 1;        // 表明该段是否被访问过，将选择子装入寄存器时，该位被置1
+    u8 writeable : 1;       // 代码段：0表示只执行，1表示可读；数据段：0表示只读，1表示可读写
+    u8 direction : 1;       // 代码段：0表示非一致码段，1表示一致码段；数据段：0表示向高位扩展，1表示向低位扩展
+    u8 executable : 1;      // 表明该段是否可执行，如果该位为1，则表示该段是代码段，否则是数据段
+    u8 descriptor_type : 1; // 表明该段描述符是系统段（0）描述符还是存储段（代码或数据）描述符
+    u8 privilege_level : 2; // 表明该段的特权级别，0表示最高级别，3表示最低级别
+    u8 present : 1;         // 表明该段是否存在内存中，如果该位为0，则表示该段不存在内存中
+} descriptor_attrs_t;
+```
+
+
 
 #### 10.2.3 虚拟地址变换机构
 
+真实的地址转换依赖于地址变换机构（一般为MMU）才得以实现，为了全面支持分段分页以及保护模式的管理，我们设计了虚拟的地址变换机构，即`Virtual Memory Management Unit`, `VMMU`。其提供一个核心功能：
+
+```C
+phys_addr_t get_phys_addr(logi_addr_t logi_addr)
+{
+    virtual_descriptor_t *vdesc = cur_vpu->csr->descriptor;
+    page_directory_t *pdir = (page_directory_t *)(vdesc->entry);
+    if ((u32)logi_addr >= vdesc->limit)
+    {
+        vmmu_error("%x - Unhandled segment fault: Exceed seg limit.", logi_addr);
+        return nullptr;
+    }
+    if (logi_addr.pdn >= pdir->nr_tables)
+    {
+        vmmu_error("%x - Unhandled page fault: Exceed page directory limit.", logi_addr);
+        return nullptr;
+    }
+    page_table_t *ptable = (page_table_t *)(pdir->tables[logi_addr.pdn]);
+    if (logi_addr.pgn >= ptable->nr_pages)
+    {
+        vmmu_error("%x - Unhandled page fault: Exceed page table limit.", logi_addr);
+        return nullptr;
+    }
+    page_t *page = (page_t *)(ptable->pages[logi_addr.pgn]);
+    if (!page->present)
+    {
+        vmmu_error("%x - Unhandled page fault: Page not present.", logi_addr);
+        return nullptr;
+    }
+    return (page->frame << 12) + logi_addr.oft;
+}
+```
+
+由于时间原因，部分功能暂未实现。计划实现的函数如下：
+
+```C
+void handle_page_fault(u32 error_code);
+void handle_tlb_miss(logi_addr_t logi_addr, phys_addr_t phys_addr);
+```
+
+
+
 #### 10.2.4 虚拟快表查找机构
 
-### 10.3 虚拟指令集设计与实现
+为了尽可能模仿真实计算机的运行过程，同时提高虚拟执行单元的工作效率，减轻多级地址变换带来的性能消耗，我们也在尝试设计虚拟快表查找机构。不过经老师提醒，该实现目前并不能很好的起到加速所用，下面仅作简要展示：
+
+```C
+#define VTLB_SIZE 64 // 2^VADDR_PGN_ODR(6)=64
+
+typedef struct vtlb_entry
+{
+    byte valid : 1;
+    byte ng : 1; // non global
+    byte asid : 6;
+    u16 tag : VADDR_PDN_ODR;
+    addr frame;
+} vtlb_entry_t;
+
+void flush_tlb();
+void vtlb_insert(logi_addr_t logi_addr, phys_addr_t frame);
+phys_addr_t *vtlb_lookup(logi_addr_t logi_addr);
+```
+
+以上`tlb`表项的设计参考了知乎上的一篇讲解文章，其示意图如下：
+
+![img](https://pic2.zhimg.com/80/v2-80141749c349c85b28ee001e2d3f88c5_720w.webp)
+
+我们的虚拟`tlb`查找的过程如下。大致原理是，将虚拟地址中的页号作为表项索引以避免对整个快表的遍历，并将虚拟地址中的页目录号作为tag和表项进行对比以判断是否命中。表项中存储了实际的物理页框号，其结合虚拟地址中的业内偏移量即可计算出真实的物理地址。
+
+```C
+#define get_vtlb_entry(logi_addr) (virtual_tlb + logi_addr.pgn)
+#define get_vtlb_tag(logi_addr) logi_addr.pdn
+
+phys_addr_t *vtlb_lookup(logi_addr_t logi_addr)
+{
+    vtlb_entry_t *entry = get_vtlb_entry(logi_addr);
+    if (!entry->valid || (entry->ng && entry->asid != cur_vpu->asid))
+    {
+        return nullptr;
+    }
+    if (entry->tag == get_vtlb_tag(logi_addr))
+    {
+        return entry->frame << 12 + (logi_addr & 0xfff);
+    }
+    return nullptr;
+}
+```
+
+
+
+### 10.3 虚拟执行过程设计与实现
+
+由于虚拟执行单元是由软件模拟的，所以其并不能执行机器指令。为了将以上虚拟硬件系统利用起来，我们设计了一套简易的模拟指令集，并在此基础上模拟实现了简单的系统调用。下面进行简要介绍。
 
 #### 10.3.1 虚拟指令集设计与实现
 
+经过研究商讨，我们最终确定的虚拟指令集如下。其中共包含算术指令7条，位操作指令6条，逻辑指令2条，分支控制指令10条，堆栈指令2条，内存指令2条，系统调用指令1条，其他指令2条总计32条虚拟机器指令。
+
+```C
+typedef enum vpu_opcode
+{
+    // Arithmetic
+    ADD,
+    SUB,
+    MUL,
+    DIV,
+    MOD,
+    INC,
+    DEC,
+    // Bitwise
+    AND,
+    OR,
+    XOR,
+    NOT,
+    SHL,
+    SHR,
+    // Logical
+    CMP,
+    TEST,
+    // Control
+    JMP,
+    JZ,
+    JNZ,
+    JG,
+    JGE,
+    JL,
+    JLE,
+    CALL,
+    RET,
+    LOOP,
+    // Stack
+    PUSH,
+    POP,
+    // Memory
+    MOV,
+    LEA,
+    // System
+    SYSCALL,
+    // Misc
+    NOP,
+    HALT
+} vpu_opcode_t;
+```
+
+虚拟指令数据结构如下（虚拟用，并未做压缩优化）：
+
+```C
+typedef enum vpu_operand_type
+{
+    REGISTER,
+    SYSCALL_REG,
+    IMMEDIATE,
+    MEMORY,
+} vpu_operand_type_t;
+
+typedef struct vpu_operand
+{
+    vpu_operand_type_t type;
+    union
+    {
+        u32 reg;
+        u32 imm;
+        u32 mem;
+    };
+} vpu_operand_t;
+
+typedef struct vpu_instr
+{
+    vpu_opcode_t opcode;
+    vpu_operand_t operands[3];
+} vpu_instr_t;
+```
+
+由上可见，我们设计的指令采用了3操作数结构，其中第一个操作数默认为目标操作数。三个操作数均支持寄存器、立即数和内存单元三种类型。虚拟指令的执行实现如下。由于指令数较多，下面只列出几个典型代表。
+
+```C
+#define _calc_op(op1, op2, op3, op)            \
+    do                                         \
+    {                                          \
+        vpu_switch_seg(SEG_DS);                \
+        u32 op2_val = get_op_value(op2);       \
+        u32 op3_val = get_op_value(op3);       \
+        set_op_value(op1, op2_val op op3_val); \
+    } while (0)
+
+void vpu_instr_add(vpu_operand_t *op1, vpu_operand_t *op2, vpu_operand_t *op3)
+{
+    _calc_op(op1, op2, op3, +);
+}
+
+void vpu_instr_sub(vpu_operand_t *op1, vpu_operand_t *op2, vpu_operand_t *op3)
+{
+    _calc_op(op1, op2, op3, -);
+}
+
+void vpu_instr_cmp(vpu_operand_t *op1, vpu_operand_t *op2)
+{
+    vpu_switch_seg(SEG_DS);
+    u32 op1_val = get_op_value(op1);
+    u32 op2_val = get_op_value(op2);
+    if (op1_val == op2_val)
+    {
+        cur_vpu->flags.zf = 1;
+    }
+    else
+    {
+        cur_vpu->flags.zf = 0;
+    }
+    if (op1_val < op2_val)
+    {
+        cur_vpu->flags.cf = 1;
+    }
+    else
+    {
+        cur_vpu->flags.cf = 0;
+    }
+}
+```
+
+
+
 #### 10.3.2 虚拟系统调用设计与实现
+
+在我们设计的虚拟执行单元中，用户程序可通过`syscall`指令陷入内核态，调用系统提供的功能函数。该指令接受一个操作数作为系统调用号，用户可将需要的参数事先放置在系统调用寄存器中。
+
+系统调用指令的实现如下：
+
+```C
+void vpu_instr_syscall(vpu_operand_t *op1)
+{
+    syscall_entry(get_op_value(op1), cur_vpu->scr);
+}
+```
+
+涉及到系统调用实现部分的数据和方法定义如下：
+
+```C
+typedef void (*syscall_t)(void);
+
+extern syscall_t syscall_table[SYSCALL_MAX];
+
+void syscall_entry(int idx, u32* args);
+```
+
+由于时间原因，系统调用的功能并未完全实现，因此系统调用表中仅仅存放了一些空白的占位符，大致如下：
+
+```C
+syscall_t syscall_table[SYSCALL_NUM_MAX] = {
+    [SYSCALL_EXIT]      = nullptr,
+    [SYSCALL_FORK]      = nullptr,
+    [SYSCALL_READ]      = nullptr,
+    [SYSCALL_WRITE]     = nullptr,
+    [SYSCALL_OPEN]      = nullptr,
+    [SYSCALL_CLOSE]     = nullptr,
+    [SYSCALL_WAITPID]   = nullptr,
+    [SYSCALL_CREAT]     = nullptr,
+    [SYSCALL_LINK]      = nullptr,
+    [SYSCALL_UNLINK]    = nullptr,
+    [SYSCALL_EXECVE]    = nullptr,
+    [SYSCALL_CHDIR]     = nullptr,
+    [SYSCALL_TIME]      = nullptr,
+    [SYSCALL_MKNOD]     = nullptr,
+    [SYSCALL_CHMOD]     = nullptr,
+    [SYSCALL_LSEEK]     = nullptr,
+    [SYSCALL_GETPID]    = nullptr,
+}
+```
+
+
 
 ### 10.4 简易汇编器设计
 
+仅仅有虚拟指令并不足够，我们计划为该指令集实现一个配套的汇编器，不过该想法目前仅仅初具雏形，暂不便进行展示。
+
 #### 10.4.1 简易汇编器设计思路
 
+我们计划将汇编分为预处理、符号解析、指令翻译、可执行文件生成等数个阶段。
+
 ## 11 富文本图形库设计与实现（`rtx`）
+
+长期以来，我们试图为自己的操作系统构建一个图形化界面。但从零开始的像素级操作的难度可想而知，于是我们打算先从文本化的界面入手。经过前期规划思考，我们大致敲定了一个名为`RTX(Rich Text Graphics)`的可视化框架，并正在设计开发中。
 
 ### 11.1 富文本图形库架构概述
 

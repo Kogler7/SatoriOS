@@ -37,7 +37,7 @@ phys_addr_t *vtlb_lookup(logi_addr_t logi_addr)
     }
     if (entry->tag == get_vtlb_tag(logi_addr))
     {
-        return entry->frame + (logi_addr & 0xfff);
+        return entry->frame << 12 + (logi_addr & 0xfff);
     }
     return nullptr;
 }
