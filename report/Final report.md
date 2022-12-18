@@ -37,7 +37,7 @@
 
 > Satori：佛教禅宗用语，指心灵之顿悟、开悟；期盼在设计学习的过程中有所顿悟。
 
-![image-20221218190342545](D:\CodeBase\satori-os\report\assets\image-20221218190342545.png)
+![image-20221218190342545](.\assets\image-20221218190342545.png)
 
 开源地址：
 
@@ -49,7 +49,7 @@
 
 > Echo：指回声，灵感来源于一款名为《Dark Echo》的解密游戏，寓意在黑暗中通过努力，获得反馈，不断探索。
 
-![image-20221218190958878](D:\CodeBase\satori-os\report\assets\image-20221218190958878.png)
+![image-20221218190958878](.\assets\image-20221218190958878.png)
 
 开源地址：
 
@@ -1004,7 +1004,7 @@ void show_about_info(int cmd_id)
 
 `SatoriOS Shell`实际运行截图如下：
 
-![image-20221218190711206](D:\CodeBase\satori-os\report\assets\image-20221218190711206.png)
+![image-20221218190711206](.\assets\image-20221218190711206.png)
 
 ## 7 内存管理设计与实现（`mm`）
 
@@ -1018,7 +1018,7 @@ void show_about_info(int cmd_id)
 
 研究Linux内核可以发现，Linux中重要的内存分配接口主要由`kmalloc`、`vmalloc`、`malloc`等组成。其中`kmalloc`用于内核空间动态内存分配，其本质是分配大小不定的连续物理内存，依靠`slab`系统实现。在Linux中，`slab`系统是以对象为单位的，在`buddy system`基础上分配较小连续物理内存的系统。Linux底层所使用的页分配器是`buddy system`。在Linux系统中，`vmalloc`负责分配虚拟连续，但物理上并不一定连续的内存空间，而`malloc`则是用于在用户空间进行连续内存分配的接口。
 
-![1670286103590](D:\CodeBase\satori-os\report\assets\1670286103590.png)
+![1670286103590](.\assets\1670286103590.png)
 
 在我们设计的操作系统中，我们模仿Linux设计了最简单的`Buddy System`和`Slab Allocator`，并在此基础上实现了`kmalloc`函数。由于时间原因，我们并未实现`vmalloc`和`malloc`两个分配器。
 
@@ -1086,7 +1086,7 @@ int alloc_aligned_bits(byte *bitmap, int map_size, int size, int *last)
 
 系统启动之初的位分配器内存分配情况：
 
-![image-20221218190942836](D:\CodeBase\satori-os\report\assets\image-20221218190942836.png)
+![image-20221218190942836](.\assets\image-20221218190942836.png)
 
 #### 7.2.1 `Buddy System`设计与实现
 
@@ -1197,7 +1197,7 @@ void buddy_free(void *addr, int size)
 
 由于时间原因，我们自己的Slab分配器尚未完全实现，下面附上Linux的具体实现示意图，感兴趣的同学可以深入了解。
 
-![1668869941719](D:\CodeBase\satori-os\report\assets\1668869941719.png)
+![1668869941719](.\assets\1668869941719.png)
 
 ### 7.3 连续虚拟内存分配器（`vmalloc`）设计与实现
 
@@ -1983,7 +1983,7 @@ void rtx_render_all();
 
 基于上述的可编辑文本数据结构、ANSI控制码，综合键盘驱动等已经实现的模块，我们设计了简易的vim应用，支持基础的文本编辑操作，其效果图如下：
 
-![image-20221218190420759](D:\CodeBase\satori-os\report\assets\image-20221218190420759.png)
+![image-20221218190420759](.\assets\image-20221218190420759.png)
 
 # 五、项目统计与心得总结
 
