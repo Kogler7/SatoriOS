@@ -1,12 +1,23 @@
 # 龙芯操作系统终期进度总结汇报
 
+| 课程名称： | 操作系统           |
+| ---------- | ------------------ |
+| 任课教师： | 翟高寿             |
+| 小组成员： | 胡栩贤、魏振杰     |
+| 成员学号： | 20231159、20241068 |
+| 专业年级： | 计算机科学与技术   |
+| 学院名称： | 詹天佑学院         |
+| 提交时间： | 2022年12月18日     |
+
 [TOC]
 
-# 一、基本要求与实验目标
+# 一、实验基本要求与思路
+
+## 1 实验基本要求
 
 基于龙芯LoongArch64的操作系统的构建：要求实现启动初始化、进程管理、内存管理、显示器与键盘驱动、文件系统、系统调用及命令解释器等主要模块，并在QEMU虚拟机或龙芯处理器计算机上测试验证。
 
-实验思路：
+## 2 实验基本思路
 
 参照……
 
@@ -14,23 +25,35 @@
 
 一边完成部分可视化工作
 
+## 3 实验基本方法
+
 底层和上层结合
 
 确定核心概念，定义模块行为，设计数据结构，确定模块方法，进行开发优化，系统联调测试
 
 # 二、项目命名与内涵阐释
 
-## 1 Satori Operating System
+## 1 Satori Operating System（by.魏振杰）
 
 > Satori：佛教禅宗用语，指心灵之顿悟、开悟；期盼在设计学习的过程中有所顿悟。
 
 ![image-20221218190342545](D:\CodeBase\satori-os\report\assets\image-20221218190342545.png)
 
-## 2 Echo Operating System
+开源地址：
+
+[SatoriOS: 开悟操作系统，仅供个人学习使用（暂时停止更新）。 (github.com)](https://github.com/Kogler7/SatoriOS)
+
+[SatoriOS: 开悟操作系统，仅供个人学习使用。 (gitee.com)](https://gitee.com/Kogler/satori-os)
+
+## 2 Echo Operating System（by.胡栩贤）
 
 > Echo：指回声，灵感来源于一款名为《Dark Echo》的解密游戏，寓意在黑暗中通过努力，获得反馈，不断探索。
 
 ![image-20221218190958878](D:\CodeBase\satori-os\report\assets\image-20221218190958878.png)
+
+开源地址：
+
+[EchoOS: my first OS (github.com)](https://github.com/Dontplay1003/EchoOS)
 
 # 三、平台搭建与环境配置
 
