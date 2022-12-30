@@ -1,0 +1,7 @@
+"filename", "language", "C", "C++", "comment", "blank", "total"
+"d:\CodeBase\satori-os\include\lib\text.h", "C", 2, 0, 0, 2, 4
+"d:\CodeBase\satori-os\include\shell\csp.h", "C++", 0, 3, 0, 3, 6
+"d:\CodeBase\satori-os\kernel\app\vim.c", "C", 19, 0, 0, 1, 20
+"d:\CodeBase\satori-os\kernel\lib\text.c", "C", 27, 0, 3, 2, 32
+"d:\CodeBase\satori-os\kernel\shell\csp.c", "C", 1, 0, 0, 0, 1
+"Total", "-", 49, 3, 3, 8, 63

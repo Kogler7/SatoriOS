@@ -1,0 +1,25 @@
+# Diff Summary
+
+Date : 2022-12-18 13:53:12
+
+Directory d:\\CodeBase\\satori-os
+
+Total : 2 files,  1005 codes, 0 comments, 323 blanks, all 1328 lines
+
+[Summary](results.md) / [Details](details.md) / Diff Summary / [Diff Details](diff-details.md)
+
+## Languages
+| language | files | code | comment | blank | total |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| Markdown | 1 | 1,009 | 0 | 325 | 1,334 |
+| C++ | 1 | -4 | 0 | -2 | -6 |
+
+## Directories
+| path | files | code | comment | blank | total |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| . | 2 | 1,005 | 0 | 323 | 1,328 |
+| include | 1 | -4 | 0 | -2 | -6 |
+| include\\mm | 1 | -4 | 0 | -2 | -6 |
+| report | 1 | 1,009 | 0 | 325 | 1,334 |
+
+[Summary](results.md) / [Details](details.md) / Diff Summary / [Diff Details](diff-details.md)

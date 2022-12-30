@@ -1,0 +1,75 @@
+Date : 2022-12-03 01:03:37
+Directory : d:\CodeBase\satori-os
+Total : 32 files,  363 codes, 10 comments, 96 blanks, all 469 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| C++      |         14 |        221 |          8 |         58 |        287 |
+| C        |         15 |         91 |          2 |         13 |        106 |
+| Makefile |          2 |         36 |          0 |         12 |         48 |
+| Markdown |          1 |         15 |          0 |         13 |         28 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                           | files      | code       | comment    | blank      | total      |
++------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                              |         32 |        363 |         10 |         96 |        469 |
+| include                                        |         20 |        253 |          9 |         75 |        337 |
+| include\drivers                                |          3 |          8 |          1 |          4 |         13 |
+| include\io                                     |          1 |         11 |          0 |          2 |         13 |
+| include\isp                                    |          3 |         26 |          0 |         12 |         38 |
+| include\lib                                    |          2 |         12 |          0 |          6 |         18 |
+| include\sched                                  |          2 |         19 |          0 |          6 |         25 |
+| include\shell                                  |          1 |         -3 |          0 |         -3 |         -6 |
+| include\vpu                                    |          6 |        157 |          8 |         39 |        204 |
+| kernel                                         |         12 |        110 |          1 |         21 |        132 |
+| kernel\app                                     |          1 |         26 |         -1 |          1 |         26 |
+| kernel\drivers                                 |          1 |         30 |          1 |          4 |         35 |
+| kernel\io                                      |          1 |          1 |          0 |          0 |          1 |
+| kernel\isp                                     |          4 |         19 |          0 |          8 |         27 |
+| kernel\lib                                     |          2 |         17 |          1 |          1 |         19 |
+| kernel\shell                                   |          1 |         -1 |          0 |          0 |         -1 |
+| kernel\vpu                                     |          2 |         18 |          0 |          7 |         25 |
++------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                       | language | code       | comment    | blank      | total      |
++------------------------------------------------+----------+------------+------------+------------+------------+
+| d:\CodeBase\satori-os\include\drivers\ansi.h   | C        |          7 |          1 |          1 |          9 |
+| d:\CodeBase\satori-os\include\drivers\rtx.h    | C++      |          2 |          0 |          2 |          4 |
+| d:\CodeBase\satori-os\include\drivers\serial.h | C        |         -1 |          0 |          1 |          0 |
+| d:\CodeBase\satori-os\include\gcc.h            | C++      |         24 |          0 |         10 |         34 |
+| d:\CodeBase\satori-os\include\io\stdout.h      | C        |         11 |          0 |          2 |         13 |
+| d:\CodeBase\satori-os\include\isp\asm.h        | C++      |          3 |          0 |          3 |          6 |
+| d:\CodeBase\satori-os\include\isp\isp.h        | C++      |         20 |          0 |          6 |         26 |
+| d:\CodeBase\satori-os\include\isp\prep.h       | C++      |          3 |          0 |          3 |          6 |
+| d:\CodeBase\satori-os\include\lib\map.h        | C++      |         11 |          0 |          5 |         16 |
+| d:\CodeBase\satori-os\include\lib\text.h       | C        |          1 |          0 |          1 |          2 |
+| d:\CodeBase\satori-os\include\sched\pcb.h      | C++      |         16 |          0 |          3 |         19 |
+| d:\CodeBase\satori-os\include\sched\sched.h    | C++      |          3 |          0 |          3 |          6 |
+| d:\CodeBase\satori-os\include\shell\csp.h      | C++      |         -3 |          0 |         -3 |         -6 |
+| d:\CodeBase\satori-os\include\types.h          | C        |         -1 |          0 |         -1 |         -2 |
+| d:\CodeBase\satori-os\include\vpu\exec.h       | C++      |         22 |          0 |          7 |         29 |
+| d:\CodeBase\satori-os\include\vpu\instr.h      | C++      |         38 |          8 |          2 |         48 |
+| d:\CodeBase\satori-os\include\vpu\vdt.h        | C++      |         52 |          0 |          9 |         61 |
+| d:\CodeBase\satori-os\include\vpu\vmmu.h       | C++      |          3 |          0 |          3 |          6 |
+| d:\CodeBase\satori-os\include\vpu\vpu.h        | C++      |         27 |          0 |          5 |         32 |
+| d:\CodeBase\satori-os\include\vpu\vpu.md       | Markdown |         15 |          0 |         13 |         28 |
+| d:\CodeBase\satori-os\kernel\app\vim.c         | C        |         26 |         -1 |          1 |         26 |
+| d:\CodeBase\satori-os\kernel\drivers\rtx.c     | C        |         30 |          1 |          4 |         35 |
+| d:\CodeBase\satori-os\kernel\io\kbdin.c        | C        |          1 |          0 |          0 |          1 |
+| d:\CodeBase\satori-os\kernel\isp\Makefile      | Makefile |         18 |          0 |          6 |         24 |
+| d:\CodeBase\satori-os\kernel\isp\asm.c         | C        |          0 |          0 |          1 |          1 |
+| d:\CodeBase\satori-os\kernel\isp\exec.c        | C        |          0 |          0 |          1 |          1 |
+| d:\CodeBase\satori-os\kernel\isp\prep.c        | C        |          1 |          0 |          0 |          1 |
+| d:\CodeBase\satori-os\kernel\lib\buffer.c      | C        |         -1 |          0 |          0 |         -1 |
+| d:\CodeBase\satori-os\kernel\lib\text.c        | C        |         18 |          1 |          1 |         20 |
+| d:\CodeBase\satori-os\kernel\shell\csp.c       | C        |         -1 |          0 |          0 |         -1 |
+| d:\CodeBase\satori-os\kernel\vpu\Makefile      | Makefile |         18 |          0 |          6 |         24 |
+| d:\CodeBase\satori-os\kernel\vpu\vpu.c         | C        |          0 |          0 |          1 |          1 |
+| Total                                          |          |        363 |         10 |         96 |        469 |
++------------------------------------------------+----------+------------+------------+------------+------------+

@@ -1,0 +1,168 @@
+Date : 2022-12-01 18:01:32
+Directory : d:\CodeBase\satori-os
+Total : 112 files,  5198 codes, 444 comments, 935 blanks, all 6577 lines
+
+Languages
++--------------+------------+------------+------------+------------+------------+
+| language     | files      | code       | comment    | blank      | total      |
++--------------+------------+------------+------------+------------+------------+
+| C            |         62 |      4,268 |        427 |        601 |      5,296 |
+| C++          |         19 |        296 |          4 |        108 |        408 |
+| Makefile     |         14 |        258 |          0 |         86 |        344 |
+| Markdown     |         13 |        183 |          0 |        116 |        299 |
+| Python       |          1 |        112 |          0 |         16 |        128 |
+| Shell Script |          2 |         65 |         13 |          7 |         85 |
+| CSV          |          1 |         16 |          0 |          1 |         17 |
++--------------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                             | files      | code       | comment    | blank      | total      |
++--------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                |        112 |      5,198 |        444 |        935 |      6,577 |
+| include                                          |         41 |      1,582 |        141 |        392 |      2,115 |
+| include\app                                      |          1 |          4 |          0 |          2 |          6 |
+| include\arch                                     |          3 |        211 |         17 |         49 |        277 |
+| include\boot                                     |          1 |         81 |          6 |         20 |        107 |
+| include\config                                   |          2 |        274 |         16 |         20 |        310 |
+| include\drivers                                  |          5 |        335 |         29 |         82 |        446 |
+| include\fs                                       |          6 |         56 |          1 |         22 |         79 |
+| include\io                                       |          5 |         98 |          0 |         32 |        130 |
+| include\lib                                      |          3 |        120 |          0 |         39 |        159 |
+| include\mm                                       |          9 |        145 |          0 |         54 |        199 |
+| include\shell                                    |          4 |         53 |          0 |         17 |         70 |
+| include\temp                                     |          1 |        178 |         72 |         47 |        297 |
+| kernel                                           |         63 |      3,388 |        290 |        509 |      4,187 |
+| kernel\app                                       |          3 |         96 |         20 |         11 |        127 |
+| kernel\boot                                      |          2 |        161 |         16 |         36 |        213 |
+| kernel\config                                    |          4 |        189 |          6 |         24 |        219 |
+| kernel\drivers                                   |          5 |        209 |          4 |         32 |        245 |
+| kernel\fs                                        |          4 |        283 |          3 |         35 |        321 |
+| kernel\io                                        |          4 |        245 |          8 |         33 |        286 |
+| kernel\lib                                       |          4 |        805 |         46 |         69 |        920 |
+| kernel\mm                                        |         13 |        499 |        127 |        122 |        748 |
+| kernel\sched                                     |          3 |         22 |          4 |         10 |         36 |
+| kernel\shell                                     |          7 |        515 |         12 |         31 |        558 |
+| kernel\sys                                       |          3 |         18 |          0 |          8 |         26 |
+| kernel\trap                                      |          8 |        295 |         40 |         80 |        415 |
+| tools                                            |          2 |        128 |          0 |         17 |        145 |
++--------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------+--------------+------------+------------+------------+------------+
+| filename                                         | language     | code       | comment    | blank      | total      |
++--------------------------------------------------+--------------+------------+------------+------------+------------+
+| d:\CodeBase\satori-os\Makefile                   | Makefile     |         11 |          0 |          4 |         15 |
+| d:\CodeBase\satori-os\README.md                  | Markdown     |         23 |          0 |          2 |         25 |
+| d:\CodeBase\satori-os\build.md                   | Markdown     |          1 |          0 |          2 |          3 |
+| d:\CodeBase\satori-os\include\app\vim.h          | C++          |          4 |          0 |          2 |          6 |
+| d:\CodeBase\satori-os\include\arch\loongarch.h   | C            |        184 |         16 |         38 |        238 |
+| d:\CodeBase\satori-os\include\arch\ls7a.h        | C            |         18 |          1 |          8 |         27 |
+| d:\CodeBase\satori-os\include\arch\port.h        | C++          |          9 |          0 |          3 |         12 |
+| d:\CodeBase\satori-os\include\boot\boot_param.h  | C            |         81 |          6 |         20 |        107 |
+| d:\CodeBase\satori-os\include\config\info.h      | C            |         12 |          0 |          3 |         15 |
+| d:\CodeBase\satori-os\include\config\kbdmap.h    | C            |        262 |         16 |         17 |        295 |
+| d:\CodeBase\satori-os\include\drivers\ansi.h     | C            |        205 |         25 |         38 |        268 |
+| d:\CodeBase\satori-os\include\drivers\driver.md  | Markdown     |          6 |          0 |          7 |         13 |
+| d:\CodeBase\satori-os\include\drivers\kbd.h      | C            |         28 |          0 |          9 |         37 |
+| d:\CodeBase\satori-os\include\drivers\rtx.h      | C++          |         77 |          3 |         23 |        103 |
+| d:\CodeBase\satori-os\include\drivers\serial.h   | C            |         19 |          1 |          5 |         25 |
+| d:\CodeBase\satori-os\include\fs\dir.h           | C++          |          3 |          0 |          2 |          5 |
+| d:\CodeBase\satori-os\include\fs\fs-old.h        | C++          |         26 |          1 |          6 |         33 |
+| d:\CodeBase\satori-os\include\fs\fs.h            | C++          |          3 |          0 |          3 |          6 |
+| d:\CodeBase\satori-os\include\fs\rfs.h           | C++          |          3 |          0 |          2 |          5 |
+| d:\CodeBase\satori-os\include\fs\tfs.h           | C++          |          3 |          0 |          3 |          6 |
+| d:\CodeBase\satori-os\include\fs\vfs.h           | C++          |         18 |          0 |          6 |         24 |
+| d:\CodeBase\satori-os\include\io\kbdin.h         | C++          |         12 |          0 |          5 |         17 |
+| d:\CodeBase\satori-os\include\io\kinfo.h         | C            |         41 |          0 |          6 |         47 |
+| d:\CodeBase\satori-os\include\io\stdin.h         | C            |         15 |          0 |         11 |         26 |
+| d:\CodeBase\satori-os\include\io\stdio.h         | C            |          5 |          0 |          3 |          8 |
+| d:\CodeBase\satori-os\include\io\stdout.h        | C            |         25 |          0 |          7 |         32 |
+| d:\CodeBase\satori-os\include\lib\buffer.h       | C            |         41 |          0 |         14 |         55 |
+| d:\CodeBase\satori-os\include\lib\string.h       | C            |         12 |          0 |          3 |         15 |
+| d:\CodeBase\satori-os\include\lib\text.h         | C            |         67 |          0 |         22 |         89 |
+| d:\CodeBase\satori-os\include\mm\bitmap.h        | C            |         10 |          0 |          6 |         16 |
+| d:\CodeBase\satori-os\include\mm\buddy.h         | C++          |         24 |          0 |          5 |         29 |
+| d:\CodeBase\satori-os\include\mm\kmalloc.h       | C++          |          9 |          0 |          3 |         12 |
+| d:\CodeBase\satori-os\include\mm\malloc.h        | C++          |          9 |          0 |          3 |         12 |
+| d:\CodeBase\satori-os\include\mm\mem_block.h     | C            |          6 |          0 |          0 |          6 |
+| d:\CodeBase\satori-os\include\mm\mm.h            | C++          |         31 |          0 |         19 |         50 |
+| d:\CodeBase\satori-os\include\mm\mm_types.h      | C++          |         11 |          0 |          5 |         16 |
+| d:\CodeBase\satori-os\include\mm\slab.h          | C++          |         33 |          0 |          9 |         42 |
+| d:\CodeBase\satori-os\include\mm\sys_heap.h      | C++          |         12 |          0 |          4 |         16 |
+| d:\CodeBase\satori-os\include\shell\csp.h        | C++          |          3 |          0 |          3 |          6 |
+| d:\CodeBase\satori-os\include\shell\impl.h       | C            |         15 |          0 |          2 |         17 |
+| d:\CodeBase\satori-os\include\shell\parser.h     | C++          |          6 |          0 |          2 |          8 |
+| d:\CodeBase\satori-os\include\shell\shell.h      | C            |         29 |          0 |         10 |         39 |
+| d:\CodeBase\satori-os\include\temp\larchintrin.h | C            |        178 |         72 |         47 |        297 |
+| d:\CodeBase\satori-os\include\types.h            | C            |         27 |          0 |          8 |         35 |
+| d:\CodeBase\satori-os\kernel\Makefile            | Makefile     |         31 |          0 |         10 |         41 |
+| d:\CodeBase\satori-os\kernel\app\Makefile        | Makefile     |         18 |          0 |          6 |         24 |
+| d:\CodeBase\satori-os\kernel\app\tester.c        | C            |          0 |          0 |          1 |          1 |
+| d:\CodeBase\satori-os\kernel\app\vim.c           | C            |         78 |         20 |          4 |        102 |
+| d:\CodeBase\satori-os\kernel\boot\Makefile       | Makefile     |         18 |          0 |          6 |         24 |
+| d:\CodeBase\satori-os\kernel\boot\boot_param.c   | C            |        143 |         16 |         30 |        189 |
+| d:\CodeBase\satori-os\kernel\config\Makefile     | Makefile     |         18 |          0 |          6 |         24 |
+| d:\CodeBase\satori-os\kernel\config\config.md    | Markdown     |          0 |          0 |          1 |          1 |
+| d:\CodeBase\satori-os\kernel\config\info.c       | C            |         25 |          0 |          9 |         34 |
+| d:\CodeBase\satori-os\kernel\config\keymap.c     | C            |        146 |          6 |          8 |        160 |
+| d:\CodeBase\satori-os\kernel\drivers\Makefile    | Makefile     |         18 |          0 |          6 |         24 |
+| d:\CodeBase\satori-os\kernel\drivers\ansi.c      | C            |         33 |          0 |          7 |         40 |
+| d:\CodeBase\satori-os\kernel\drivers\driver.md   | Markdown     |          1 |          0 |          1 |          2 |
+| d:\CodeBase\satori-os\kernel\drivers\kbd.c       | C            |        117 |          2 |         13 |        132 |
+| d:\CodeBase\satori-os\kernel\drivers\rtx.c       | C            |         40 |          2 |          5 |         47 |
+| d:\CodeBase\satori-os\kernel\entry.c             | C            |         18 |          4 |          6 |         28 |
+| d:\CodeBase\satori-os\kernel\fs\Makefile         | Makefile     |         18 |          0 |          6 |         24 |
+| d:\CodeBase\satori-os\kernel\fs\filesys.md       | Markdown     |         12 |          0 |         12 |         24 |
+| d:\CodeBase\satori-os\kernel\fs\fs-old.c         | C            |        253 |          3 |         16 |        272 |
+| d:\CodeBase\satori-os\kernel\fs\fs.c             | C            |          0 |          0 |          1 |          1 |
+| d:\CodeBase\satori-os\kernel\io\Makefile         | Makefile     |         18 |          0 |          6 |         24 |
+| d:\CodeBase\satori-os\kernel\io\kbdin.c          | C            |         48 |          0 |          6 |         54 |
+| d:\CodeBase\satori-os\kernel\io\stdin.c          | C            |         70 |          7 |         10 |         87 |
+| d:\CodeBase\satori-os\kernel\io\stdout.c         | C            |        109 |          1 |         11 |        121 |
+| d:\CodeBase\satori-os\kernel\kernel.md           | Markdown     |          2 |          0 |          2 |          4 |
+| d:\CodeBase\satori-os\kernel\lib\Makefile        | Makefile     |         18 |          0 |          6 |         24 |
+| d:\CodeBase\satori-os\kernel\lib\buffer.c        | C            |        114 |          1 |         13 |        128 |
+| d:\CodeBase\satori-os\kernel\lib\string.c        | C            |        118 |         10 |          9 |        137 |
+| d:\CodeBase\satori-os\kernel\lib\text.c          | C            |        555 |         35 |         41 |        631 |
+| d:\CodeBase\satori-os\kernel\mm\Makefile         | Makefile     |         18 |          0 |          6 |         24 |
+| d:\CodeBase\satori-os\kernel\mm\bitmap.c         | C            |         93 |          2 |          6 |        101 |
+| d:\CodeBase\satori-os\kernel\mm\buddy.c          | C            |        122 |          2 |         10 |        134 |
+| d:\CodeBase\satori-os\kernel\mm\cache.c          | C            |          0 |          0 |          1 |          1 |
+| d:\CodeBase\satori-os\kernel\mm\kmalloc.c        | C            |         31 |          0 |          5 |         36 |
+| d:\CodeBase\satori-os\kernel\mm\malloc.c         | C            |         37 |          0 |          4 |         41 |
+| d:\CodeBase\satori-os\kernel\mm\mem_block.c      | C            |          1 |          7 |          4 |         12 |
+| d:\CodeBase\satori-os\kernel\mm\memory.md        | Markdown     |         68 |          0 |         56 |        124 |
+| d:\CodeBase\satori-os\kernel\mm\mm.c             | C            |         37 |         29 |          8 |         74 |
+| d:\CodeBase\satori-os\kernel\mm\page.c           | C            |          0 |         24 |          1 |         25 |
+| d:\CodeBase\satori-os\kernel\mm\slab.c           | C            |         15 |          6 |          3 |         24 |
+| d:\CodeBase\satori-os\kernel\mm\sys_heap.c       | C            |         77 |          0 |          9 |         86 |
+| d:\CodeBase\satori-os\kernel\mm\tlb.c            | C            |          0 |         57 |          9 |         66 |
+| d:\CodeBase\satori-os\kernel\sched\Makefile      | Makefile     |         18 |          0 |          6 |         24 |
+| d:\CodeBase\satori-os\kernel\sched\sched.c       | C            |          2 |          4 |          2 |          8 |
+| d:\CodeBase\satori-os\kernel\sched\sched.md      | Markdown     |          2 |          0 |          2 |          4 |
+| d:\CodeBase\satori-os\kernel\shell\Makefile      | Makefile     |         18 |          0 |          6 |         24 |
+| d:\CodeBase\satori-os\kernel\shell\cmd.c         | C            |        238 |          0 |          1 |        239 |
+| d:\CodeBase\satori-os\kernel\shell\csp.c         | C            |          1 |          0 |          0 |          1 |
+| d:\CodeBase\satori-os\kernel\shell\impl.c        | C            |        105 |          5 |          8 |        118 |
+| d:\CodeBase\satori-os\kernel\shell\parser.c      | C            |        109 |          7 |          9 |        125 |
+| d:\CodeBase\satori-os\kernel\shell\shell.c       | C            |         25 |          0 |          4 |         29 |
+| d:\CodeBase\satori-os\kernel\shell\shell.md      | Markdown     |         19 |          0 |          3 |         22 |
+| d:\CodeBase\satori-os\kernel\sys\Makefile        | Makefile     |         18 |          0 |          6 |         24 |
+| d:\CodeBase\satori-os\kernel\sys\sys.c           | C            |          0 |          0 |          1 |          1 |
+| d:\CodeBase\satori-os\kernel\sys\syscall.md      | Markdown     |          0 |          0 |          1 |          1 |
+| d:\CodeBase\satori-os\kernel\trap\Makefile       | Makefile     |         18 |          0 |          6 |         24 |
+| d:\CodeBase\satori-os\kernel\trap\entry.c        | C            |         73 |          2 |          0 |         75 |
+| d:\CodeBase\satori-os\kernel\trap\extioi.c       | C            |         19 |          6 |          7 |         32 |
+| d:\CodeBase\satori-os\kernel\trap\handle.c       | C            |         70 |          2 |         15 |         87 |
+| d:\CodeBase\satori-os\kernel\trap\i8042.c        | C            |         27 |         24 |         12 |         63 |
+| d:\CodeBase\satori-os\kernel\trap\init.c         | C            |         21 |          0 |          7 |         28 |
+| d:\CodeBase\satori-os\kernel\trap\ls7a.c         | C            |         18 |          6 |          8 |         32 |
+| d:\CodeBase\satori-os\kernel\trap\trap.md        | Markdown     |         49 |          0 |         25 |         74 |
+| d:\CodeBase\satori-os\notes.md                   | Markdown     |          0 |          0 |          2 |          2 |
+| d:\CodeBase\satori-os\run_loongarch.sh           | Shell Script |         61 |         13 |          6 |         80 |
+| d:\CodeBase\satori-os\start.sh                   | Shell Script |          4 |          0 |          1 |          5 |
+| d:\CodeBase\satori-os\tools\mmp.csv              | CSV          |         16 |          0 |          1 |         17 |
+| d:\CodeBase\satori-os\tools\vis_mmap.py          | Python       |        112 |          0 |         16 |        128 |
+| Total                                            |              |      5,198 |        444 |        935 |      6,577 |
++--------------------------------------------------+--------------+------------+------------+------------+------------+

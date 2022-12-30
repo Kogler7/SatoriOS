@@ -1,0 +1,62 @@
+Date : 2022-12-14 18:13:49
+Directory : d:\CodeBase\satori-os
+Total : 25 files,  713 codes, 2 comments, 154 blanks, all 869 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| C        |         10 |        479 |          0 |         56 |        535 |
+| C++      |         13 |        222 |          2 |         86 |        310 |
+| Markdown |          2 |         12 |          0 |         12 |         24 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------+------------+------------+------------+------------+------------+
+| path                                          | files      | code       | comment    | blank      | total      |
++-----------------------------------------------+------------+------------+------------+------------+------------+
+| .                                             |         25 |        713 |          2 |        154 |        869 |
+| include                                       |         16 |        240 |          2 |         99 |        341 |
+| include\config                                |          1 |          1 |          0 |          0 |          1 |
+| include\drivers                               |          1 |          3 |          1 |          3 |          7 |
+| include\io                                    |          1 |          9 |          0 |          4 |         13 |
+| include\mm                                    |          1 |          0 |          0 |          1 |          1 |
+| include\sys                                   |          1 |         36 |          0 |         13 |         49 |
+| include\vpu                                   |          9 |        185 |          1 |         77 |        263 |
+| kernel                                        |          9 |        473 |          0 |         55 |        528 |
+| kernel\mm                                     |          2 |          5 |          0 |          4 |          9 |
+| kernel\sys                                    |          2 |         33 |          0 |          2 |         35 |
+| kernel\vpu                                    |          4 |        420 |          0 |         49 |        469 |
++-----------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                      | language | code       | comment    | blank      | total      |
++-----------------------------------------------+----------+------------+------------+------------+------------+
+| d:\CodeBase\satori-os\include\config\config.h | C++      |          1 |          0 |          0 |          1 |
+| d:\CodeBase\satori-os\include\drivers\vdsk.h  | C++      |          3 |          1 |          3 |          7 |
+| d:\CodeBase\satori-os\include\gcc.h           | C++      |          5 |          0 |          0 |          5 |
+| d:\CodeBase\satori-os\include\io\kinfo.h      | C        |          9 |          0 |          4 |         13 |
+| d:\CodeBase\satori-os\include\mm\buddy.h      | C++      |          0 |          0 |          1 |          1 |
+| d:\CodeBase\satori-os\include\sys\syscall.h   | C++      |         36 |          0 |         13 |         49 |
+| d:\CodeBase\satori-os\include\types.h         | C        |          1 |          0 |          1 |          2 |
+| d:\CodeBase\satori-os\include\vpu\addr.h      | C++      |         14 |          0 |          5 |         19 |
+| d:\CodeBase\satori-os\include\vpu\gate.h      | C++      |         14 |          0 |          3 |         17 |
+| d:\CodeBase\satori-os\include\vpu\instr.h     | C++      |         53 |          0 |         34 |         87 |
+| d:\CodeBase\satori-os\include\vpu\page.h      | C++      |         24 |          0 |          5 |         29 |
+| d:\CodeBase\satori-os\include\vpu\vdt.h       | C++      |         -2 |          0 |          0 |         -2 |
+| d:\CodeBase\satori-os\include\vpu\vmmu.h      | C++      |          7 |          0 |          2 |          9 |
+| d:\CodeBase\satori-os\include\vpu\vpu.h       | C++      |         49 |          1 |         15 |         65 |
+| d:\CodeBase\satori-os\include\vpu\vpu.md      | Markdown |          8 |          0 |          8 |         16 |
+| d:\CodeBase\satori-os\include\vpu\vtlb.h      | C++      |         18 |          0 |          5 |         23 |
+| d:\CodeBase\satori-os\kernel\entry.c          | C        |         15 |          0 |          0 |         15 |
+| d:\CodeBase\satori-os\kernel\mm\memory.md     | Markdown |          4 |          0 |          4 |          8 |
+| d:\CodeBase\satori-os\kernel\mm\slab.c        | C        |          1 |          0 |          0 |          1 |
+| d:\CodeBase\satori-os\kernel\sys\sys.c        | C        |          0 |          0 |         -1 |         -1 |
+| d:\CodeBase\satori-os\kernel\sys\syscall.c    | C        |         33 |          0 |          3 |         36 |
+| d:\CodeBase\satori-os\kernel\vpu\instr.c      | C        |        264 |          0 |         34 |        298 |
+| d:\CodeBase\satori-os\kernel\vpu\vmmu.c       | C        |         33 |          0 |          2 |         35 |
+| d:\CodeBase\satori-os\kernel\vpu\vpu.c        | C        |         86 |          0 |          7 |         93 |
+| d:\CodeBase\satori-os\kernel\vpu\vtlb.c       | C        |         37 |          0 |          6 |         43 |
+| Total                                         |          |        713 |          2 |        154 |        869 |
++-----------------------------------------------+----------+------------+------------+------------+------------+
