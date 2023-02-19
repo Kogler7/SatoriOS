@@ -1,4 +1,5 @@
 #include "lib/string.h"
+#include <stdarg.h>
 
 int strcmp(const char *str1, const char *str2)
 {
@@ -64,40 +65,74 @@ int strncpy(char *dst, const char *src, int n)
     return 0;
 }
 
-void split(char *str, char *delim, char result[][100], int *result_len)
+int isdigit(char c)
 {
-    int len = strlen(str);
-    int delim_len = strlen(delim);
-    int i = 0;
-    int j = 0;
-    int k = 0;
-    // printf("\n%d %d\n\n",len,delim_len);
-    // printf("---%p\n",&(result[0][0]));
-    // printf("---%p\n",&(result[1][1]));
-    while (k < len)
+    if (c >= '0' && c <= '9')
+        return 1;
+    return 0;
+}
+
+int atoi(char *str)
+{
+    int n = 0;
+    int sign = 1;
+    if (*str == 0) return 0;
+    while (*str == ' ')
     {
-        // printf("----11111****\n");
-        if (strncmp(str + k, delim, delim_len) == 1)
+        str++;
+    }
+    if (*str == '-')
+    {
+        sign = -1;
+        str++;
+    }
+    while (*str != 0 && isdigit(*str))
+    {
+        n = n * 10 + *str - '0';
+        str++;
+    }
+}
+
+void sscanf(char *str, char *format, ...)
+{
+    va_list ap;
+    int i, c, n;
+    char *s;
+    va_start(ap, format);
+    while (*format != 0)
+    {
+        if (*format == '%')
         {
-            // printf("\n6666\n\n");
-            result[j][i] = str[k];
-            // printf("%c ",*(&result[j]+i));
-            i++;
-            k++;
+            format++;
+            switch (*format)
+            {
+            case 'd':
+                n = atoi(str);
+                *va_arg(ap, int *) = n;
+                while (*str != 0 && *str != ' ')
+                    str++;
+                break;
+            case 's':
+                s = va_arg(ap, char *);
+                while (*str != 0 && *str != ' ')
+                {
+                    *s = *str;
+                    s++;
+                    str++;
+                }
+                *s = 0;
+                break;
+            }
         }
         else
         {
-            // printf("\n7777\n\n");
-            result[j][i] = 0;
-            // printf("\n\n");
-            j++;
-            i = 0;
-            k += delim_len;
+            while (*str != 0 && *str != ' ')
+                str++;
         }
+        format++;
+        str++;
     }
-    // printf("---\n");
-    j++;
-    *result_len = j;
+    va_end(ap);
 }
 
 void memset(void *ptr, char c, unsigned long size)
